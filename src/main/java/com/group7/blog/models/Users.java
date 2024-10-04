@@ -1,11 +1,10 @@
 package com.group7.blog.models;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -25,4 +24,14 @@ public class Users {
     private boolean status;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+
+    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    private Set<UserBlogVote> userBlogVotes;
+    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    private Set<UserCommentVote> userCommentVotes;
+    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    private Set<Comment> comments;
+    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    private Set<BlogRegistration> blogRegistrations;
+
 }
