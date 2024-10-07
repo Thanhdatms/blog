@@ -30,7 +30,7 @@ public class UserController {
 
         usersApiResponse.setCode(StatusCode.SUCCESS.getCode());
         usersApiResponse.setMessage(StatusCode.SUCCESS.getMessage());
-        usersApiResponse.setMetadata(createdUser);
+        usersApiResponse.setResult(createdUser);
 
         return usersApiResponse;
     }
@@ -42,7 +42,7 @@ public class UserController {
 
         usersApiResponse.setCode(StatusCode.SUCCESS.getCode());
         usersApiResponse.setMessage(StatusCode.SUCCESS.getMessage());
-        usersApiResponse.setMetadata(user);
+        usersApiResponse.setResult(user);
 
         return usersApiResponse;
 

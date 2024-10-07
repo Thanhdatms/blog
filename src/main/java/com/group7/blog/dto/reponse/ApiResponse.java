@@ -1,35 +1,17 @@
 package com.group7.blog.dto.reponse;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.Entity;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResponse <T> {
-    private int code;
-    private String message;
-    private T metadata;
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ApiResponse<T> {
+    @Builder.Default
+    int code = 200;
 
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public T getMetadata() {
-        return metadata;
-    }
-
-    public void setMetadata(T metadata) {
-        this.metadata = metadata;
-    }
+    String message;
+    T result;
 }
