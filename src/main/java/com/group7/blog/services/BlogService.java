@@ -1,10 +1,11 @@
 package com.group7.blog.services;
 import java.util.List;
+import java.util.UUID;
 
 import com.group7.blog.dto.request.BlogCreationRequest;
 import com.group7.blog.dto.request.BlogUpdateRequest;
 import com.group7.blog.exceptions.AppException;
-import com.group7.blog.exceptions.ErrorCode;
+import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.mappers.BlogMapper;
 import com.group7.blog.models.Blog;
 import com.group7.blog.repositories.BlogRepository;
@@ -29,13 +30,13 @@ public class BlogService {
         return blogRepository.findAll();
     }
 
-    public Blog getBlog(String blogId) {
+    public Blog getBlog(UUID blogId) {
         return blogRepository
                 .findById(blogId)
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
     }
 
-    public  Blog updateBlog(String blogId, BlogUpdateRequest request) {
+    public  Blog updateBlog(UUID blogId, BlogUpdateRequest request) {
         Blog blog = blogRepository.findById(blogId).orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
         blogMapper.updateBlog(blog, request);
         return blogRepository.save(blog);

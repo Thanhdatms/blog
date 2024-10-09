@@ -1,5 +1,7 @@
 package com.group7.blog.exceptions;
 
+import com.group7.blog.enums.ErrorCode;
+
 public class AppException extends RuntimeException {
     public AppException(ErrorCode errorCode) {
         super(errorCode.getMessage());

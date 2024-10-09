@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/blogs")
@@ -34,14 +35,14 @@ public class BlogController {
     }
 
     @GetMapping("/{blogId}")
-    ApiResponse<Blog> getBlog(@PathVariable("blogId") String blogId) {
+    ApiResponse<Blog> getBlog(@PathVariable("blogId") UUID blogId) {
         return ApiResponse.<Blog>builder()
                 .result(blogService.getBlog(blogId))
                 .build();
     }
 
     @PutMapping("/{blogId}")
-    ApiResponse<Blog> updateBlog(@PathVariable("blogId") String blogId, @RequestBody BlogUpdateRequest request) {
+    ApiResponse<Blog> updateBlog(@PathVariable("blogId") UUID blogId, @RequestBody BlogUpdateRequest request) {
         return ApiResponse.<Blog>builder()
                 .result(blogService.updateBlog(blogId, request))
                 .build();

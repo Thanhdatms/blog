@@ -10,6 +10,7 @@ import org.hibernate.annotations.UuidGenerator;
 
 import java.sql.Timestamp;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.hibernate.annotations.UuidGenerator.Style.TIME;
 
@@ -19,8 +20,7 @@ import static org.hibernate.annotations.UuidGenerator.Style.TIME;
 public class Blog {
     @Id
     @GeneratedValue
-    @UuidGenerator(style = TIME)
-    String id;
+    UUID id;
     String title;
     String content;
     String summary;
