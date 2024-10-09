@@ -1,6 +1,6 @@
 package com.group7.blog.dto.reponse;
 
-import com.group7.blog.enums.StatusCode;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,9 +9,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ApiResponse<T> {
-    @Builder.Default
-    int code = 200;
-    String message = StatusCode.SUCCESS.getMessage();
-    T result;
+public class AuthenticationResponse {
+    boolean authenticated;
 }
