@@ -2,21 +2,27 @@ package com.group7.blog.controllers;
 
 
 import com.group7.blog.dto.reponse.ApiResponse;
+import com.group7.blog.dto.reponse.UserResponse;
 import com.group7.blog.dto.request.UserCreationRequest;
+import com.group7.blog.dto.request.UserUpdateRequest;
 import com.group7.blog.enums.StatusCode;
 import com.group7.blog.models.Users;
 import com.group7.blog.services.UserService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    @Autowired
-    private UserService userService;
+    UserService userService;
 
     @GetMapping
     List<Users> getUsers() {
@@ -27,9 +33,6 @@ public class UserController {
     ApiResponse<Users> createUser(@RequestBody UserCreationRequest request){
         ApiResponse<Users> usersApiResponse = new ApiResponse<>();
         Users createdUser = userService.createUser(request);
-
-        usersApiResponse.setCode(StatusCode.SUCCESS.getCode());
-        usersApiResponse.setMessage(StatusCode.SUCCESS.getMessage());
         usersApiResponse.setResult(createdUser);
 
         return usersApiResponse;
@@ -39,14 +42,22 @@ public class UserController {
     ApiResponse<Users> getUser(@PathVariable("userId") UUID userId){
         ApiResponse<Users> usersApiResponse = new ApiResponse<>();
         Users user = userService.getUser(userId);
-
-        usersApiResponse.setCode(StatusCode.SUCCESS.getCode());
-        usersApiResponse.setMessage(StatusCode.SUCCESS.getMessage());
         usersApiResponse.setResult(user);
 
         return usersApiResponse;
 
     }
+
+    @PutMapping("/{userId}")
+    ApiResponse<UserResponse> updateUser(@PathVariable("userId") UUID userId, @RequestBody UserUpdateRequest request){
+        ApiResponse<UserResponse> usersApiResponse = new ApiResponse<>();
+        UserResponse user = userService.updateUser(userId, request);
+
+        usersApiResponse.setResult(user);
+        return usersApiResponse;
+    }
+
+
 
 
 }
