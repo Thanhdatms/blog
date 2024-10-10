@@ -1,9 +1,7 @@
-package com.group7.blog.dto.request;
+package com.group7.blog.dto.Blog.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.sql.Timestamp;
 
 @Data
 @Builder
@@ -13,4 +11,5 @@ import java.sql.Timestamp;
 public class BlogCreationRequest {
     String title;
     String content;
+    String thumbnail;
 }
