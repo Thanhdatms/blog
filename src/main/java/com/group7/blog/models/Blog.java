@@ -6,13 +6,11 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.sql.Timestamp;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.hibernate.annotations.UuidGenerator.Style.TIME;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -24,6 +22,7 @@ public class Blog {
     String title;
     String content;
     String summary;
+    String thumbnail;
     boolean status;
     @CreationTimestamp
     Timestamp createdAt;
