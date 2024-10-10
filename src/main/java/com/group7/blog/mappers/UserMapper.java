@@ -1,4 +1,4 @@
-package com.group7.blog.mapper;
+package com.group7.blog.mappers;
 
 import com.group7.blog.dto.reponse.UserResponse;
 import com.group7.blog.dto.request.UserCreationRequest;

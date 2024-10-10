@@ -3,7 +3,7 @@ package com.group7.blog.services;
 
 import com.group7.blog.dto.request.AuthenticationRequest;
 import com.group7.blog.exceptions.AppException;
-import com.group7.blog.exceptions.ErrorCode;
+import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.repositories.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

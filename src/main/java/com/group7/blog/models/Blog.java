@@ -20,7 +20,6 @@ import static org.hibernate.annotations.UuidGenerator.Style.TIME;
 public class Blog {
     @Id
     @GeneratedValue
-    @UuidGenerator(style = TIME)
     UUID id;
     String title;
     String content;
