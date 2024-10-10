@@ -1,4 +1,4 @@
-package com.group7.blog.dto.request;
+package com.group7.blog.dto.Blog.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
