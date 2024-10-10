@@ -1,19 +1,15 @@
 package com.group7.blog.models;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.Data;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Getter
-@Setter
+@Data
 public class Users {
 
     @Id
