@@ -13,3 +13,6 @@ springdoc:
   swagger-ui:
     path: 'swagger-ui-custom.html'
     operationsSorter: method
+
+jwt:
+  signerKey: "Wk0B+O+G7pSKr1prye6vSriiuqttzjcAYWftOJwRNoXG8j8h1RsAV/donVFbcKDA"
