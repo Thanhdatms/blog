@@ -1,9 +1,14 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   datasource:
     url:
     username:
     password:
   jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     show-sql: true
@@ -13,3 +18,7 @@ springdoc:
   swagger-ui:
     path: 'swagger-ui-custom.html'
     operationsSorter: method
+cloudinary:
+  cloud-name:
+  api-key:
+  api-secret:
