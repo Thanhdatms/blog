@@ -1,10 +1,8 @@
 package com.group7.blog.services;
-
-
-import com.group7.blog.dto.reponse.AuthenticationResponse;
-import com.group7.blog.dto.reponse.IntrospecResponse;
-import com.group7.blog.dto.request.AuthenticationRequest;
-import com.group7.blog.dto.request.IntrospecRequest;
+import com.group7.blog.dto.User.reponse.AuthenticationResponse;
+import com.group7.blog.dto.User.reponse.IntrospecResponse;
+import com.group7.blog.dto.User.request.AuthenticationRequest;
+import com.group7.blog.dto.User.request.IntrospecRequest;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.repositories.UserRepository;
@@ -13,7 +11,6 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,7 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -88,14 +84,16 @@ public class AuthenticationService {
     public IntrospecResponse introspect(IntrospecRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
 
+        // Create verifier object with SIGNER_KEY => Covert this to byte for calculation
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+
 
         SignedJWT signedJWT = SignedJWT.parse(token);
 
         // Check expiry data
         Date expiryDate = signedJWT.getJWTClaimsSet().getExpirationTime();
 
-        // verify token
+        // verify token => re
         var verify = signedJWT.verify(verifier);
 
         return IntrospecResponse.builder()

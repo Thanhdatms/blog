@@ -1,7 +1,7 @@
 package com.group7.blog.controllers;
 
 import com.group7.blog.dto.Blog.response.BlogResponse;
-import com.group7.blog.dto.reponse.ApiResponse;
+import com.group7.blog.dto.User.reponse.ApiResponse;
 import com.group7.blog.dto.Blog.request.BlogCreationRequest;
 import com.group7.blog.dto.Blog.request.BlogUpdateRequest;
 import com.group7.blog.services.BlogService;

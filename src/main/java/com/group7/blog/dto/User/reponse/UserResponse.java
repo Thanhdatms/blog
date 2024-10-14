@@ -1,18 +1,20 @@
-package com.group7.blog.dto.request;
+package com.group7.blog.dto.User.reponse;
+
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserUpdateRequest {
+public class UserResponse {
+    String id;
     String firstname;
     String lastname;
     String username;
-    String password;
+    String hashpassword;
 }
