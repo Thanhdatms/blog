@@ -23,4 +23,4 @@ cloudinary:
   api-key:
   api-secret:
 jwt:
-  signerKey: "Wk0B+O+G7pSKr1prye6vSriiuqttzjcAYWftOJwRNoXG8j8h1RsAV/donVFbcKDA"
+  signerKey:
