@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatusCode;
 public enum ErrorCode {
 
     // GLOBAL ERRORS
-    UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
+    INTERNAL_SERVER_ERROR(9999, "Internal server error", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(1001, "Uncategorized error", HttpStatus.BAD_REQUEST),
 
     // USER ERRORS

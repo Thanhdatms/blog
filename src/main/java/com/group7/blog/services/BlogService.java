@@ -42,10 +42,6 @@ public class BlogService {
     CloudinaryService cloudinaryService;
 
     public BlogResponse createBlog(BlogCreationRequest request, MultipartFile file) {
-        if (file != null && !file.isEmpty()) {
-            request.setThumbnail(cloudinaryService.uploadFile(file, FOLDER_NAME));
-        }
-
         List<Tag> tags = request.getTags()
                                 .stream()
                                 .map(
@@ -54,6 +50,9 @@ public class BlogService {
                                                     .orElseThrow(() -> new AppException(ErrorCode.TAG_NOT_EXISTED))
                                 )
                                 .toList();
+        if (file != null && !file.isEmpty()) {
+            request.setThumbnail(cloudinaryService.uploadFile(file, FOLDER_NAME));
+        }
         Blog blog = blogMapper.toBlog(request);
         blog = blogRepository.save(blog);
         Blog finalBlog = blog;

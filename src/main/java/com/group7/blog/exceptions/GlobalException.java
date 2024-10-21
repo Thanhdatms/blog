@@ -7,16 +7,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 @ControllerAdvice
 public class GlobalException {
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(value = { Exception.class })
     ResponseEntity<ApiResponse> handlingRuntimeException(RuntimeException exception) {
 
         ApiResponse apiResponse = new ApiResponse();
 
-        apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
-        apiResponse.setMessage(exception.getMessage());
+        apiResponse.setCode(ErrorCode.INTERNAL_SERVER_ERROR.getCode());
+        apiResponse.setMessage(ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
+        apiResponse.setResult(exception.getMessage());
 
         return ResponseEntity.ok().body(apiResponse);
     }
@@ -25,8 +27,9 @@ public class GlobalException {
     ResponseEntity<ApiResponse> handlingValidation(MethodArgumentNotValidException exception) {
         ApiResponse apiResponse = new ApiResponse();
 
-        apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
-        apiResponse.setMessage(exception.getFieldError().getDefaultMessage());
+        apiResponse.setCode(ErrorCode.INTERNAL_SERVER_ERROR.getCode());
+        apiResponse.setMessage(ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
+        apiResponse.setResult(exception.getFieldError().getDefaultMessage());
         return ResponseEntity.ok().body(apiResponse);
     }
 
@@ -37,6 +40,17 @@ public class GlobalException {
 
         apiResponse.setCode(errorCode.getCode());
         apiResponse.setMessage(errorCode.getMessage());
+
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
+    @ExceptionHandler(value = { MissingServletRequestPartException.class })
+    ResponseEntity<ApiResponse> handleMissingServletRequestPartException(MissingServletRequestPartException exception) {
+        ApiResponse apiResponse = new ApiResponse();
+
+        apiResponse.setCode(ErrorCode.INTERNAL_SERVER_ERROR.getCode());
+        apiResponse.setMessage(ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
+        apiResponse.setResult(exception.getMessage());
 
         return ResponseEntity.ok().body(apiResponse);
     }
