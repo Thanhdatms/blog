@@ -4,7 +4,6 @@ import com.group7.blog.dto.Tag.response.TagResponse;
 import com.group7.blog.dto.reponse.ApiResponse;
 import com.group7.blog.dto.Tag.request.TagUpdateRequest;
 import com.group7.blog.dto.Tag.request.TagCreateRequest;
-import com.group7.blog.models.Tag;
 import com.group7.blog.services.TagService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +45,13 @@ public class TagController {
     ApiResponse<TagResponse> updateTag(@PathVariable("tagId") UUID tagId, @RequestBody TagUpdateRequest request) {
         return ApiResponse.<TagResponse>builder()
                 .result(tagService.updateTag(tagId, request))
+                .build();
+    }
+
+    @GetMapping("/blogs/{tagId}")
+    ApiResponse<TagResponse> getBlogsByTagId(@PathVariable("tagId") UUID tagId) {
+        return ApiResponse.<TagResponse>builder()
+                .result(tagService.getBlogsByTagId(tagId))
                 .build();
     }
 }

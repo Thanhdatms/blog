@@ -1,10 +1,13 @@
 package com.group7.blog.controllers;
 
+import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
 import com.group7.blog.dto.reponse.ApiResponse;
 import com.group7.blog.dto.Blog.request.BlogCreationRequest;
 import com.group7.blog.dto.Blog.request.BlogUpdateRequest;
+import com.group7.blog.models.Blog;
 import com.group7.blog.services.BlogService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,8 +27,8 @@ public class BlogController {
 
     @PostMapping
     ApiResponse<BlogResponse> createBlog(
-            @RequestPart("blog") BlogCreationRequest request,
-            @RequestPart("file") MultipartFile file
+            @Valid @RequestPart("blog") BlogCreationRequest request,
+            @RequestPart(name = "file", required = false) MultipartFile file
             ) {
         return ApiResponse.<BlogResponse>builder()
                 .result(blogService.createBlog(request, file))
@@ -40,8 +43,8 @@ public class BlogController {
     }
 
     @GetMapping("/{blogId}")
-    ApiResponse<BlogResponse> getBlog(@PathVariable("blogId") UUID blogId) {
-        return ApiResponse.<BlogResponse>builder()
+    ApiResponse<BlogDetailResponse> getBlog(@PathVariable("blogId") UUID blogId) {
+        return ApiResponse.<BlogDetailResponse>builder()
                 .result(blogService.getBlog(blogId))
                 .build();
     }
@@ -52,4 +55,5 @@ public class BlogController {
                 .result(blogService.updateBlog(blogId, request))
                 .build();
     }
+
 }

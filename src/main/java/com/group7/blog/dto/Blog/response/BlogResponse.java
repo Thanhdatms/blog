@@ -1,6 +1,8 @@
 package com.group7.blog.dto.Blog.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @Data
@@ -15,4 +17,5 @@ public class BlogResponse {
     String summary;
     String thumbnail;
     boolean status;
+    Timestamp publishedAt;
 }
