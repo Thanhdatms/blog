@@ -1,7 +1,7 @@
 package com.group7.blog.exceptions;
 
 
-import com.group7.blog.dto.reponse.ApiResponse;
+import com.group7.blog.dto.User.reponse.ApiResponse;
 import com.group7.blog.enums.ErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

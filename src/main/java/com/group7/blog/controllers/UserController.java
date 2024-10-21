@@ -1,17 +1,15 @@
 package com.group7.blog.controllers;
 
 
-import com.group7.blog.dto.reponse.ApiResponse;
-import com.group7.blog.dto.reponse.UserResponse;
-import com.group7.blog.dto.request.UserCreationRequest;
-import com.group7.blog.dto.request.UserUpdateRequest;
-import com.group7.blog.enums.StatusCode;
+import com.group7.blog.dto.User.reponse.ApiResponse;
+import com.group7.blog.dto.User.reponse.UserResponse;
+import com.group7.blog.dto.User.request.UserCreationRequest;
+import com.group7.blog.dto.User.request.UserUpdateRequest;
 import com.group7.blog.models.Users;
 import com.group7.blog.services.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

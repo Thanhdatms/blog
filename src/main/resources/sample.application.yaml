@@ -22,3 +22,5 @@ cloudinary:
   cloud-name:
   api-key:
   api-secret:
+jwt:
+  signerKey:
