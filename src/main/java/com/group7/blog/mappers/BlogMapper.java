@@ -2,6 +2,7 @@ package com.group7.blog.mappers;
 
 import com.group7.blog.dto.Blog.request.BlogCreationRequest;
 import com.group7.blog.dto.Blog.request.BlogUpdateRequest;
+import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
 import com.group7.blog.models.Blog;
 import org.mapstruct.Mapper;
@@ -19,6 +20,7 @@ public interface BlogMapper {
     void updateBlog(@MappingTarget Blog blog, BlogUpdateRequest request);
 
     BlogResponse toBlogResponse(Blog blog);
+    BlogDetailResponse toBlogDetailResponse(Blog blog);
 }
 
 

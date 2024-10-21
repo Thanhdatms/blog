@@ -6,8 +6,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
+
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -19,6 +20,6 @@ public class Tag {
     String name;
     String description;
 
-    @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
-    private Set<BlogTag> blogTags;
+    @OneToMany(mappedBy = "tag")
+    List<BlogTag> blogTags;
 }

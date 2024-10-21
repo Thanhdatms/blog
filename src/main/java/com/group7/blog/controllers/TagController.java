@@ -47,4 +47,11 @@ public class TagController {
                 .result(tagService.updateTag(tagId, request))
                 .build();
     }
+
+    @GetMapping("/blogs/{tagId}")
+    ApiResponse<TagResponse> getBlogsByTagId(@PathVariable("tagId") UUID tagId) {
+        return ApiResponse.<TagResponse>builder()
+                .result(tagService.getBlogsByTagId(tagId))
+                .build();
+    }
 }
