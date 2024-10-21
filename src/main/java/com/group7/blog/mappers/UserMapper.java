@@ -1,8 +1,8 @@
 package com.group7.blog.mappers;
 
-import com.group7.blog.dto.reponse.UserResponse;
-import com.group7.blog.dto.request.UserCreationRequest;
-import com.group7.blog.dto.request.UserUpdateRequest;
+import com.group7.blog.dto.User.reponse.UserResponse;
+import com.group7.blog.dto.User.request.UserCreationRequest;
+import com.group7.blog.dto.User.request.UserUpdateRequest;
 import com.group7.blog.models.Users;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

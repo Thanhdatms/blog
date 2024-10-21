@@ -1,4 +1,4 @@
-package com.group7.blog.dto.request;
+package com.group7.blog.dto.User.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IntrospecRequest {
-    String token;
+public class AuthenticationRequest {
+    String username;
+    String password;
 }

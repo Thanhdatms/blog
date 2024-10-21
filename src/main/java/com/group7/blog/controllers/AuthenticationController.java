@@ -1,11 +1,11 @@
 package com.group7.blog.controllers;
 
 
-import com.group7.blog.dto.reponse.ApiResponse;
-import com.group7.blog.dto.reponse.AuthenticationResponse;
-import com.group7.blog.dto.reponse.IntrospecResponse;
-import com.group7.blog.dto.request.AuthenticationRequest;
-import com.group7.blog.dto.request.IntrospecRequest;
+import com.group7.blog.dto.User.reponse.ApiResponse;
+import com.group7.blog.dto.User.reponse.AuthenticationResponse;
+import com.group7.blog.dto.User.reponse.IntrospecResponse;
+import com.group7.blog.dto.User.request.AuthenticationRequest;
+import com.group7.blog.dto.User.request.IntrospecRequest;
 import com.group7.blog.services.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import lombok.AccessLevel;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.text.ParseException;
 
 @RestController
@@ -28,7 +27,7 @@ public class AuthenticationController {
 
     @PostMapping("/token")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
-        var result   = authenticationService.authenticate(request);
+        var result  = authenticationService.authenticate(request);
         return ApiResponse.<AuthenticationResponse>builder()
                 .result(result)
                 .build();

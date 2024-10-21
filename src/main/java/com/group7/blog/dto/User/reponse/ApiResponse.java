@@ -1,4 +1,4 @@
-package com.group7.blog.dto.reponse;
+package com.group7.blog.dto.User.reponse;
 
 import com.group7.blog.enums.StatusCode;
 import lombok.*;

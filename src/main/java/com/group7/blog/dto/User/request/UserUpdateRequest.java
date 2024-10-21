@@ -1,14 +1,18 @@
-package com.group7.blog.dto.request;
+package com.group7.blog.dto.User.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationRequest {
+public class UserUpdateRequest {
+    String firstname;
+    String lastname;
     String username;
     String password;
 }
