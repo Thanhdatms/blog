@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -15,5 +17,5 @@ public class BlogCreationRequest {
 
     String content;
     String thumbnail;
-    String tagName;
+    List<String> tags;
 }

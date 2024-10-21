@@ -15,6 +15,7 @@ import com.group7.blog.exceptions.AppException;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.mappers.BlogMapper;
 import com.group7.blog.mappers.BlogTagMapper;
+import com.group7.blog.mappers.TagMapper;
 import com.group7.blog.models.Blog;
 import com.group7.blog.models.BlogTag;
 import com.group7.blog.models.Tag;
@@ -41,14 +42,25 @@ public class BlogService {
     CloudinaryService cloudinaryService;
 
     public BlogResponse createBlog(BlogCreationRequest request, MultipartFile file) {
-        if (file == null && file.isEmpty()) {
+        List<Tag> tags = request.getTags()
+                                .stream()
+                                .map(
+                                        tagName -> tagRepository
+                                                    .findOneByName(tagName)
+                                                    .orElseThrow(() -> new AppException(ErrorCode.TAG_NOT_EXISTED))
+                                )
+                                .toList();
+        if (file != null && !file.isEmpty()) {
             request.setThumbnail(cloudinaryService.uploadFile(file, FOLDER_NAME));
         }
-        Tag tag = tagRepository.findOneByName(request.getTagName());
         Blog blog = blogMapper.toBlog(request);
         blog = blogRepository.save(blog);
-        BlogTag blogTag = blogTagMapper.toBlogTag(new BlogTagCreation(tag, blog));
-        blogTagRepository.save(blogTag);
+        Blog finalBlog = blog;
+        tags.forEach(tag ->
+                blogTagRepository.save(
+                        blogTagMapper.toBlogTag(new BlogTagCreation(tag, finalBlog))
+                )
+        );
         return blogMapper.toBlogResponse(blog);
     }
 
