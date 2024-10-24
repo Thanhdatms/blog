@@ -1,21 +1,22 @@
 package com.group7.blog.dto.User.request;
 
-import lombok.Getter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
 import java.util.UUID;
 
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
-    private UUID id;
-    private String firstname;
-    private String lastname;
-    private String username;
-    private String hashpassword;
-    private String email;
-    private String phonenumber;
-    private String refeshtoken;
-    private boolean status;
-    private Date createdAt;
-    private Date updatedAt;
+    UUID id;
+    String firstname;
+    String lastname;
+    String username;
+    String hashpassword;
+    String email;
+    String phonenumber;
 }

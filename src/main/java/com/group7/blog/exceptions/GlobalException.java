@@ -18,7 +18,7 @@ public class GlobalException {
 
         apiResponse.setCode(ErrorCode.INTERNAL_SERVER_ERROR.getCode());
         apiResponse.setMessage(ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
-        apiResponse.setResult(exception.getMessage());
+        apiResponse.setResult(exception.toString());
 
         return ResponseEntity.ok().body(apiResponse);
     }

@@ -38,7 +38,7 @@ public class SecurityConfiguration {
             "/users"
     };
 
-    @Value("${jwt.signerKey}")
+    @Value("${jwt.access-key}")
     private String signerKey;
 
     @Bean

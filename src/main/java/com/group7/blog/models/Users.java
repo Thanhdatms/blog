@@ -22,7 +22,8 @@ public class Users {
     private String hashpassword;
     private String email;
     private String phonenumber;
-    private String refeshtoken;
+    @Column(columnDefinition = "TEXT")
+    private String refreshtoken;
     private boolean status;
     private Timestamp createdAt;
     private Timestamp updatedAt;
