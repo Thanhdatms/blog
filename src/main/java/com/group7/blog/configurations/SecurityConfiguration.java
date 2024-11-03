@@ -38,14 +38,15 @@ public class SecurityConfiguration {
             "/users"
     };
 
-    @Value("${jwt.signerKey}")
+    @Value("${jwt.access-key}")
     private String signerKey;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -58,8 +59,8 @@ public class SecurityConfiguration {
                 .exceptionHandling(customizer -> customizer.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests((requests) -> requests
-                        .anyRequest().permitAll())
+                    .authorizeHttpRequests((requests) -> requests
+                            .anyRequest().permitAll())
         ;
 
 //        httpSecurity.authorizeHttpRequests(request ->

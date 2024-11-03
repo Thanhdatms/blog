@@ -1,21 +1,20 @@
 package com.group7.blog.controllers;
 
 
+import com.group7.blog.dto.Auth.LoginRequest;
+import com.group7.blog.dto.Auth.TokenResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
-import com.group7.blog.dto.User.reponse.AuthenticationResponse;
-import com.group7.blog.dto.User.reponse.IntrospecResponse;
-import com.group7.blog.dto.User.request.AuthenticationRequest;
-import com.group7.blog.dto.User.request.IntrospecRequest;
 import com.group7.blog.services.AuthenticationService;
-import com.nimbusds.jose.JOSEException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.text.ParseException;
 
 @RestController
 @RequestMapping("/auth")
@@ -25,20 +24,22 @@ public class AuthenticationController {
 
     AuthenticationService authenticationService;
 
-    @PostMapping("/token")
-    ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
-        var result  = authenticationService.authenticate(request);
-        return ApiResponse.<AuthenticationResponse>builder()
-                .result(result)
+    @PostMapping("/login")
+    ApiResponse<String> login(@RequestBody LoginRequest request, HttpServletResponse response){
+        TokenResponse tokens = authenticationService.login(request);
+        Cookie cookie = authenticationService.getCookie("jwt", tokens.getRefreshToken());
+        response.addCookie(cookie);
+        return ApiResponse.<String>builder()
+                .result(tokens.getAccessToken())
                 .build();
     }
 
-    @PostMapping("/introspect")
-    ApiResponse<IntrospecResponse> authenticate(@RequestBody IntrospecRequest request) throws ParseException, JOSEException {
-        var result   = authenticationService.introspect(request);
-        return ApiResponse.<IntrospecResponse>builder()
-                .result(result)
-                .build();
-    }
+//    @PostMapping("/login")
+//    ApiResponse<IntrospecResponse> authenticate(@RequestBody IntrospecRequest request) throws ParseException, JOSEException {
+//        var result   = authenticationService.introspect(request);
+//        return ApiResponse.<IntrospecResponse>builder()
+//                .result(result)
+//                .build();
+//    }
 
 }

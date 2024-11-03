@@ -23,4 +23,10 @@ cloudinary:
   api-key:
   api-secret:
 jwt:
-  signerKey:
+  access-key:
+  refresh-key:
+server:
+  cookie:
+    cookie-domain:
+    cookie-path:
+    cookie-maxAge:
