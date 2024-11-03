@@ -27,11 +27,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     ApiResponse<String> login(@RequestBody LoginRequest request, HttpServletResponse response){
         TokenResponse tokens = authenticationService.login(request);
-        Cookie cookie = new Cookie("jwt", tokens.getRefreshToken());
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setSecure(false);
-        cookie.setDomain("localhost");
+        Cookie cookie = authenticationService.getCookie("jwt", tokens.getRefreshToken());
         response.addCookie(cookie);
         return ApiResponse.<String>builder()
                 .result(tokens.getAccessToken())

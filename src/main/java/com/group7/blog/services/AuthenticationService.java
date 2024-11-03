@@ -6,9 +6,13 @@ import com.group7.blog.exceptions.AppException;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.models.Users;
 import com.group7.blog.repositories.UserRepository;
+import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +24,14 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
     UserRepository userRepository;
     TokenService tokenService;
+
+    @NonFinal
+    @Value("${server.cookie.domain}")
+    private String domain;
+
+    @NonFinal
+    @Value("${server.cookie.path}")
+    private String path;
 
     public TokenResponse login(LoginRequest request){
         Users user = userRepository.findByUsername(request.getUsername())
@@ -55,4 +67,14 @@ public class AuthenticationService {
 //                .valid(verify && expiryDate.after(new Date()))
 //                .build();
 //    }
+
+    public Cookie getCookie(String name, String value) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setPath(path);
+        cookie.setDomain(domain);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setMaxAge(60 * 60 * 24 * 1000);
+        return cookie;
+    }
 }
