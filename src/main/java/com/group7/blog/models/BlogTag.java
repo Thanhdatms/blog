@@ -22,12 +22,4 @@ public class BlogTag {
     @ManyToOne
     @JoinColumn(name = "tag_id")
     Tag tag;
-
-    public UUID getBlog() {
-        return blog.getId();
-    }
-
-    public UUID getTag() {
-        return tag.getId();
-    }
 }

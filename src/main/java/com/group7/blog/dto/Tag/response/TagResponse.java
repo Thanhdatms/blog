@@ -22,4 +22,9 @@ public class TagResponse {
     String name;
     String description;
     List<BlogResponse> blogs;
+
+    public TagResponse(UUID id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

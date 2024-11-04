@@ -1,10 +1,13 @@
 package com.group7.blog.controllers;
 
 
+import com.group7.blog.dto.Blog.response.BlogResponse;
+import com.group7.blog.dto.Tag.response.TagResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
 import com.group7.blog.dto.User.reponse.UserResponse;
 import com.group7.blog.dto.User.request.UserCreationRequest;
 import com.group7.blog.dto.User.request.UserUpdateRequest;
+import com.group7.blog.models.Blog;
 import com.group7.blog.models.Users;
 import com.group7.blog.services.UserService;
 import lombok.AccessLevel;
@@ -55,7 +58,18 @@ public class UserController {
         return usersApiResponse;
     }
 
+    @GetMapping("/me")
+    ApiResponse<UserResponse> getMe () {
+        return ApiResponse.<UserResponse>builder()
+                .message("Get User Profile Successfully!")
+                .result(userService.getCurrentUserInfor())
+                .build();
+    }
 
-
-
+    @GetMapping("/{userId}/blogs")
+    ApiResponse<UserResponse> getBlogsByUserId(@PathVariable("userId") UUID userId) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getBlogsByUserId(userId))
+                .build();
+    }
 }

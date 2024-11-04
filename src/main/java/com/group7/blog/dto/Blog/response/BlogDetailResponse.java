@@ -1,20 +1,15 @@
 package com.group7.blog.dto.Blog.response;
 
-import com.group7.blog.dto.Tag.response.TagResponse;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.group7.blog.dto.Tag.response.TagResponseBlogDetail;
-import com.group7.blog.models.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.group7.blog.dto.User.reponse.UserBlogResponse;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class BlogDetailResponse {
@@ -24,10 +19,39 @@ public class BlogDetailResponse {
     String summary;
     String thumbnail;
     boolean status;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     Timestamp publishedAt;
-    Set<BlogCategoryList> blogCategoryLists;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    Timestamp createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    Timestamp updatedAt;
     List<TagResponseBlogDetail> tags;
-    Set<BlogRegistration> blogRegistrations;
-    Set<Comment> comments;
-    Set<UserBlogVote> userBlogVotes;
+    UserBlogResponse user;
+
+    public BlogDetailResponse(
+            UUID id,
+            String title,
+            String content,
+            String summary,
+            String thumbnail,
+            boolean status,
+            Timestamp publishedAt,
+            Timestamp createdAt,
+            Timestamp updatedAt,
+            UserBlogResponse userWithBlogResponse,
+            List<TagResponseBlogDetail> tags
+    ) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.summary = summary;
+        this.thumbnail = thumbnail;
+        this.status = status;
+        this.publishedAt = publishedAt;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.user = userWithBlogResponse;
+        this.tags = tags;
+    }
+
 }

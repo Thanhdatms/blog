@@ -1,5 +1,4 @@
 package com.group7.blog.services;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -9,22 +8,18 @@ import com.group7.blog.dto.Blog.request.BlogUpdateRequest;
 import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
 import com.group7.blog.dto.BlogTag.BlogTagCreation;
-import com.group7.blog.dto.Tag.response.TagResponse;
-import com.group7.blog.dto.Tag.response.TagResponseBlogDetail;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.mappers.BlogMapper;
 import com.group7.blog.mappers.BlogTagMapper;
-import com.group7.blog.mappers.TagMapper;
-import com.group7.blog.models.Blog;
-import com.group7.blog.models.BlogTag;
-import com.group7.blog.models.Tag;
-import com.group7.blog.repositories.BlogRepository;
-import com.group7.blog.repositories.BlogTagRepository;
-import com.group7.blog.repositories.TagRepository;
+import com.group7.blog.mappers.UserMapper;
+import com.group7.blog.models.*;
+import com.group7.blog.repositories.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,8 +35,17 @@ public class BlogService {
     BlogMapper blogMapper;
     BlogTagMapper blogTagMapper;
     CloudinaryService cloudinaryService;
+    UserRepository userRepository;
+    UserMapper userMapper;
 
-    public BlogResponse createBlog(BlogCreationRequest request, MultipartFile file) {
+    public BlogDetailResponse createBlog(BlogCreationRequest request, MultipartFile file) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        String userId = context.getAuthentication().getName();
+
+        Users user = userRepository
+                .findById(UUID
+                .fromString(userId))
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         List<Tag> tags = request.getTags()
                                 .stream()
                                 .map(
@@ -54,6 +58,7 @@ public class BlogService {
             request.setThumbnail(cloudinaryService.uploadFile(file, FOLDER_NAME));
         }
         Blog blog = blogMapper.toBlog(request);
+        blog.setUsers(user);
         blog = blogRepository.save(blog);
         Blog finalBlog = blog;
         tags.forEach(tag ->
@@ -61,22 +66,23 @@ public class BlogService {
                         blogTagMapper.toBlogTag(new BlogTagCreation(tag, finalBlog))
                 )
         );
-        return blogMapper.toBlogResponse(blog);
+        return blogMapper.toBlogDetailResponse(blog);
     }
 
-    public List<BlogResponse> getBlogs() {
-        return blogRepository.findAll()
-                             .stream()
-                             .map(blogMapper::toBlogResponse)
-                             .collect(Collectors.toList());
+    public List<BlogDetailResponse> getBlogs() {
+        return blogRepository
+                .findAll()
+                .stream()
+                .map(blogMapper::toBlogDetailResponse)
+                .collect(Collectors.toList());
     }
 
     public BlogDetailResponse getBlog(UUID blogId) {
-        BlogDetailResponse blogDetailRes = blogMapper.toBlogDetailResponse(blogRepository.findById(blogId)
-                              .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED)));
-        List<TagResponseBlogDetail> tags = blogTagRepository.findAllTagsByBlogId(blogId);
-        blogDetailRes.setTags(tags);
-        return blogDetailRes;
+        return blogMapper.toBlogDetailResponse(blogRepository
+                .findById(blogId)
+                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED))
+        );
+
     }
 
     public BlogResponse updateBlog(UUID blogId, BlogUpdateRequest request) {

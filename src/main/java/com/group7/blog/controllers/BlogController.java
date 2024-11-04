@@ -2,6 +2,7 @@ package com.group7.blog.controllers;
 
 import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
+import com.group7.blog.dto.BlogTag.BlogTagResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
 import com.group7.blog.dto.Blog.request.BlogCreationRequest;
 import com.group7.blog.dto.Blog.request.BlogUpdateRequest;
@@ -26,18 +27,18 @@ public class BlogController {
     BlogService blogService;
 
     @PostMapping
-    ApiResponse<BlogResponse> createBlog(
+    ApiResponse<BlogDetailResponse> createBlog(
             @Valid @RequestPart("blog") BlogCreationRequest request,
             @RequestPart(name = "file", required = false) MultipartFile file
             ) {
-        return ApiResponse.<BlogResponse>builder()
+        return ApiResponse.<BlogDetailResponse>builder()
                 .result(blogService.createBlog(request, file))
                 .build();
     }
 
     @GetMapping
-    ApiResponse<List<BlogResponse>> getBlogs() {
-        return ApiResponse.<List<BlogResponse>>builder()
+    ApiResponse<List<BlogDetailResponse>> getBlogs() {
+        return ApiResponse.<List<BlogDetailResponse>>builder()
                 .result(blogService.getBlogs())
                 .build();
     }
@@ -55,5 +56,4 @@ public class BlogController {
                 .result(blogService.updateBlog(blogId, request))
                 .build();
     }
-
 }
