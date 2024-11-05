@@ -3,12 +3,14 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
 import com.group7.blog.dto.Tag.request.TagCreateRequest;
 import com.group7.blog.dto.Tag.request.TagUpdateRequest;
 import com.group7.blog.dto.Tag.response.TagResponse;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.enums.ErrorCode;
+import com.group7.blog.mappers.BlogMapper;
 import com.group7.blog.mappers.TagMapper;
 import com.group7.blog.models.Blog;
 import com.group7.blog.models.Tag;
@@ -27,6 +29,7 @@ public class TagService {
     TagRepository tagRepository;
     BlogTagRepository blogTagRepository;
     TagMapper tagMapper;
+    BlogMapper blogMapper;
 
     public TagResponse createTag(TagCreateRequest request) {
         Tag tag = tagMapper.toTag(request);
@@ -54,9 +57,14 @@ public class TagService {
 
     public TagResponse getBlogsByTagId(UUID tagId) {
         Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new AppException(ErrorCode.TAG_NOT_EXISTED));
-        List<BlogResponse> blogs = blogTagRepository.findAllBlogsByTagId(tagId);
         TagResponse tagRes = tagMapper.toTagResponse(tag);
-        tagRes.setBlogs(blogs);
+        tagRes.setBlogs(
+                tag.getBlogTags().stream()
+                .map(
+                        item ->  blogMapper.toBlogDetailResponse(item.getBlog())
+                )
+                .collect(Collectors.toList())
+        );
         return tagRes;
     }
 }

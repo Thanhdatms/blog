@@ -17,6 +17,7 @@ public interface TagMapper {
 
     TagResponse toTagResponse(Tag tag);
     TagResponseBlogDetail toTagResponseBlogDetail(Tag tag);
+
 }
 
 

@@ -37,6 +37,7 @@ public class BlogService {
     CloudinaryService cloudinaryService;
     UserRepository userRepository;
     UserMapper userMapper;
+    CategoryRepository categoryRepository;
 
     public BlogDetailResponse createBlog(BlogCreationRequest request, MultipartFile file) {
         SecurityContext context = SecurityContextHolder.getContext();
@@ -54,11 +55,16 @@ public class BlogService {
                                                     .orElseThrow(() -> new AppException(ErrorCode.TAG_NOT_EXISTED))
                                 )
                                 .toList();
+        Category category = categoryRepository
+                .findOneByTitle(request.getCategoryName())
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXISTED));
+
         if (file != null && !file.isEmpty()) {
             request.setThumbnail(cloudinaryService.uploadFile(file, FOLDER_NAME));
         }
         Blog blog = blogMapper.toBlog(request);
         blog.setUsers(user);
+        blog.setCategory(category);
         blog = blogRepository.save(blog);
         Blog finalBlog = blog;
         tags.forEach(tag ->

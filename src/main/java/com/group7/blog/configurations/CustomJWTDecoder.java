@@ -3,7 +3,10 @@ package com.group7.blog.configurations;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.services.TokenService;
+import com.group7.blog.services.UserService;
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jwt.SignedJWT;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -22,15 +25,21 @@ public class CustomJWTDecoder implements JwtDecoder {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private UserService userService;
+
     private NimbusJwtDecoder nimbusJwtDecoder = null;
 
     @Override
     public Jwt decode(String token) throws BadJwtException {
         try {
             try {
-                tokenService.verifyToken(token, false);
+                SignedJWT result = tokenService.verifyToken(token, false);
+                if(!userService.checkUserExistById(result.getJWTClaimsSet().getSubject())) {
+                    throw new AppException(ErrorCode.USER_NOT_EXISTED);
+                }
             } catch (AppException e) {
-                throw new BadJwtException("Invalid toke");
+                throw new BadJwtException("Invalid token");
             }
             if(Objects.isNull(nimbusJwtDecoder)){
                 SecretKeySpec secretKeySpec = new SecretKeySpec(accessKey.getBytes(), "HS512");
