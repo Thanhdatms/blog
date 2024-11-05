@@ -1,28 +1,40 @@
 package com.group7.blog.services;
 
+import com.group7.blog.dto.Blog.response.BlogResponse;
 import com.group7.blog.dto.User.reponse.UserResponse;
 import com.group7.blog.dto.User.request.UserCreationRequest;
 import com.group7.blog.dto.User.request.UserUpdateRequest;
+import com.group7.blog.enums.ErrorCode;
+import com.group7.blog.exceptions.AppException;
+import com.group7.blog.mappers.BlogMapper;
 import com.group7.blog.mappers.UserMapper;
 import com.group7.blog.models.Users;
+import com.group7.blog.repositories.BlogRepository;
 import com.group7.blog.repositories.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Service
+@Slf4j
 public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
+    BlogRepository blogRepository;
+    BlogMapper blogMapper;
 
     public List<Users> getUsers() {
         return userRepository.findAll();
@@ -48,4 +60,25 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    public UserResponse getCurrentUserInfor() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        String userId = context.getAuthentication().getName();
+
+        Users user = userRepository.findById(UUID.fromString(userId)).
+                orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        return userMapper.toUserResponse(user);
+    }
+
+    public UserResponse getBlogsByUserId(UUID userId) {
+        Users user = userRepository.findUserWithBlogsById(userId);
+        UserResponse userRes = userMapper.toUserResponse(user);
+        // Load tags for each blog in a separate query if needed
+       userRes.setBlogs(
+               user.getBlogs()
+               .stream().map(blogMapper::toUserWithBlogDetail)
+               .collect(Collectors.toList())
+       );
+       return userRes;
+    }
 }

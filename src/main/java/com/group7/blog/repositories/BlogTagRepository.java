@@ -21,7 +21,9 @@ public interface BlogTagRepository extends JpaRepository<BlogTag, Integer> {
             b.summary,
             b.thumbnail,
             b.status,
-            b.publishedAt)
+            b.publishedAt,
+            b.createdAt,
+            b.updatedAt)
           from BlogTag bt inner join Blog b on bt.blog.id = b.id
           where bt.tag.id = :tagId
           """)

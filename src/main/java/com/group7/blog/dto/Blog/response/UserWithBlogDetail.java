@@ -1,19 +1,20 @@
 package com.group7.blog.dto.Blog.response;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.UpdateTimestamp;
+import com.group7.blog.dto.Tag.response.TagResponseBlogDetail;
+import com.group7.blog.dto.User.reponse.UserBlogResponse;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class BlogResponse {
+public class UserWithBlogDetail {
     UUID id;
     String title;
     String content;
@@ -26,4 +27,5 @@ public class BlogResponse {
     Timestamp createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     Timestamp updatedAt;
+    List<TagResponseBlogDetail> tags;
 }

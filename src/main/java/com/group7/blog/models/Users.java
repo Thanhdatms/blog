@@ -1,14 +1,19 @@
 package com.group7.blog.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -72,7 +77,7 @@ public class Users {
     @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
     private Set<Comment> comments;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
-    private Set<BlogRegistration> blogRegistrations;
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Blog> blogs;
 }
