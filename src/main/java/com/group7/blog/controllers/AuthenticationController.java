@@ -30,13 +30,4 @@ public class AuthenticationController {
                 .result(tokens.getAccessToken())
                 .build();
     }
-
-//    @PostMapping("/login")
-//    ApiResponse<IntrospecResponse> authenticate(@RequestBody IntrospecRequest request) throws ParseException, JOSEException {
-//        var result   = authenticationService.introspect(request);
-//        return ApiResponse.<IntrospecResponse>builder()
-//                .result(result)
-//                .build();
-//    }
-
 }

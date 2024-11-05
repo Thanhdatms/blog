@@ -30,7 +30,9 @@ public class SecurityConfiguration {
 
     private final String[] PUBLIC_ENDPOINTS = {
             "/auth/login",
-            "/users"
+            "/users",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
     };
 
     @Autowired
@@ -56,8 +58,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
-                .permitAll()
+                .authorizeHttpRequests(request -> request.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                 .anyRequest()
                 .authenticated()
         );
