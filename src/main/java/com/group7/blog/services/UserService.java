@@ -125,4 +125,15 @@ public class UserService {
 
         return "Unfollow user successfully";
     }
+
+    public Boolean isFollowing(UUID targetUserId) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        String sourceUserId = context.getAuthentication().getName();
+
+        UserFollow follow = userFollowRepository.findByUserTargetSourceId(
+                targetUserId, UUID.fromString(sourceUserId)
+        );
+
+        return follow != null;
+    }
 }

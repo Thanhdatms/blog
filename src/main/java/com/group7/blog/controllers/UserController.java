@@ -77,14 +77,24 @@ public class UserController {
                 .build();
     }
 
-    @PostMapping("/user_follows")
-    ApiResponse<String> unFollowUser(@RequestParam String action, @RequestBody UserFollowRequest request) {
+    @PostMapping("/followers/user")
+    ApiResponse<String> followUser(@RequestBody UserFollowRequest request) {
         return ApiResponse.<String>builder()
-                .result(
-                        Objects.equals(action, "unfollow") ?
-                                userService.unFollowUser(request.getTargetUserId()) :
-                                userService.followUser(request.getTargetUserId())
-                )
+                .result(userService.followUser(request.getTargetUserId()))
+                .build();
+    }
+
+    @DeleteMapping("/followers/user")
+    ApiResponse<String> unFollowUser(@RequestBody UserFollowRequest request) {
+        return ApiResponse.<String>builder()
+                .result(userService.unFollowUser(request.getTargetUserId()))
+                .build();
+    }
+
+    @GetMapping("/followers/user/{userId}/is-following")
+    ApiResponse<Boolean> isFollowing(@PathVariable("userId") UUID userId) {
+        return ApiResponse.<Boolean>builder()
+                .result(userService.isFollowing(userId))
                 .build();
     }
 }
