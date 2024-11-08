@@ -49,6 +49,9 @@ public class Blog {
     @JoinColumn(name = "category_id")
     Category category;
 
+    @OneToMany(mappedBy = "blog")
+    List<BookMark> bookMarks;
+
     @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
     Set<Comment> comments;
     @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
