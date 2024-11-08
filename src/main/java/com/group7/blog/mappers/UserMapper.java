@@ -2,6 +2,7 @@ package com.group7.blog.mappers;
 
 import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.User.reponse.UserBlogResponse;
+import com.group7.blog.dto.User.reponse.UserProfileResponse;
 import com.group7.blog.dto.User.reponse.UserResponse;
 import com.group7.blog.dto.User.request.UserCreationRequest;
 import com.group7.blog.dto.User.request.UserUpdateRequest;
@@ -29,4 +30,6 @@ public interface UserMapper {
 
     @Mapping(source = "blogs", target = "blogs")
     UserResponse toUserResponse(Users user);
+
+    UserProfileResponse toUserProfileResponse(Users user);
 }

@@ -23,6 +23,8 @@ public enum ErrorCode {
     // TAG ERRORS
     TAG_NOT_EXISTED(1005, "Tag not existed", HttpStatus.NOT_FOUND),
 
+    //CATEGORY ERRORS
+    CATEGORY_NOT_EXISTED(1005, "Category not existed", HttpStatus.NOT_FOUND),
     ;
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

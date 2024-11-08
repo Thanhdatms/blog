@@ -78,6 +78,5 @@ public class Users {
     private Set<Comment> comments;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
     private List<Blog> blogs;
 }

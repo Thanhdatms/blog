@@ -14,8 +14,8 @@ import java.util.List;
 public class BlogCreationRequest {
     @NotEmpty(message = "Title is not empty!")
     String title;
-
     String content;
     String thumbnail;
     List<String> tags;
+    String categoryName;
 }

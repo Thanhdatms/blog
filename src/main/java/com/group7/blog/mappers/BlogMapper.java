@@ -37,6 +37,7 @@ public interface BlogMapper {
 
 
     @Mapping(source = "users", target = "user")
+    @Mapping(source = "category", target = "category")
     @Mapping(source = "blogTags", target = "tags", qualifiedByName = "mapTags")
     BlogDetailResponse toBlogDetailResponse(Blog blog);
 
@@ -55,7 +56,6 @@ public interface BlogMapper {
                 ))
                 .collect(Collectors.toList());
     }
-
 }
 
 

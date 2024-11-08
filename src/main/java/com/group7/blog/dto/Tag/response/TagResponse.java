@@ -1,5 +1,6 @@
 package com.group7.blog.dto.Tag.response;
 
+import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
 import com.group7.blog.models.Blog;
 import jakarta.persistence.FetchType;
@@ -21,7 +22,7 @@ public class TagResponse {
     UUID id;
     String name;
     String description;
-    List<BlogResponse> blogs;
+    List<BlogDetailResponse> blogs;
 
     public TagResponse(UUID id, String name) {
         this.id = id;

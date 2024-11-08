@@ -4,6 +4,7 @@ package com.group7.blog.controllers;
 import com.group7.blog.dto.Blog.response.BlogResponse;
 import com.group7.blog.dto.Tag.response.TagResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
+import com.group7.blog.dto.User.reponse.UserProfileResponse;
 import com.group7.blog.dto.User.reponse.UserResponse;
 import com.group7.blog.dto.User.request.UserCreationRequest;
 import com.group7.blog.dto.User.request.UserUpdateRequest;
@@ -59,10 +60,10 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    ApiResponse<UserResponse> getMe () {
-        return ApiResponse.<UserResponse>builder()
+    ApiResponse<UserProfileResponse> getMe () {
+        return ApiResponse.<UserProfileResponse>builder()
                 .message("Get User Profile Successfully!")
-                .result(userService.getCurrentUserInfor())
+                .result(userService.getCurrentUserInfo())
                 .build();
     }
 

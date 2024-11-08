@@ -1,6 +1,7 @@
 package com.group7.blog.services;
 
 import com.group7.blog.dto.Blog.response.BlogResponse;
+import com.group7.blog.dto.User.reponse.UserProfileResponse;
 import com.group7.blog.dto.User.reponse.UserResponse;
 import com.group7.blog.dto.User.request.UserCreationRequest;
 import com.group7.blog.dto.User.request.UserUpdateRequest;
@@ -36,6 +37,10 @@ public class UserService {
     BlogRepository blogRepository;
     BlogMapper blogMapper;
 
+    public boolean checkUserExistById(String userId) {
+        return userRepository.existsById(UUID.fromString(userId));
+    }
+
     public List<Users> getUsers() {
         return userRepository.findAll();
     }
@@ -60,14 +65,14 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    public UserResponse getCurrentUserInfor() {
+    public UserProfileResponse getCurrentUserInfo() {
         SecurityContext context = SecurityContextHolder.getContext();
         String userId = context.getAuthentication().getName();
 
         Users user = userRepository.findById(UUID.fromString(userId)).
                 orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        return userMapper.toUserResponse(user);
+        return userMapper.toUserProfileResponse(user);
     }
 
     public UserResponse getBlogsByUserId(UUID userId) {

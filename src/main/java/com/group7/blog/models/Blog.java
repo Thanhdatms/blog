@@ -41,14 +41,17 @@ public class Blog {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     Timestamp publishedAt;
 
-    @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
-    Set<BlogCategoryList> blogCategoryLists;
     @OneToMany(mappedBy = "blog")
     List<BlogTag> blogTags;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @JsonBackReference
     Users users;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    Category category;
+
     @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
     Set<Comment> comments;
     @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
