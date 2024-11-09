@@ -30,7 +30,8 @@ public enum ErrorCode {
     CATEGORY_NOT_EXISTED(1005, "Category not existed", HttpStatus.NOT_FOUND),
 
     //BOOKMARK ERRORS
-    BOOKMARK_NOT_EXISTED(404, "Bookmark not existed", HttpStatus.NOT_FOUND),
+    BOOKMARK_NOT_FOUND(404, "Bookmark not found", HttpStatus.NOT_FOUND),
+    BOOKMARK_EXISTED(404, "Bookmark is existed", HttpStatus.BAD_REQUEST),
     ;
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

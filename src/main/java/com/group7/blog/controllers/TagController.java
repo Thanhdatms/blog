@@ -1,5 +1,6 @@
 package com.group7.blog.controllers;
 
+import com.group7.blog.dto.Blog.request.BlogFilter;
 import com.group7.blog.dto.Tag.response.TagResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
 import com.group7.blog.dto.Tag.request.TagUpdateRequest;
@@ -48,10 +49,10 @@ public class TagController {
                 .build();
     }
 
-    @GetMapping("/blogs/{tagId}")
-    ApiResponse<TagResponse> getBlogsByTagId(@PathVariable("tagId") UUID tagId) {
+    @PostMapping("/blogs")
+    ApiResponse<TagResponse> getBlogsByTagId(@RequestBody BlogFilter filter) {
         return ApiResponse.<TagResponse>builder()
-                .result(tagService.getBlogsByTagId(tagId))
+                .result(tagService.getBlogsByTagId(filter))
                 .build();
     }
 }

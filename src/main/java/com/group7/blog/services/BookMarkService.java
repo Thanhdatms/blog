@@ -4,6 +4,7 @@ import com.group7.blog.dto.BookMark.response.BookMarkListResponse;
 import com.group7.blog.dto.BookMark.response.BookMarkResponse;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
+import com.group7.blog.mappers.BlogMapper;
 import com.group7.blog.mappers.BookMarkMapper;
 import com.group7.blog.models.Blog;
 import com.group7.blog.models.BookMark;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +32,7 @@ public class BookMarkService {
     BookMarkRepository bookMarkRepository;
     UserRepository userRepository;
     BookMarkMapper bookMarkMapper;
+    BlogMapper blogMapper;
 
     public BookMarkResponse saveBlog(UUID blogId) {
         SecurityContext context = SecurityContextHolder.getContext();
@@ -41,11 +44,18 @@ public class BookMarkService {
         Blog blog = blogRepository.findById(blogId)
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
 
+        BookMark isExisted = bookMarkRepository
+                .findByUserBlogId(UUID.fromString(userId), blogId);
+
+        if(isExisted != null) throw new AppException(ErrorCode.BOOKMARK_EXISTED);
+
         BookMark bookMark = new BookMark();
         bookMark.setBlog(blog);
         bookMark.setUser(user);
 
-        return bookMarkMapper.toBookMarkResponse(bookMarkRepository.save(bookMark));
+        bookMarkRepository.save(bookMark);
+
+        return new BookMarkResponse(blog.getId(), user.getId());
     }
 
     public String deleteBlog(UUID blogId) {
@@ -53,9 +63,21 @@ public class BookMarkService {
         String userId = context.getAuthentication().getName();
         BookMark bookMark = bookMarkRepository
                 .findByUserBlogIdOptional(UUID.fromString(userId), blogId)
-                .orElseThrow(() -> new AppException(ErrorCode.BOOKMARK_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.BOOKMARK_NOT_FOUND));
         bookMarkRepository.delete(bookMark);
         return "Remove Blog Successfully!";
     }
 
+    public BookMarkListResponse getBookMarkBlogs() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        String userId = context.getAuthentication().getName();
+        List<BookMark> bookMarks = bookMarkRepository.findAllByUserId(UUID.fromString(userId));
+        BookMarkListResponse list = new BookMarkListResponse();
+        list.setBlogs(
+                bookMarks.stream().map(
+                        item -> blogMapper.toBlogDetailResponse(item.getBlog())
+                ).collect(Collectors.toList())
+        );
+        return list;
+    }
 }

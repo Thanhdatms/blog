@@ -2,6 +2,7 @@ package com.group7.blog.controllers;
 
 
 import com.group7.blog.dto.Blog.response.BlogResponse;
+import com.group7.blog.dto.BookMark.response.BookMarkListResponse;
 import com.group7.blog.dto.BookMark.response.BookMarkResponse;
 import com.group7.blog.dto.Tag.response.TagResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
@@ -115,6 +116,10 @@ public class UserController {
                 .build();
     }
 
-    //@GetMapping("/bookmarks")
-    //ApiResponse<>
+    @GetMapping("/bookmarks")
+    ApiResponse<BookMarkListResponse> getBookMarkBlogs () {
+        return  ApiResponse.<BookMarkListResponse>builder()
+                .result(bookMarkService.getBookMarkBlogs())
+                .build();
+    }
 }

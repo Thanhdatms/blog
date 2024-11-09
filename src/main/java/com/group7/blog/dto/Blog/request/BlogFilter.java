@@ -1,16 +1,16 @@
-package com.group7.blog.dto.BookMark.response;
+package com.group7.blog.dto.Blog.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookMarkResponse {
-    UUID blogId;
-    UUID userId;
+public class BlogFilter {
+    List<UUID> tags;
 }

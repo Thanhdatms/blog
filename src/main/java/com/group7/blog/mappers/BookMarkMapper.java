@@ -6,6 +6,4 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface BookMarkMapper {
-    BookMarkResponse toBookMarkResponse(BookMark bookMark);
-
 }
