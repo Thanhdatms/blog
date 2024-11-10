@@ -2,6 +2,7 @@ package com.group7.blog.repositories;
 
 import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
+import com.group7.blog.enums.EnumData;
 import com.group7.blog.models.Blog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

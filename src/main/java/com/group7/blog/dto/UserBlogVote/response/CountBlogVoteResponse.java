@@ -1,7 +1,6 @@
-package com.group7.blog.dto.Vote.request;
+package com.group7.blog.dto.UserBlogVote.response;
 
 
-import com.group7.blog.models.Vote.VoteType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,7 +11,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VoteCreationRequest {
-    UUID id;
-    VoteType voteType;
+public class CountBlogVoteResponse {
+    UUID blogId;
+    Long upvote;
+    Long downvote;
 }
