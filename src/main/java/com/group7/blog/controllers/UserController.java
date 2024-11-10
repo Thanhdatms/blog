@@ -2,6 +2,8 @@ package com.group7.blog.controllers;
 
 
 import com.group7.blog.dto.Blog.response.BlogResponse;
+import com.group7.blog.dto.BookMark.response.BookMarkListResponse;
+import com.group7.blog.dto.BookMark.response.BookMarkResponse;
 import com.group7.blog.dto.Tag.response.TagResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
 import com.group7.blog.dto.User.reponse.UserProfileResponse;
@@ -12,6 +14,7 @@ import com.group7.blog.dto.User.request.UserUpdateRequest;
 import com.group7.blog.models.Blog;
 import com.group7.blog.models.UserFollow;
 import com.group7.blog.models.Users;
+import com.group7.blog.services.BookMarkService;
 import com.group7.blog.services.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,7 @@ import java.util.UUID;
 @RequestMapping("/users")
 public class UserController {
     UserService userService;
+    BookMarkService bookMarkService;
 
     @GetMapping
     List<Users> getUsers() {
@@ -95,6 +99,34 @@ public class UserController {
     ApiResponse<Boolean> isFollowing(@PathVariable("userId") UUID userId) {
         return ApiResponse.<Boolean>builder()
                 .result(userService.isFollowing(userId))
+                .build();
+    }
+
+    @PutMapping("/bookmarks/blog/{blogId}")
+    ApiResponse<BookMarkResponse> addBookMark(@PathVariable("blogId") UUID blogId) {
+        return ApiResponse.<BookMarkResponse>builder()
+                .result(bookMarkService.addBookMark(blogId))
+                .build();
+    }
+
+    @DeleteMapping("/bookmarks/blog/{blogId}")
+    ApiResponse<String> removeBookMark(@PathVariable("blogId") UUID blogId) {
+        return ApiResponse.<String>builder()
+                .result(bookMarkService.removeBookMark(blogId))
+                .build();
+    }
+
+    @GetMapping("/bookmarks")
+    ApiResponse<BookMarkListResponse> getBookMarkBlogs () {
+        return  ApiResponse.<BookMarkListResponse>builder()
+                .result(bookMarkService.getBookMarkBlogs())
+                .build();
+    }
+
+    @GetMapping("/bookmarks/blog/{blogId}/is-bookmarked")
+    ApiResponse<Boolean> isBookMarked(@PathVariable("blogId") UUID blogId) {
+        return ApiResponse.<Boolean>builder()
+                .result(bookMarkService.isBookMarked(blogId))
                 .build();
     }
 }

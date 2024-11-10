@@ -51,9 +51,13 @@ public class BlogController {
     }
 
     @PutMapping("/{blogId}")
-    ApiResponse<BlogResponse> updateBlog(@PathVariable("blogId") UUID blogId, @RequestBody BlogUpdateRequest request) {
+    ApiResponse<BlogResponse> updateBlog(
+            @PathVariable("blogId") UUID blogId,
+            @Valid @RequestPart("blog") BlogUpdateRequest request,
+            @RequestPart(name = "file", required = false) MultipartFile file
+    ) {
         return ApiResponse.<BlogResponse>builder()
-                .result(blogService.updateBlog(blogId, request))
+                .result(blogService.updateBlog(blogId, request, file))
                 .build();
     }
 }

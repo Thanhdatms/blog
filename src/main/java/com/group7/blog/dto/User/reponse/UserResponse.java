@@ -20,5 +20,5 @@ public class UserResponse {
     String firstname;
     String lastname;
     String username;
-    List<UserWithBlogDetail> blogs;
+    List<BlogDetailResponse> blogs;
 }

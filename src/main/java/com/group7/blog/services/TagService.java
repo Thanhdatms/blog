@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.group7.blog.dto.Blog.request.BlogFilter;
 import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
 import com.group7.blog.dto.Tag.request.TagCreateRequest;
@@ -20,7 +21,10 @@ import com.group7.blog.repositories.TagRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import static com.group7.blog.specifications.BlogSpecification.hasTags;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +34,7 @@ public class TagService {
     BlogTagRepository blogTagRepository;
     TagMapper tagMapper;
     BlogMapper blogMapper;
+    BlogRepository blogRepository;
 
     public TagResponse createTag(TagCreateRequest request) {
         Tag tag = tagMapper.toTag(request);
@@ -56,14 +61,17 @@ public class TagService {
     }
 
     public TagResponse getBlogsByTagId(UUID tagId) {
-        Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new AppException(ErrorCode.TAG_NOT_EXISTED));
+        Tag tag = tagRepository
+                .findById(tagId)
+                .orElseThrow(() -> new AppException(ErrorCode.TAG_NOT_EXISTED));
+
         TagResponse tagRes = tagMapper.toTagResponse(tag);
+
         tagRes.setBlogs(
-                tag.getBlogTags().stream()
-                .map(
-                        item ->  blogMapper.toBlogDetailResponse(item.getBlog())
-                )
-                .collect(Collectors.toList())
+                tag.getBlogTags()
+                        .stream()
+                        .map(item -> blogMapper.toBlogDetailResponse(item.getBlog()))
+                        .toList()
         );
         return tagRes;
     }

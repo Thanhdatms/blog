@@ -22,8 +22,13 @@ public class Blog {
     @GeneratedValue
     UUID id;
     String title;
+
+    @Column(columnDefinition = "TEXT")
     String content;
+
+    @Column(columnDefinition = "TEXT")
     String summary;
+
     String thumbnail;
     boolean status;
 
@@ -48,6 +53,9 @@ public class Blog {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     Category category;
+
+    @OneToMany(mappedBy = "blog")
+    List<BookMark> bookMarks;
 
     @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
     Set<Comment> comments;

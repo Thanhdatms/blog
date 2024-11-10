@@ -72,6 +72,7 @@ public class SecurityConfiguration {
         httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Set up CORS configuration
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET, "/blogs/**").permitAll()
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll() // Allow access to public endpoints
                         .anyRequest().authenticated() // Require authentication for other endpoints
                 ); // Disable CSRF if needed (optional, only if necessary)
