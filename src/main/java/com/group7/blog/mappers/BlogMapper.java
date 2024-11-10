@@ -5,15 +5,10 @@ import com.group7.blog.dto.Blog.request.BlogUpdateRequest;
 import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
 import com.group7.blog.dto.Blog.response.UserWithBlogDetail;
-import com.group7.blog.dto.BookMark.response.BookMarkResponse;
 import com.group7.blog.dto.Tag.response.TagResponseBlogDetail;
 import com.group7.blog.models.Blog;
 import com.group7.blog.models.BlogTag;
-import com.group7.blog.models.BookMark;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import java.util.Collections;
@@ -21,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface BlogMapper {
     BlogMapper INSTANCE = Mappers.getMapper(BlogMapper.class);
 
@@ -29,8 +24,7 @@ public interface BlogMapper {
 
     @Mapping(target = "title", source = "title")
     @Mapping(target = "content", source = "content")
-    @Mapping(target = "status", source = "status")
-    @Mapping(target = "publishedAt", source = "publishedAt")
+    @Mapping(target = "thumbnail", source = "thumbnail")
     void updateBlog(@MappingTarget Blog blog, BlogUpdateRequest request);
 
     @Mapping(target = "createdAt", source = "createdAt")

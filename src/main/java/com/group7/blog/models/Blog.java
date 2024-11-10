@@ -22,8 +22,13 @@ public class Blog {
     @GeneratedValue
     UUID id;
     String title;
+
+    @Column(columnDefinition = "TEXT")
     String content;
+
+    @Column(columnDefinition = "TEXT")
     String summary;
+
     String thumbnail;
     boolean status;
 

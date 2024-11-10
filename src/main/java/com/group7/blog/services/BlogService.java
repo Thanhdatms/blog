@@ -8,7 +8,6 @@ import com.group7.blog.dto.Blog.request.BlogUpdateRequest;
 import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
 import com.group7.blog.dto.BlogTag.BlogTagCreation;
-import com.group7.blog.dto.BookMark.response.BookMarkResponse;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.mappers.BlogMapper;
@@ -88,12 +87,45 @@ public class BlogService {
         Blog blog = blogRepository
                 .findById(blogId)
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
-        BlogDetailResponse blogRes = blogMapper.toBlogDetailResponse(blog);
-        return blogRes;
+        return blogMapper.toBlogDetailResponse(blog);
     }
 
-    public BlogResponse updateBlog(UUID blogId, BlogUpdateRequest request) {
+    public BlogResponse updateBlog(UUID blogId, BlogUpdateRequest request,  MultipartFile file) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        String userId = context.getAuthentication().getName();
+
         Blog blog = blogRepository.findById(blogId).orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
+
+        if (file != null && !file.isEmpty()) {
+            request.setThumbnail(cloudinaryService.uploadFile(file, FOLDER_NAME));
+        }
+
+        if(request.getTags() != null && !request.getTags().isEmpty()) {
+            List<Tag> tags = request.getTags()
+                    .stream()
+                    .map(
+                            tagName -> tagRepository
+                                    .findOneByName(tagName)
+                                    .orElseThrow(() -> new AppException(ErrorCode.TAG_NOT_EXISTED))
+                    )
+
+                    .toList();
+            blogTagRepository.findAllByBlogId(blogId).forEach(blogTagRepository::delete);
+            tags.forEach(tag ->
+                    blogTagRepository.save(
+                            blogTagMapper.toBlogTag(new BlogTagCreation(tag, blog))
+                    )
+            );
+        }
+
+        if(request.getCategoryName() != null && !request.getCategoryName().isEmpty()) {
+            Category category = categoryRepository
+                    .findOneByTitle(request.getCategoryName())
+                    .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXISTED));
+
+            blog.setCategory(category);
+        }
+
         blogMapper.updateBlog(blog, request);
         return blogMapper.toBlogResponse(blogRepository.save(blog));
     }

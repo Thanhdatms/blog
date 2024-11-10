@@ -1,6 +1,7 @@
 package com.group7.blog.services;
 
 import com.group7.blog.dto.Blog.response.BlogResponse;
+import com.group7.blog.dto.BookMark.response.BookMarkListResponse;
 import com.group7.blog.dto.User.reponse.UserProfileResponse;
 import com.group7.blog.dto.User.reponse.UserResponse;
 import com.group7.blog.dto.User.request.UserCreationRequest;
@@ -9,6 +10,7 @@ import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.mappers.BlogMapper;
 import com.group7.blog.mappers.UserMapper;
+import com.group7.blog.models.BookMark;
 import com.group7.blog.models.UserFollow;
 import com.group7.blog.models.Users;
 import com.group7.blog.repositories.BlogRepository;
@@ -84,7 +86,7 @@ public class UserService {
         // Load tags for each blog in a separate query if needed
        userRes.setBlogs(
                user.getBlogs()
-               .stream().map(blogMapper::toUserWithBlogDetail)
+               .stream().map(blogMapper::toBlogDetailResponse)
                .collect(Collectors.toList())
        );
        return userRes;

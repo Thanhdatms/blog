@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @Builder
@@ -13,6 +14,7 @@ import java.sql.Timestamp;
 public class BlogUpdateRequest {
     String title;
     String content;
-    boolean status;
-    Timestamp publishedAt;
+    String thumbnail;
+    List<String> tags;
+    String categoryName;
 }
