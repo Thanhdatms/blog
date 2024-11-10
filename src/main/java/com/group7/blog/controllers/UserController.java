@@ -103,16 +103,16 @@ public class UserController {
     }
 
     @PutMapping("/bookmarks/blog/{blogId}")
-    ApiResponse<BookMarkResponse> saveBlog(@PathVariable("blogId") UUID blogId) {
+    ApiResponse<BookMarkResponse> addBookMark(@PathVariable("blogId") UUID blogId) {
         return ApiResponse.<BookMarkResponse>builder()
-                .result(bookMarkService.saveBlog(blogId))
+                .result(bookMarkService.addBookMark(blogId))
                 .build();
     }
 
     @DeleteMapping("/bookmarks/blog/{blogId}")
-    ApiResponse<String> removeBlog(@PathVariable("blogId") UUID blogId) {
+    ApiResponse<String> removeBookMark(@PathVariable("blogId") UUID blogId) {
         return ApiResponse.<String>builder()
-                .result(bookMarkService.deleteBlog(blogId))
+                .result(bookMarkService.removeBookMark(blogId))
                 .build();
     }
 
@@ -120,6 +120,13 @@ public class UserController {
     ApiResponse<BookMarkListResponse> getBookMarkBlogs () {
         return  ApiResponse.<BookMarkListResponse>builder()
                 .result(bookMarkService.getBookMarkBlogs())
+                .build();
+    }
+
+    @GetMapping("/bookmarks/blog/{blogId}/is-bookmarked")
+    ApiResponse<Boolean> isBookMarked(@PathVariable("blogId") UUID blogId) {
+        return ApiResponse.<Boolean>builder()
+                .result(bookMarkService.isBookMarked(blogId))
                 .build();
     }
 }

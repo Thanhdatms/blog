@@ -49,10 +49,10 @@ public class TagController {
                 .build();
     }
 
-    @PostMapping("/blogs")
-    ApiResponse<TagResponse> getBlogsByTagId(@RequestBody BlogFilter filter) {
+    @GetMapping("/blogs/{tagId}")
+    ApiResponse<TagResponse> getBlogsByTagId(@PathVariable("tagId") UUID tagId) {
         return ApiResponse.<TagResponse>builder()
-                .result(tagService.getBlogsByTagId(filter))
+                .result(tagService.getBlogsByTagId(tagId))
                 .build();
     }
 }

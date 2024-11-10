@@ -34,7 +34,7 @@ public class BookMarkService {
     BookMarkMapper bookMarkMapper;
     BlogMapper blogMapper;
 
-    public BookMarkResponse saveBlog(UUID blogId) {
+    public BookMarkResponse addBookMark(UUID blogId) {
         SecurityContext context = SecurityContextHolder.getContext();
         String userId = context.getAuthentication().getName();
 
@@ -58,7 +58,7 @@ public class BookMarkService {
         return new BookMarkResponse(blog.getId(), user.getId());
     }
 
-    public String deleteBlog(UUID blogId) {
+    public String removeBookMark(UUID blogId) {
         SecurityContext context = SecurityContextHolder.getContext();
         String userId = context.getAuthentication().getName();
         BookMark bookMark = bookMarkRepository
@@ -79,5 +79,13 @@ public class BookMarkService {
                 ).collect(Collectors.toList())
         );
         return list;
+    }
+
+    public Boolean isBookMarked(UUID blogId) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        String userId = context.getAuthentication().getName();
+        return  bookMarkRepository
+                .findByUserBlogIdOptional(UUID.fromString(userId), blogId)
+                .isPresent();
     }
 }

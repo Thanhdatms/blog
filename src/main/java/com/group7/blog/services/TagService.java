@@ -60,28 +60,17 @@ public class TagService {
         return tagMapper.toTagResponse(tagRepository.save(tag));
     }
 
-    public TagResponse getBlogsByTagId(BlogFilter filter) {
+    public TagResponse getBlogsByTagId(UUID tagId) {
+        Tag tag = tagRepository
+                .findById(tagId)
+                .orElseThrow(() -> new AppException(ErrorCode.TAG_NOT_EXISTED));
 
-//        tagRes.setBlogs(
-//                tag.getBlogTags().stream()
-//                .map(
-//                        item ->  blogMapper.toBlogDetailResponse(item.getBlog())
-//                )
-//                .collect(Collectors.toList())
-//        );
-        filter.getTags().forEach(tagId -> {
-            tagRepository.findById(tagId).orElseThrow(() -> new AppException(ErrorCode.TAG_NOT_EXISTED));
-        });
-        Tag tag = tagRepository.findById(filter.getTags().getFirst()).orElseThrow(() -> new AppException(ErrorCode.TAG_NOT_EXISTED));
         TagResponse tagRes = tagMapper.toTagResponse(tag);
 
-        Specification<Blog> filters = Specification.where(hasTags(filter.getTags()));
-
         tagRes.setBlogs(
-                blogRepository
-                        .findAll(filters)
-                        .stream().distinct()
-                        .map(blogMapper::toBlogDetailResponse)
+                tag.getBlogTags()
+                        .stream()
+                        .map(item -> blogMapper.toBlogDetailResponse(item.getBlog()))
                         .toList()
         );
         return tagRes;

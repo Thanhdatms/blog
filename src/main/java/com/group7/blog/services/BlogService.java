@@ -8,6 +8,7 @@ import com.group7.blog.dto.Blog.request.BlogUpdateRequest;
 import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
 import com.group7.blog.dto.BlogTag.BlogTagCreation;
+import com.group7.blog.dto.BookMark.response.BookMarkResponse;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.mappers.BlogMapper;
@@ -84,11 +85,11 @@ public class BlogService {
     }
 
     public BlogDetailResponse getBlog(UUID blogId) {
-        return blogMapper.toBlogDetailResponse(blogRepository
+        Blog blog = blogRepository
                 .findById(blogId)
-                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED))
-        );
-
+                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
+        BlogDetailResponse blogRes = blogMapper.toBlogDetailResponse(blog);
+        return blogRes;
     }
 
     public BlogResponse updateBlog(UUID blogId, BlogUpdateRequest request) {
