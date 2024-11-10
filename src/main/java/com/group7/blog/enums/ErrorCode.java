@@ -17,6 +17,9 @@ public enum ErrorCode {
     UNAUTHENTICATED(401, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_TOKEN(401, "Invalid token", HttpStatus.UNAUTHORIZED),
+
+    USER_ID_INVALID(401, "User id invalid", HttpStatus.NOT_FOUND),
+    USER_FOLLOW_EXISTED(401, "User follow existed", HttpStatus.FOUND),
     // BLOG ERRORS
     BLOG_NOT_EXISTED(1005, "Blog not existed", HttpStatus.NOT_FOUND),
 
