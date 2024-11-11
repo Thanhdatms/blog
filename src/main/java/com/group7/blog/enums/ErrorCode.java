@@ -17,6 +17,9 @@ public enum ErrorCode {
     UNAUTHENTICATED(401, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_TOKEN(401, "Invalid token", HttpStatus.UNAUTHORIZED),
+
+    USER_ID_INVALID(401, "User id invalid", HttpStatus.NOT_FOUND),
+    USER_FOLLOW_EXISTED(401, "User follow existed", HttpStatus.FOUND),
     // BLOG ERRORS
     BLOG_NOT_EXISTED(1005, "Blog not existed", HttpStatus.NOT_FOUND),
 
@@ -25,8 +28,14 @@ public enum ErrorCode {
 
     //CATEGORY ERRORS
     CATEGORY_NOT_EXISTED(1005, "Category not existed", HttpStatus.NOT_FOUND),
+  
     // VOTE ERROR
     VOTETYPE_NOT_EXISTED(1005, "Vote type must be UPVOTE or DOWNVOTE", HttpStatus.NOT_FOUND),
+
+    //BOOKMARK ERRORS
+    BOOKMARK_NOT_FOUND(404, "Bookmark not found", HttpStatus.NOT_FOUND),
+    BOOKMARK_EXISTED(404, "Bookmark is existed", HttpStatus.BAD_REQUEST),
+
     ;
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

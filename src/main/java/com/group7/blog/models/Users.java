@@ -79,4 +79,7 @@ public class Users {
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Blog> blogs;
+
+    @OneToMany(mappedBy = "user")
+    private List<BookMark> bookMarks;
 }

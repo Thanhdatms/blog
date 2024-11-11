@@ -37,4 +37,7 @@ public interface BlogTagRepository extends JpaRepository<BlogTag, Integer> {
           where bt.blog.id = :blogId
           """)
     List<TagResponseBlogDetail> findAllTagsByBlogId (@Param("blogId") UUID blogId);
+
+
+    List<BlogTag> findAllByBlogId(UUID blogId);
 }
