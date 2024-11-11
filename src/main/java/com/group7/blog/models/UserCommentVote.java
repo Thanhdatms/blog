@@ -1,10 +1,16 @@
 package com.group7.blog.models;
 
 
+import com.group7.blog.enums.EnumData.VoteType;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 import java.util.UUID;
 
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class UserCommentVote {
     @Id
@@ -17,9 +23,8 @@ public class UserCommentVote {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "commentId")
     private Comment comment;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "voteId")
-    private Vote vote;
 
+    @Enumerated(EnumType.STRING)
+    private VoteType voteType;
 
 }
