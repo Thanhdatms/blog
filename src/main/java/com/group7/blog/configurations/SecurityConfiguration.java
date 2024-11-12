@@ -34,6 +34,7 @@ public class SecurityConfiguration {
             "/users",
             "/v3/api-docs/**",
             "/swagger-ui/**",
+            "auth/token"
     };
 
     @Autowired

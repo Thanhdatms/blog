@@ -4,14 +4,19 @@ package com.group7.blog.controllers;
 import com.group7.blog.dto.Auth.LoginRequest;
 import com.group7.blog.dto.Auth.TokenResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
+import com.group7.blog.enums.ErrorCode;
+import com.group7.blog.exceptions.AppException;
 import com.group7.blog.services.AuthenticationService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 @RequestMapping("/auth")
@@ -28,6 +33,21 @@ public class AuthenticationController {
         response.addCookie(cookie);
         return ApiResponse.<String>builder()
                 .result(tokens.getAccessToken())
+                .build();
+    }
+
+    @GetMapping("/token")
+    ApiResponse<String> refreshToken(HttpServletRequest request) {
+        AtomicReference<String> refreshToken = new AtomicReference<>();
+        Arrays.stream(request.getCookies()).forEach(cookie -> {
+            if(cookie.getName().equals("jwt")) {
+                if(cookie.getValue() == null || cookie.getValue().isEmpty())
+                    throw new AppException(ErrorCode.INVALID_TOKEN);
+                refreshToken.set(cookie.getValue());
+            }
+        });
+        return ApiResponse.<String>builder()
+                .result(String.valueOf(refreshToken))
                 .build();
     }
 }
