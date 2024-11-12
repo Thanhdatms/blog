@@ -13,10 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BlogVoteResponse {
-    UUID id;
     UUID blogId;
     UUID userId;
     VoteType voteType;
-    Timestamp createdAt;
-    boolean isRemove;
 }

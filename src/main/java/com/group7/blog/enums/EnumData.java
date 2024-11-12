@@ -5,7 +5,8 @@ public class EnumData {
     public enum VoteType {
         UPVOTE,
         DOWNVOTE,
-        NONE;
+        NONE,
+        ;
 
         public static VoteType fromString(String value) {
             try {

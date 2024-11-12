@@ -31,7 +31,8 @@ public enum ErrorCode {
   
     // VOTE ERROR
     VOTETYPE_NOT_EXISTED(1005, "Vote type must be UPVOTE or DOWNVOTE", HttpStatus.NOT_FOUND),
-
+    VOTE_EXISTED(404, "Vote is existed", HttpStatus.BAD_REQUEST),
+    VOTE_NOT_FOUND(404, "Vote not found", HttpStatus.NOT_FOUND),
     //BOOKMARK ERRORS
     BOOKMARK_NOT_FOUND(404, "Bookmark not found", HttpStatus.NOT_FOUND),
     BOOKMARK_EXISTED(404, "Bookmark is existed", HttpStatus.BAD_REQUEST),
