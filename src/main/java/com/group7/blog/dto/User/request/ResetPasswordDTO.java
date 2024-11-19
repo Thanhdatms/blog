@@ -1,17 +1,16 @@
 package com.group7.blog.dto.User.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserUpdateRequest {
-    String username;
-    String password;
-    String nameTag;
+public class ResetPasswordDTO {
+    @NotBlank(message = "Password cannot be blank")
+    String email;
+
 }

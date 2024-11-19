@@ -17,6 +17,8 @@ public enum ErrorCode {
     UNAUTHENTICATED(401, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_TOKEN(401, "Invalid token", HttpStatus.UNAUTHORIZED),
+    EMAIL_NOT_FOUND(404, "Email not found", HttpStatus.NOT_FOUND),
+    RESET_PASSWD_EMAIL_SENT(404, "Reset Password email has been sent", HttpStatus.BAD_REQUEST),
 
     USER_ID_INVALID(401, "User id invalid", HttpStatus.NOT_FOUND),
     USER_FOLLOW_EXISTED(401, "User follow existed", HttpStatus.FOUND),

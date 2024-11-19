@@ -12,11 +12,9 @@ import java.util.UUID;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
-    UUID id;
-    String firstname;
-    String lastname;
+    String nameTag;
     String username;
-    String hashpassword;
     String email;
-    String phonenumber;
+    String password;
+    String phoneNumber;
 }

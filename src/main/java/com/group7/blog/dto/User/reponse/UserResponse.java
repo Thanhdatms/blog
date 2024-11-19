@@ -17,8 +17,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
     UUID id;
-    String firstname;
-    String lastname;
     String username;
+    String nameTag;
     List<BlogDetailResponse> blogs;
 }

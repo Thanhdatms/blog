@@ -6,8 +6,10 @@ import com.group7.blog.dto.BookMark.response.BookMarkListResponse;
 import com.group7.blog.dto.BookMark.response.BookMarkResponse;
 import com.group7.blog.dto.Tag.response.TagResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
+import com.group7.blog.dto.User.reponse.ChangePasswordDTO;
 import com.group7.blog.dto.User.reponse.UserProfileResponse;
 import com.group7.blog.dto.User.reponse.UserResponse;
+import com.group7.blog.dto.User.request.ResetPasswordDTO;
 import com.group7.blog.dto.User.request.UserCreationRequest;
 import com.group7.blog.dto.User.request.UserFollowRequest;
 import com.group7.blog.dto.User.request.UserUpdateRequest;
@@ -131,6 +133,27 @@ public class UserController {
     ApiResponse<Boolean> isBookMarked(@PathVariable("blogId") UUID blogId) {
         return ApiResponse.<Boolean>builder()
                 .result(bookMarkService.isBookMarked(blogId))
+                .build();
+    }
+
+    @PostMapping("/reset-password")
+    ApiResponse<String> resetPassword(@RequestBody ResetPasswordDTO request) {
+        return ApiResponse.<String>builder()
+                .result(userService.resetPassword(request))
+                .build();
+    }
+
+    @GetMapping("/reset-password")
+    ApiResponse<String> verifyResetPasswordToken(@RequestParam(name = "token", required = true) String token) {
+        return ApiResponse.<String>builder()
+                .result(userService.verifyResetPasswordToken(token))
+                .build();
+    }
+
+    @PostMapping("/change-password")
+    ApiResponse<String> changePassword(@RequestBody ChangePasswordDTO request) {
+        return ApiResponse.<String>builder()
+                .result(userService.changePassword(request))
                 .build();
     }
 }

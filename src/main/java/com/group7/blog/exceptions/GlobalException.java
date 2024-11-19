@@ -67,7 +67,7 @@ public class GlobalException {
         return ResponseEntity.ok()
                 .body(ApiResponse.builder()
                         .code(errorCode.getCode())
-                        .message("asd")
+                        .message(errorCode.getMessage())
                         .build());
     }
 
@@ -77,7 +77,7 @@ public class GlobalException {
         return ResponseEntity.ok()
                 .body(ApiResponse.builder()
                         .code(errorCode.getCode())
-                        .message("asd")
+                        .message(errorCode.getMessage())
                         .build());
     }
 }
