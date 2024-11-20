@@ -1,9 +1,9 @@
-package com.group7.blog.dto.User.request;
+package com.group7.blog.dto.User.reponse;
+
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -11,13 +11,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCreationRequest {
+public class UserCommentResponse {
     UUID id;
-    String firstname;
-    String lastname;
     String username;
-    String hashpassword;
     String avatar;
-    String email;
-    String phonenumber;
 }

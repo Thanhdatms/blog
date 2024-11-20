@@ -21,6 +21,7 @@ public interface UserMapper {
     @Mapping(target = "firstname", source = "firstname")
     @Mapping(target = "lastname", source = "lastname")
     @Mapping(target = "username", source = "username")
+    @Mapping(target = "avatar", source = "avatar")
     Users toUser(UserCreationRequest request);
 
 

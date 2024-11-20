@@ -37,6 +37,11 @@ public class TagService {
     BlogRepository blogRepository;
 
     public TagResponse createTag(TagCreateRequest request) {
+
+        if(tagRepository.findOneByName(request.getName()).isPresent()){
+            throw new AppException(ErrorCode.TAG_EXISTED);
+        }
+
         Tag tag = tagMapper.toTag(request);
         return tagMapper.toTagResponse(tagRepository.save(tag));
     }

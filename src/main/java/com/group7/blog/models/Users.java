@@ -38,6 +38,9 @@ public class Users {
             message = "Password must contain at least one digit, one lowercase, one uppercase letter, and one special character")
     private String hashpassword;
 
+    @Column(columnDefinition = "TEXT")
+    private String avatar;
+
     @Column(unique = true)
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email cannot be blank")
