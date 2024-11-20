@@ -21,7 +21,6 @@ public interface UserBlogVoteMapper {
     // Map UserBlogVote to BlogVoteResponse and map blogId and userId correctly
     @Mapping(target = "blogId", source = "userBlogVote.blog.id")
     @Mapping(target = "userId", source = "userBlogVote.users.id")
-    @Mapping(target = "createdAt", source = "userBlogVote.createdAt")
     BlogVoteResponse toResponse(UserBlogVote userBlogVote);
 
     // Update existing UserBlogVote with new voteType

@@ -17,7 +17,7 @@ import java.util.UUID;
 public class UserBlogVote {
     @Id
     @GeneratedValue
-    private UUID id;
+    Integer id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private Users users;

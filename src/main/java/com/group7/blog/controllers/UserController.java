@@ -11,10 +11,13 @@ import com.group7.blog.dto.User.reponse.UserResponse;
 import com.group7.blog.dto.User.request.UserCreationRequest;
 import com.group7.blog.dto.User.request.UserFollowRequest;
 import com.group7.blog.dto.User.request.UserUpdateRequest;
+import com.group7.blog.dto.UserBlogVote.request.BlogVoteCreationRequest;
+import com.group7.blog.dto.UserBlogVote.response.BlogVoteResponse;
 import com.group7.blog.models.Blog;
 import com.group7.blog.models.UserFollow;
 import com.group7.blog.models.Users;
 import com.group7.blog.services.BookMarkService;
+import com.group7.blog.services.UserBlogVoteService;
 import com.group7.blog.services.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +35,7 @@ import java.util.UUID;
 public class UserController {
     UserService userService;
     BookMarkService bookMarkService;
+    UserBlogVoteService userBlogVoteService;
 
     @GetMapping
     List<Users> getUsers() {

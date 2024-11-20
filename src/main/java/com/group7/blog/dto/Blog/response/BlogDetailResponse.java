@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.group7.blog.dto.Category.response.CategoryResponse;
 import com.group7.blog.dto.Tag.response.TagResponseBlogDetail;
 import com.group7.blog.dto.User.reponse.UserBlogResponse;
+import com.group7.blog.dto.UserBlogVote.response.VoteResponse;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -29,6 +30,7 @@ public class BlogDetailResponse {
     List<TagResponseBlogDetail> tags;
     UserBlogResponse user;
     CategoryResponse category;
+    VoteResponse votes;
 
     public BlogDetailResponse(
             UUID id,
@@ -42,7 +44,8 @@ public class BlogDetailResponse {
             Timestamp updatedAt,
             UserBlogResponse userWithBlogResponse,
             List<TagResponseBlogDetail> tags,
-            CategoryResponse category
+            CategoryResponse category,
+            VoteResponse votes
     ) {
         this.id = id;
         this.title = title;
@@ -56,6 +59,7 @@ public class BlogDetailResponse {
         this.user = userWithBlogResponse;
         this.tags = tags;
         this.category = category;
+        this.votes = votes;
     }
 
 }
