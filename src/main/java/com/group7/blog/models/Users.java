@@ -37,6 +37,9 @@ public class Users {
     @Column(columnDefinition = "TEXT")
     private String avatar;
 
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+
     @Column(unique = true)
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email cannot be blank")

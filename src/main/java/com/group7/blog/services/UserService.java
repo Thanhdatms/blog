@@ -33,6 +33,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.BadJwtException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.util.HashMap;
@@ -41,6 +42,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.group7.blog.enums.Constant.FOLDER_NAME;
 import static com.group7.blog.enums.Constant.resetPasswordUrl;
 
 
@@ -57,6 +59,7 @@ public class UserService {
     EmailService emailService;
     TokenService tokenService;
     PasswordResetTokenRepository passwordResetTokenRepository;
+    CloudinaryService cloudinaryService;
 
     public boolean checkUserExistById(String userId) {
         return userRepository.existsById(UUID.fromString(userId));
@@ -66,11 +69,18 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Users createUser(UserCreationRequest request){
-        Users user = userMapper.toUser(request);
+    public UserResponse createUser(UserCreationRequest request, MultipartFile file){
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) throw new AppException(ErrorCode.EMAIL_REGISTERED);
+
+        if (file != null && !file.isEmpty()) {
+            request.setAvatar(cloudinaryService.uploadFile(file, FOLDER_NAME));
+        }
+
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        Users user = userMapper.toUser(request);
         user.setHashPassword(passwordEncoder.encode(request.getPassword()));
-        return userRepository.save(user);
+
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
     public Users getUser(UUID userId){

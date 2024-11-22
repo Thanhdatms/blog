@@ -21,10 +21,12 @@ import com.group7.blog.models.Users;
 import com.group7.blog.services.BookMarkService;
 import com.group7.blog.services.UserBlogVoteService;
 import com.group7.blog.services.UserService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -45,12 +47,13 @@ public class UserController {
     }
 
     @PostMapping
-    ApiResponse<Users> createUser(@RequestBody UserCreationRequest request){
-        ApiResponse<Users> usersApiResponse = new ApiResponse<>();
-        Users createdUser = userService.createUser(request);
-        usersApiResponse.setResult(createdUser);
-
-        return usersApiResponse;
+    ApiResponse<UserResponse> createUser(
+            @Valid @RequestPart("user") UserCreationRequest request,
+            @RequestPart(name = "file", required = false) MultipartFile file
+    ){
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.createUser(request, file))
+                .build();
     }
 
     @GetMapping("/{userId}")
