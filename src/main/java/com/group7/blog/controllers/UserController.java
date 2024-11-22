@@ -1,22 +1,13 @@
 package com.group7.blog.controllers;
 
 
-import com.group7.blog.dto.Blog.response.BlogResponse;
 import com.group7.blog.dto.BookMark.response.BookMarkListResponse;
 import com.group7.blog.dto.BookMark.response.BookMarkResponse;
-import com.group7.blog.dto.Tag.response.TagResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
 import com.group7.blog.dto.User.reponse.ChangePasswordDTO;
-import com.group7.blog.dto.User.reponse.UserProfileResponse;
+import com.group7.blog.dto.User.reponse.UserProfileResponseDTO;
 import com.group7.blog.dto.User.reponse.UserResponse;
-import com.group7.blog.dto.User.request.ResetPasswordDTO;
-import com.group7.blog.dto.User.request.UserCreationRequest;
-import com.group7.blog.dto.User.request.UserFollowRequest;
-import com.group7.blog.dto.User.request.UserUpdateRequest;
-import com.group7.blog.dto.UserBlogVote.request.BlogVoteCreationRequest;
-import com.group7.blog.dto.UserBlogVote.response.BlogVoteResponse;
-import com.group7.blog.models.Blog;
-import com.group7.blog.models.UserFollow;
+import com.group7.blog.dto.User.request.*;
 import com.group7.blog.models.Users;
 import com.group7.blog.services.BookMarkService;
 import com.group7.blog.services.UserBlogVoteService;
@@ -29,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -57,13 +47,11 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    ApiResponse<Users> getUser(@PathVariable("userId") UUID userId){
-        ApiResponse<Users> usersApiResponse = new ApiResponse<>();
-        Users user = userService.getUser(userId);
-        usersApiResponse.setResult(user);
-
-        return usersApiResponse;
-
+    ApiResponse<UserProfileResponseDTO> getUserProfile(@PathVariable("userId") UUID userId){
+        System.out.println(userId);
+        return ApiResponse.<UserProfileResponseDTO>builder()
+                .result(userService.getUserById(userId))
+                .build();
     }
 
     @PutMapping("/{userId}")
@@ -76,8 +64,8 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    ApiResponse<UserProfileResponse> getMe () {
-        return ApiResponse.<UserProfileResponse>builder()
+    ApiResponse<UserProfileResponseDTO> getMe () {
+        return ApiResponse.<UserProfileResponseDTO>builder()
                 .message("Get User Profile Successfully!")
                 .result(userService.getCurrentUserInfo())
                 .build();
@@ -157,6 +145,16 @@ public class UserController {
     ApiResponse<String> changePassword(@RequestBody ChangePasswordDTO request) {
         return ApiResponse.<String>builder()
                 .result(userService.changePassword(request))
+                .build();
+    }
+
+    @PutMapping("/profiles")
+    ApiResponse<UserProfileResponseDTO> updateProfile(
+            @Valid @RequestPart("userProfile") UpdateProfileRequestDTO request,
+            @RequestPart(name = "file", required = false) MultipartFile file
+    ) {
+        return ApiResponse.<UserProfileResponseDTO>builder()
+                .result(userService.updateProfile(request, file))
                 .build();
     }
 }

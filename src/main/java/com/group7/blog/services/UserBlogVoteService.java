@@ -1,9 +1,6 @@
 package com.group7.blog.services;
 
-import com.group7.blog.dto.User.reponse.UserProfileResponse;
-import com.group7.blog.dto.User.reponse.UserResponse;
-import com.group7.blog.dto.UserBlogVote.request.BlogVoteCreationRequest;
-import com.group7.blog.dto.UserBlogVote.request.CountBlogVoteRequest;
+import com.group7.blog.dto.User.reponse.UserProfileResponseDTO;
 import com.group7.blog.dto.UserBlogVote.response.BlogVoteResponse;
 import com.group7.blog.enums.EnumData.VoteType;
 import com.group7.blog.enums.ErrorCode;
@@ -20,15 +17,11 @@ import com.group7.blog.repositories.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -90,7 +83,7 @@ public class UserBlogVoteService {
         return "Remove vote successfully!";
     }
 
-    public List<UserProfileResponse> getUserVotesByBlogId(UUID blogId) {
+    public List<UserProfileResponseDTO> getUserVotesByBlogId(UUID blogId) {
         Blog blog = blogRepository.findById(blogId)
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
 

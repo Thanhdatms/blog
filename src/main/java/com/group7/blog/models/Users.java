@@ -69,10 +69,6 @@ public class Users {
 
     @JsonIgnore
     @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
-    private Set<UserBlogVote> userBlogVotes;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
     private Set<UserCommentVote> userCommentVotes;
 
     @JsonIgnore
