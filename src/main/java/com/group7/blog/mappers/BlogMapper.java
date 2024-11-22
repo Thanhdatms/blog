@@ -60,6 +60,7 @@ public interface BlogMapper {
 
     @Named("mapVotes")
     public default VoteResponse mapVotes(List<UserBlogVote> userBlogVotes) {
+        if(userBlogVotes == null) return null;
         VoteResponse voteResponse = new VoteResponse();
         userBlogVotes.forEach(vote -> {
             if(vote.getVoteType().equals(EnumData.VoteType.UPVOTE))

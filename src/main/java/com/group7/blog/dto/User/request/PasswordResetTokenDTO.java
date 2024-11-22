@@ -1,17 +1,18 @@
 package com.group7.blog.dto.User.request;
 
+import com.group7.blog.models.Users;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserUpdateRequest {
-    String username;
-    String password;
-    String nameTag;
+public class PasswordResetTokenDTO {
+    String token;
+    Date expiryDate;
+    Users user;
 }

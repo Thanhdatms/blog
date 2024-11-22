@@ -12,7 +12,6 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserProfileResponse {
     UUID id;
-    String firstname;
-    String lastname;
     String username;
+    String nameTag;
 }
