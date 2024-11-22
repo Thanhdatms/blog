@@ -1,11 +1,11 @@
 package com.group7.blog.services;
 
 import com.group7.blog.dto.Auth.TokenCreation;
-import com.group7.blog.dto.Auth.TokenResponse;
 import com.group7.blog.dto.User.reponse.ChangePasswordDTO;
-import com.group7.blog.dto.User.reponse.UserProfileResponse;
+import com.group7.blog.dto.User.reponse.UserProfileResponseDTO;
 import com.group7.blog.dto.User.reponse.UserResponse;
 import com.group7.blog.dto.User.request.ResetPasswordDTO;
+import com.group7.blog.dto.User.request.UpdateProfileRequestDTO;
 import com.group7.blog.dto.User.request.UserCreationRequest;
 import com.group7.blog.dto.User.request.UserUpdateRequest;
 import com.group7.blog.enums.ErrorCode;
@@ -24,15 +24,14 @@ import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.BadJwtException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.util.HashMap;
@@ -41,6 +40,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.group7.blog.enums.Constant.FOLDER_NAME;
 import static com.group7.blog.enums.Constant.resetPasswordUrl;
 
 
@@ -57,6 +57,7 @@ public class UserService {
     EmailService emailService;
     TokenService tokenService;
     PasswordResetTokenRepository passwordResetTokenRepository;
+    CloudinaryService cloudinaryService;
 
     public boolean checkUserExistById(String userId) {
         return userRepository.existsById(UUID.fromString(userId));
@@ -73,8 +74,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Users getUser(UUID userId){
-        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("The user is not exist"));
+    public UserProfileResponseDTO getUserById(UUID userId){
+        Users user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("The user is not exist"));
+        return userMapper.toUserProfileResponse(user);
     }
 
     public UserResponse updateUser(UUID userId, UserUpdateRequest request){
@@ -86,7 +89,7 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    public UserProfileResponse getCurrentUserInfo() {
+    public UserProfileResponseDTO getCurrentUserInfo() {
         SecurityContext context = SecurityContextHolder.getContext();
         String userId = context.getAuthentication().getName();
 
@@ -227,5 +230,24 @@ public class UserService {
         return "Change Password Successfully!";
     }
 
+    public UserProfileResponseDTO updateProfile(
+            UpdateProfileRequestDTO request,
+            MultipartFile file
+    ) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        String userId = context.getAuthentication().getName();
 
+        Users user = userRepository.findById(UUID.fromString(userId)).
+                orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        if (file != null && !file.isEmpty()) {
+            request.setAvatar(cloudinaryService.uploadFile(file, FOLDER_NAME));
+        }
+
+        userMapper.updateUserProfile(user, request);
+        user.setAvatar(request.getAvatar());
+        userRepository.save(user);
+
+        return userMapper.toUserProfileResponse(user);
+    }
 }
