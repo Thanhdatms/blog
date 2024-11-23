@@ -19,5 +19,7 @@ public class UserResponse {
     UUID id;
     String username;
     String nameTag;
+    String avatar;
+    String bio;
     List<BlogDetailResponse> blogs;
 }

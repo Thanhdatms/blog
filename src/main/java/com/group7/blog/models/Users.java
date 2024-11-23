@@ -37,6 +37,9 @@ public class Users {
     @Column(columnDefinition = "TEXT")
     private String avatar;
 
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+
     @Column(unique = true)
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email cannot be blank")
@@ -63,10 +66,6 @@ public class Users {
     protected void onUpdate() {
         updatedAt = Timestamp.from(Instant.now());
     }
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
-    private Set<UserBlogVote> userBlogVotes;
 
     @JsonIgnore
     @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)

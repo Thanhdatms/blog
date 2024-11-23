@@ -2,19 +2,14 @@ package com.group7.blog.controllers;
 
 import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
-import com.group7.blog.dto.BlogTag.BlogTagResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
 import com.group7.blog.dto.Blog.request.BlogCreationRequest;
 import com.group7.blog.dto.Blog.request.BlogUpdateRequest;
-import com.group7.blog.dto.User.reponse.UserProfileResponse;
-import com.group7.blog.dto.User.reponse.UserResponse;
-import com.group7.blog.dto.UserBlogVote.request.BlogVoteCreationRequest;
+import com.group7.blog.dto.User.reponse.UserProfileResponseDTO;
 import com.group7.blog.dto.UserBlogVote.response.BlogVoteResponse;
 import com.group7.blog.enums.EnumData;
-import com.group7.blog.models.Blog;
 import com.group7.blog.services.BlogService;
 import com.group7.blog.services.UserBlogVoteService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -84,8 +79,8 @@ public class BlogController {
     }
 
     @GetMapping("/{blogId}/users/votes")
-    ApiResponse<List<UserProfileResponse>> getListUsersVotes(@PathVariable("blogId") UUID blogId) {
-        return ApiResponse.<List<UserProfileResponse>>builder()
+    ApiResponse<List<UserProfileResponseDTO>> getListUsersVotes(@PathVariable("blogId") UUID blogId) {
+        return ApiResponse.<List<UserProfileResponseDTO>>builder()
                 .result(userBlogVoteService.getUserVotesByBlogId(blogId))
                 .build();
     }
