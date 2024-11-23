@@ -37,12 +37,13 @@ public class UserController {
     }
 
     @PostMapping
-    ApiResponse<Users> createUser(@RequestBody UserCreationRequest request){
-        ApiResponse<Users> usersApiResponse = new ApiResponse<>();
-        Users createdUser = userService.createUser(request);
-        usersApiResponse.setResult(createdUser);
-
-        return usersApiResponse;
+    ApiResponse<UserResponse> createUser(
+            @Valid @RequestPart("user") UserCreationRequest request,
+            @RequestPart(name = "file", required = false) MultipartFile file
+    ){
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.createUser(request, file))
+                .build();
     }
 
     @GetMapping("/{userId}")

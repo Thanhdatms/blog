@@ -19,4 +19,5 @@ public interface UserRepository extends JpaRepository<Users, UUID> {
     Users findUserWithBlogsById(@Param("userId") UUID userId);
 
     Optional<Users> findByEmail(String email);
+    Users findOneByEmail(String email);
 }

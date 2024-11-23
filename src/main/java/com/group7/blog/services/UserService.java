@@ -67,11 +67,18 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Users createUser(UserCreationRequest request){
-        Users user = userMapper.toUser(request);
+    public UserResponse createUser(UserCreationRequest request, MultipartFile file){
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) throw new AppException(ErrorCode.EMAIL_REGISTERED);
+
+        if (file != null && !file.isEmpty()) {
+            request.setAvatar(cloudinaryService.uploadFile(file, FOLDER_NAME));
+        }
+
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        Users user = userMapper.toUser(request);
         user.setHashPassword(passwordEncoder.encode(request.getPassword()));
-        return userRepository.save(user);
+
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
     public UserProfileResponseDTO getUserById(UUID userId){
