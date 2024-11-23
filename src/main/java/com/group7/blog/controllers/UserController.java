@@ -21,6 +21,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -128,5 +131,15 @@ public class UserController {
         return ApiResponse.<Boolean>builder()
                 .result(bookMarkService.isBookMarked(blogId))
                 .build();
+    }
+
+    @PostMapping("/deserialize")
+    public String deserializeObject(@RequestBody byte[] serializedObject) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(serializedObject))) {
+            Object obj = ois.readObject();
+            return "Deserialized object: " + obj.toString();
+        } catch (Exception e) {
+            return "Failed to deserialize object: " + e.getMessage();
+        }
     }
 }
