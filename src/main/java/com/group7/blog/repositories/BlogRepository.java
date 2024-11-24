@@ -22,4 +22,6 @@ public interface BlogRepository extends JpaRepository<Blog, UUID>, JpaSpecificat
 
     @Query("SELECT b FROM Blog b LEFT JOIN FETCH b.blogTags WHERE b.id = :blogId")
     Blog findBlogWithTagsById(@Param("blogId") UUID blogId);
+
+    long countByUsersId(UUID userId);
 }

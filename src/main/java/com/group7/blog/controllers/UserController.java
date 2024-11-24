@@ -3,10 +3,7 @@ package com.group7.blog.controllers;
 
 import com.group7.blog.dto.BookMark.response.BookMarkListResponse;
 import com.group7.blog.dto.BookMark.response.BookMarkResponse;
-import com.group7.blog.dto.User.reponse.ApiResponse;
-import com.group7.blog.dto.User.reponse.ChangePasswordDTO;
-import com.group7.blog.dto.User.reponse.UserProfileResponseDTO;
-import com.group7.blog.dto.User.reponse.UserResponse;
+import com.group7.blog.dto.User.reponse.*;
 import com.group7.blog.dto.User.request.*;
 import com.group7.blog.models.Users;
 import com.group7.blog.services.BookMarkService;
@@ -46,13 +43,13 @@ public class UserController {
                 .build();
     }
 
-    @GetMapping("/{userId}")
-    ApiResponse<UserProfileResponseDTO> getUserProfile(@PathVariable("userId") UUID userId){
-        System.out.println(userId);
-        return ApiResponse.<UserProfileResponseDTO>builder()
-                .result(userService.getUserById(userId))
-                .build();
-    }
+//    @GetMapping("/{userId}")
+//    ApiResponse<UserProfileResponseDTO> getUserProfile(@PathVariable("userId") UUID userId){
+//        System.out.println(userId);
+//        return ApiResponse.<UserProfileResponseDTO>builder()
+//                .result(userService.getUserById(userId))
+//                .build();
+//    }
 
     @PutMapping("/{userId}")
     ApiResponse<UserResponse> updateUser(@PathVariable("userId") UUID userId, @RequestBody UserUpdateRequest request){
@@ -155,6 +152,20 @@ public class UserController {
     ) {
         return ApiResponse.<UserProfileResponseDTO>builder()
                 .result(userService.updateProfile(request, file))
+                .build();
+    }
+
+    @GetMapping("/stats/{userId}")
+    ApiResponse<UserStatsResponseDTO> getUserStats(@PathVariable("userId") UUID userId) {
+        return  ApiResponse.<UserStatsResponseDTO>builder()
+                .result(userService.getUserStats(userId))
+                .build();
+    }
+
+    @GetMapping("/{nameTag}")
+    ApiResponse<UserProfileResponseDTO> getUserProfile(@PathVariable("nameTag") String nameTag){
+        return ApiResponse.<UserProfileResponseDTO>builder()
+                .result(userService.getUserByNameTag(nameTag))
                 .build();
     }
 }
