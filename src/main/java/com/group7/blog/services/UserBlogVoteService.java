@@ -91,4 +91,14 @@ public class UserBlogVoteService {
                 vote -> userMapper.toUserProfileResponse(vote.getUsers())
         ).toList();
     }
+
+    public Boolean checkIsVoted(UUID blogId) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        String userId = context.getAuthentication().getName();
+
+        Blog blog = blogRepository.findById(blogId)
+                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
+
+        return userBlogVoteRepository.findByUsersIdAndBlogId(UUID.fromString(userId), blogId).isPresent();
+    }
 }

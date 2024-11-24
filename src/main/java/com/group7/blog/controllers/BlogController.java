@@ -84,4 +84,11 @@ public class BlogController {
                 .result(userBlogVoteService.getUserVotesByBlogId(blogId))
                 .build();
     }
+
+    @GetMapping("/{blogId}/user/is-voted")
+    ApiResponse<Boolean> isVote(@PathVariable("blogId") UUID blogId) {
+        return  ApiResponse.<Boolean>builder()
+                .result(userBlogVoteService.checkIsVoted(blogId))
+                .build();
+    }
 }
