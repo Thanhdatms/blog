@@ -86,8 +86,8 @@ public class BlogController {
     }
 
     @GetMapping("/{blogId}/user/is-voted")
-    ApiResponse<Boolean> isVote(@PathVariable("blogId") UUID blogId) {
-        return  ApiResponse.<Boolean>builder()
+    ApiResponse<BlogVoteResponse> isVote(@PathVariable("blogId") UUID blogId) {
+        return  ApiResponse.<BlogVoteResponse>builder()
                 .result(userBlogVoteService.checkIsVoted(blogId))
                 .build();
     }
