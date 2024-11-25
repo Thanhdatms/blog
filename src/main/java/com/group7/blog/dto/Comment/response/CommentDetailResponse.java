@@ -1,7 +1,6 @@
 package com.group7.blog.dto.Comment.response;
 
-import com.group7.blog.dto.User.reponse.UserCommentResponse;
-import com.group7.blog.dto.User.reponse.UserResponse;
+import com.group7.blog.dto.User.reponse.UserInfoResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,6 +17,6 @@ public class CommentDetailResponse {
     String content;
     UUID parentId;
     boolean isUpdate;
-    UserCommentResponse user;
+    UserInfoResponse user;
     List<CommentDetailResponse> children;
 }

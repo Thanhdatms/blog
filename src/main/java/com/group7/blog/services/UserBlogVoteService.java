@@ -49,9 +49,10 @@ public class UserBlogVoteService {
 
         UserBlogVote existingVoteOpt = userBlogVoteRepository.findByUsersAndBlog(user, blog);
         if (existingVoteOpt != null){
-            if(existingVoteOpt.getVoteType().equals(voteType))
-                throw new AppException(ErrorCode.VOTE_EXISTED);
-            userBlogVoteRepository.delete(existingVoteOpt);
+            if(existingVoteOpt.getVoteType().equals(voteType)){
+                userBlogVoteRepository.delete(existingVoteOpt);
+                return userBlogVoteMapper.toResponse(existingVoteOpt);
+            }
         }
         // Create a new vote
         UserBlogVote newVote = new UserBlogVote();

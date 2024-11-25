@@ -61,4 +61,7 @@ public class Blog {
     Set<Comment> comments;
     @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
     List<UserBlogVote> userBlogVotes;
+
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Report> reports;
 }
