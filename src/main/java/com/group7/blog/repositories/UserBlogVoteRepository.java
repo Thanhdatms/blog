@@ -16,4 +16,5 @@ public interface UserBlogVoteRepository extends JpaRepository<UserBlogVote, Inte
     UserBlogVote findByUsersAndBlog(Users user, Blog blog);
     Long countByBlog_IdAndVoteType(UUID blogId, VoteType voteType);
     List<UserBlogVote> findAllByBlogId(UUID blogId);
+    UserBlogVote findByUsersIdAndBlogId(UUID userId, UUID blogId);
 }

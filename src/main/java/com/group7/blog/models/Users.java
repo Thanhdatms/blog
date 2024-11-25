@@ -22,9 +22,11 @@ public class Users {
     @GeneratedValue
     private UUID id;
 
+    @NotBlank(message = "Username cannot be blank")
     @Column(unique = true)
     private String username;
 
+    @NotBlank(message = "NameTag cannot be blank")
     @Column(unique = true)
     private String nameTag;
 

@@ -4,6 +4,7 @@ import com.group7.blog.dto.Auth.TokenCreation;
 import com.group7.blog.dto.User.reponse.ChangePasswordDTO;
 import com.group7.blog.dto.User.reponse.UserProfileResponseDTO;
 import com.group7.blog.dto.User.reponse.UserResponse;
+import com.group7.blog.dto.User.reponse.UserStatsResponseDTO;
 import com.group7.blog.dto.User.request.ResetPasswordDTO;
 import com.group7.blog.dto.User.request.UpdateProfileRequestDTO;
 import com.group7.blog.dto.User.request.UserCreationRequest;
@@ -84,6 +85,14 @@ public class UserService {
     public UserProfileResponseDTO getUserById(UUID userId){
         Users user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("The user is not exist"));
+
+        return userMapper.toUserProfileResponse(user);
+    }
+
+    public UserProfileResponseDTO getUserByNameTag(String nameTag){
+        Users user = userRepository.findByNameTag(nameTag)
+                .orElseThrow(() -> new RuntimeException("User is not exist"));
+
         return userMapper.toUserProfileResponse(user);
     }
 
@@ -256,5 +265,14 @@ public class UserService {
         userRepository.save(user);
 
         return userMapper.toUserProfileResponse(user);
+    }
+
+    public UserStatsResponseDTO getUserStats(UUID userId) {
+        UserStatsResponseDTO userStatsResponseDTO = new UserStatsResponseDTO();
+        userStatsResponseDTO.setId(userId);
+        userStatsResponseDTO.setFollowing(userFollowRepository.countByUserSourceId(userId));
+        userStatsResponseDTO.setFollowers(userFollowRepository.countByUserTargetIdId(userId));
+        userStatsResponseDTO.setPosts(blogRepository.countByUsersId(userId));
+        return userStatsResponseDTO;
     }
 }

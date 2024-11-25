@@ -6,12 +6,15 @@ import com.group7.blog.dto.User.reponse.UserResponse;
 import com.group7.blog.dto.User.request.UpdateProfileRequestDTO;
 import com.group7.blog.dto.User.request.UserCreationRequest;
 import com.group7.blog.dto.User.request.UserUpdateRequest;
+import com.group7.blog.dto.UserBlogVote.response.VoteResponse;
+import com.group7.blog.enums.EnumData;
+import com.group7.blog.models.UserBlogVote;
+import com.group7.blog.models.UserFollow;
 import com.group7.blog.models.Users;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
