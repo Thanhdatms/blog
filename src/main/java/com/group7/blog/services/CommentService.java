@@ -5,8 +5,7 @@ import com.group7.blog.dto.Comment.request.CommentCreationRequest;
 import com.group7.blog.dto.Comment.response.CommentDetailResponse;
 import com.group7.blog.dto.Comment.response.CommentResponse;
 import com.group7.blog.dto.Comment.response.CommentStatusResponse;
-import com.group7.blog.dto.User.reponse.UserCommentResponse;
-import com.group7.blog.dto.User.reponse.UserResponse;
+import com.group7.blog.dto.User.reponse.UserInfoResponse;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.mappers.CommentMapper;
@@ -132,7 +131,7 @@ public class CommentService {
 
         Users user = userRepository.findById(UUID
                         .fromString(userId))
-                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Blog blog = blogRepository.findById(UUID.fromString(blogId))
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
@@ -156,7 +155,7 @@ public class CommentService {
                 comment.getParentComment().getId() : null);
         response.setUpdate(comment.isUpdate());
 
-        UserCommentResponse user = new UserCommentResponse();
+        UserInfoResponse user = new UserInfoResponse();
         user.setId(comment.getUsers().getId());
         user.setUsername(comment.getUsers().getUsername());
         user.setAvatar(comment.getUsers().getAvatar());
@@ -170,5 +169,4 @@ public class CommentService {
 
         return response;
     }
-
 }
