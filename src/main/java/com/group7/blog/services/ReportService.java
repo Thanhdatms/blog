@@ -2,9 +2,7 @@ package com.group7.blog.services;
 
 import com.group7.blog.dto.Report.reponse.ReportResponse;
 import com.group7.blog.dto.Report.request.ReportCreationRequest;
-import com.group7.blog.dto.Report.request.ReportDetailResponse;
-import com.group7.blog.dto.User.reponse.UserInfoResponse;
-import com.group7.blog.enums.EnumData;
+import com.group7.blog.dto.Report.reponse.ReportDetailResponse;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.mappers.ReportMapper;

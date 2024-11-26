@@ -102,5 +102,4 @@ public class BlogController {
                 .result(blogService.searchBlog(keyword, page, size))
                 .build();
     }
-
 }

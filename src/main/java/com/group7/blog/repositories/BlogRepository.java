@@ -26,8 +26,6 @@ public interface BlogRepository extends JpaRepository<Blog, UUID>, JpaSpecificat
     Blog findBlogWithTagsById(@Param("blogId") UUID blogId);
 
     long countByUsersId(UUID userId);
-
-
     @Query("SELECT DISTINCT b FROM Blog b " +
             "LEFT JOIN b.category c " +
             "LEFT JOIN b.blogTags bt " +

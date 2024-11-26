@@ -136,18 +136,14 @@ public class BlogService {
     public List<BlogResponse> searchBlog(String keyword, int page, int size){
         SecurityContext context = SecurityContextHolder.getContext();
         String userId = context.getAuthentication().getName();
-
         Users user = userRepository
                 .findById(UUID
                         .fromString(userId))
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
         Pageable pageable = PageRequest.of(page, size);
         Page<Blog> blogs = blogRepository.searchBlogs(keyword, pageable);
-
         return blogs.getContent().stream()
                 .map(blogMapper::toBlogResponse)
                 .collect(Collectors.toList());
     }
-
 }
