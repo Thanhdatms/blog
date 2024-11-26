@@ -1,12 +1,8 @@
 package com.group7.blog.mappers;
 
 import com.group7.blog.dto.Report.reponse.ReportResponse;
-import com.group7.blog.dto.Report.request.ReportDetailResponse;
+import com.group7.blog.dto.Report.reponse.ReportDetailResponse;
 import com.group7.blog.models.Report;
-import jakarta.persistence.Entity;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

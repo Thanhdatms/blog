@@ -3,7 +3,7 @@ package com.group7.blog.controllers;
 
 import com.group7.blog.dto.Report.reponse.ReportResponse;
 import com.group7.blog.dto.Report.request.ReportCreationRequest;
-import com.group7.blog.dto.Report.request.ReportDetailResponse;
+import com.group7.blog.dto.Report.reponse.ReportDetailResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
 import com.group7.blog.services.ReportService;
 import jakarta.validation.Valid;

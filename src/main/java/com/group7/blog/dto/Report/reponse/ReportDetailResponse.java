@@ -1,4 +1,4 @@
-package com.group7.blog.dto.Report.request;
+package com.group7.blog.dto.Report.reponse;
 
 import com.group7.blog.dto.Report.reponse.ReportResponse;
 import com.group7.blog.dto.User.reponse.UserInfoResponse;

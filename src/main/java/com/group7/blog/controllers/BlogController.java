@@ -91,4 +91,15 @@ public class BlogController {
                 .result(userBlogVoteService.checkIsVoted(blogId))
                 .build();
     }
+
+    @GetMapping("/searchblogs")
+    ApiResponse<List<BlogResponse>> searchBlog(
+            @RequestParam("keyword") String keyword,
+            @RequestParam("size") int size,
+            @RequestParam("page") int page
+    ){
+        return ApiResponse.<List<BlogResponse>>builder()
+                .result(blogService.searchBlog(keyword, page, size))
+                .build();
+    }
 }
