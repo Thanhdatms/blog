@@ -16,5 +16,23 @@ public class EnumData {
         }
     }
 
+    public enum HistoryActionType {
+        LOGIN,
+        CREATE,
+        UPDATE,
+        DELETE;
 
+        public static HistoryActionType fromString(String value) {
+            return HistoryActionType.valueOf(value);
+        }
+    }
+
+    public enum HistoryActionStatus {
+        SUCCESSFUL,
+        FAILED;
+
+        public static HistoryActionStatus fromString(String value) {
+            return HistoryActionStatus.valueOf(value);
+        }
+    }
 }

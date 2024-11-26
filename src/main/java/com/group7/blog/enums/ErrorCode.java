@@ -13,6 +13,8 @@ public enum ErrorCode {
 
     // USER ERRORS
     USER_EXISTED(1002, "User existed", HttpStatus.BAD_REQUEST),
+    PASSWORD_INCORRECT(1001, "Password is incorrect", HttpStatus.BAD_REQUEST),
+    IS_LOCKED(1003, "User account is locked! Please try again after 15 minutes!", HttpStatus.LOCKED),
     USER_NOT_EXISTED(1003, "User not existed", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(401, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),

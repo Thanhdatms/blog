@@ -7,7 +7,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -82,4 +84,13 @@ public class Users {
 
     @OneToMany(mappedBy = "user")
     private List<BookMark> bookMarks;
+
+    @ColumnDefault("0")
+    private Integer loginFailedCount;
+
+    @ColumnDefault("false")
+    private Boolean isLock;
+
+    @OneToMany(mappedBy = "users")
+    private List<History> histories;
 }
