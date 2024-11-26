@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCommentResponse {
+public class UserInfoResponse {
     UUID id;
     String username;
     String avatar;

@@ -7,15 +7,27 @@ public class EnumData {
         DOWNVOTE,
         NONE,
         ;
-
         public static VoteType fromString(String value) {
             try {
                 return VoteType.valueOf(value);
             } catch (IllegalArgumentException e) {
-                return NONE;  // Default value if invalid
+                return NONE;
             }
         }
     }
 
+    public enum ReportType{
+        SPAM,
+        OFFENSIVE,
+        INCORRECT,
+        OTHER
+    }
 
+    public static ReportType fromString(String value) {
+        try {
+            return ReportType.valueOf(value);
+        } catch (IllegalArgumentException e){
+            return ReportType.OTHER;
+        }
+    }
 }
