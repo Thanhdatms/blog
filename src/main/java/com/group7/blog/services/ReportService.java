@@ -106,11 +106,5 @@ public class ReportService {
         return reportPage.getContent().stream()
                 .map(reportMapper::toReportDetailResponse)
                 .collect(Collectors.toList());
-
-
-
     }
-
-
-
 }

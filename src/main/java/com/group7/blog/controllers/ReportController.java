@@ -52,7 +52,4 @@ public class ReportController {
                 .result(reportService.getListUserReport(username, page, size))
                 .build();
     }
-
-
-
 }
