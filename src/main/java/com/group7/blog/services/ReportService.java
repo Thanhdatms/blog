@@ -70,49 +70,45 @@ public class ReportService {
 
 
 
-    public List<ReportDetailResponse> getListReport(int page, int size){
-        SecurityContext context = SecurityContextHolder.getContext();
-        String userId = context.getAuthentication().getName();
+    public List<ReportDetailResponse> getListReport(int page, int size) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Users user = userRepository.findById(UUID
-                        .fromString(userId))
+        // Validate User
+        userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        // Pagination with sorting
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        // Fetch paginated Reports
+        Page<Report> paginatedReports = reportRepository.findAll(pageable);
+
+        // Map reports to responses
+        return paginatedReports.getContent().stream()
+                .map(reportMapper::toReportDetailResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<ReportDetailResponse> getListUserReport(String username, int page, int size){
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+
+        Users user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        Page<Report> topLevelReports = reportRepository.findAll(pageable);
+        Page<Report> reportPage = reportRepository.findByUsers(user, pageable);
 
-        return topLevelReports.getContent().stream()
-                .map(this::mapToReportDetailResponse)
+        return reportPage.getContent().stream()
+                .map(reportMapper::toReportDetailResponse)
                 .collect(Collectors.toList());
 
-//        return topLevelReports.stream()
-//                .map(reportMapper::toReportDetailResponse)
-//                .collect(Collectors.toList());
-    }
 
 
-
-    private ReportDetailResponse mapToReportDetailResponse(Report report){
-        ReportDetailResponse response = new ReportDetailResponse();
-
-        response.setThumbnail(report.getBlog().getThumbnail());
-        response.setBlogTitle(report.getBlog().getTitle());
-
-        UserInfoResponse user = new UserInfoResponse();
-        user.setId(report.getUsers().getId());
-        user.setUsername(report.getUsers().getUsername());
-        user.setAvatar(report.getUsers().getAvatar());
-
-        ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setBlogId(report.getBlog().getId());
-        reportResponse.setReportType(EnumData.ReportType.valueOf(report.getReportType().toString()));
-        reportResponse.setDescription(report.getDescription());
-        reportResponse.setCreatedAt(report.getCreatedAt());
-
-        response.setReportResponse(reportResponse);
-        response.setUser(user);
-        return response;
     }
 
 

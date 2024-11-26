@@ -17,5 +17,4 @@ public class ReportDetailResponse {
     String thumbnail;
     ReportResponse reportResponse;
     UserInfoResponse user;
-    EnumData.ReportType reportType;
 }
