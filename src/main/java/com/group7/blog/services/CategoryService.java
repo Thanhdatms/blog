@@ -28,6 +28,10 @@ public class CategoryService {
     BlogMapper blogMapper;
 
     public Category createCategory(CategoryCreateRequest request) {
+
+        if (categoryRepository.findOneByTitle(request.getTitle()).isPresent()){
+            throw new AppException(ErrorCode.CATEGORY_EXISTED);
+        }
         return categoryRepository.save(
                 categoryMapper.toCategory(request)
         );

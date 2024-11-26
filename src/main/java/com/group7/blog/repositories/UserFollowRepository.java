@@ -16,4 +16,6 @@ public interface UserFollowRepository extends JpaRepository<UserFollow, UUID> {
     @Query("Select u from UserFollow u where u.userSourceId=:userSourceId and u.userTargetId.id=:userTargetId")
     UserFollow findByUserTargetSourceId(@Param("userTargetId") UUID userTargetId, @Param("userSourceId") UUID userSourceId);
 
+    long countByUserSourceId(UUID userSourceId);
+    long countByUserTargetIdId(UUID userTargetId);
 }

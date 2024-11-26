@@ -6,14 +6,18 @@ import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
 import com.group7.blog.dto.Blog.response.UserWithBlogDetail;
 import com.group7.blog.dto.Tag.response.TagResponseBlogDetail;
+import com.group7.blog.dto.UserBlogVote.response.VoteResponse;
+import com.group7.blog.enums.EnumData;
 import com.group7.blog.models.Blog;
 import com.group7.blog.models.BlogTag;
+import com.group7.blog.models.UserBlogVote;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -35,6 +39,7 @@ public interface BlogMapper {
     @Mapping(source = "users", target = "user")
     @Mapping(source = "category", target = "category")
     @Mapping(source = "blogTags", target = "tags", qualifiedByName = "mapTags")
+    @Mapping(source = " userBlogVotes", target = "votes", qualifiedByName = "mapVotes")
     BlogDetailResponse toBlogDetailResponse(Blog blog);
 
     @Mapping(source = "blogTags", target = "tags", qualifiedByName = "mapTags")
@@ -51,6 +56,19 @@ public interface BlogMapper {
                         blogTag.getTag().getName()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Named("mapVotes")
+    public default VoteResponse mapVotes(List<UserBlogVote> userBlogVotes) {
+        if(userBlogVotes == null) return null;
+        VoteResponse voteResponse = new VoteResponse();
+        userBlogVotes.forEach(vote -> {
+            if(vote.getVoteType().equals(EnumData.VoteType.UPVOTE))
+                voteResponse.setUpVote(voteResponse.getUpVote() + 1);
+            else
+                voteResponse.setDownVote(voteResponse.getDownVote() + 1);
+        });
+        return voteResponse;
     }
 }
 

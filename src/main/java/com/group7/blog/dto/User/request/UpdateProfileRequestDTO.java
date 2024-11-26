@@ -1,17 +1,17 @@
-package com.group7.blog.dto.User.reponse;
+package com.group7.blog.dto.User.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserBlogResponse {
-    UUID id;
-    String username;
+public class UpdateProfileRequestDTO {
     String nameTag;
+    String username;
+    String phoneNumber;
+    String bio;
+    String avatar;
 }

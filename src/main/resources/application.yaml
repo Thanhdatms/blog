@@ -17,6 +17,19 @@ spring:
       enabled: true
       max-file-size: 10MB
       max-request-size: 100MB
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${GM_USERNAME}
+    password: ${GM_PASSWORD}
+    transport:
+      protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 cloudinary:
   cloud-name: ${CLOUDINARY_NAME}
   api-key: ${CLOUDINARY_API_KEY}
@@ -24,9 +37,11 @@ cloudinary:
 jwt:
   access-key: ${ACCESS_TOKEN_KEY_SECRET}
   refresh-key: ${REFRESH_TOKEN_KEY_SECRET}
-  valid-duration: ${VALID_DURATION:5}
-  refreshable-duration: ${REFRESHABLE-DURATION:15}
+  valid-duration: ${VALID_DURATION:1}
+  refreshable-duration: ${REFRESHABLE_DURATION:15}
+  reset-password-duration: ${RESETTABLE_DURATION:30}
 server:
   cookie:
     domain: ${DOMAIN_COOKIE_DEV}
     path: ${PATH_COOKIE_DEV}
+  domain-url: ${BASE_DEV_URL}

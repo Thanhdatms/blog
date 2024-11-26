@@ -60,5 +60,5 @@ public class Blog {
     @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
     Set<Comment> comments;
     @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
-    Set<UserBlogVote> userBlogVotes;
+    List<UserBlogVote> userBlogVotes;
 }

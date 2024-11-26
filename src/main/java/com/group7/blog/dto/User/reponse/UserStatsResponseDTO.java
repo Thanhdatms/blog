@@ -4,14 +4,14 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.UUID;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserBlogResponse {
+public class UserStatsResponseDTO {
     UUID id;
-    String username;
-    String nameTag;
+    Long posts;
+    Long following;
+    Long followers;
 }

@@ -41,23 +41,33 @@ public class TokenService {
     @Value("${jwt.refreshable-duration}")
     protected long REFRESHABLE_DURATION;
 
+    @NonFinal
+    @Value("${jwt.reset-password-duration}")
+    protected long RESETTABLE_DURATION;
+
     public TokenResponse generateToken(TokenCreation body) {
         // covert Java object to JSON strings
         // output: {"name":"mkyong","age":42}
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
-        String accessToken = signToken(jwsHeader, ACCESS_KEY, body, (int) VALID_DURATION);
-        String refreshToken = signToken(jwsHeader, REFRESH_KEY, body, (int) REFRESHABLE_DURATION);
+        String accessToken = signToken(jwsHeader, ACCESS_KEY, body, (int) VALID_DURATION, ChronoUnit.DAYS);
+        String refreshToken = signToken(jwsHeader, REFRESH_KEY, body, (int) REFRESHABLE_DURATION, ChronoUnit.DAYS);
         return new TokenResponse(accessToken, refreshToken);
     }
 
-    private String signToken (JWSHeader algo, String KEY, TokenCreation body, Integer days) {
+    public String generateResetPasswordToken(TokenCreation body) {
+        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
+        return signToken(jwsHeader, ACCESS_KEY, body, (int) RESETTABLE_DURATION, ChronoUnit.MINUTES);
+    }
+
+
+    private String signToken (JWSHeader algo, String KEY, TokenCreation body, Integer duration, ChronoUnit type) {
         try {
             JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                     .subject(body.getUserId().toString())
                     .issuer("group7.com")
                     .issueTime(new Date())
                     .expirationTime(new Date(
-                            Instant.now().plus(days, ChronoUnit.DAYS).toEpochMilli()
+                            Instant.now().plus(duration, type).toEpochMilli()
                     ))
                     .claim("username", body.getUsername())
                     .build();

@@ -17,9 +17,10 @@ public class Tag {
     @Id
     @GeneratedValue
     UUID id;
+
+    @Column(unique = true)
     String name;
     String description;
-
     @OneToMany(mappedBy = "tag")
     List<BlogTag> blogTags;
 }

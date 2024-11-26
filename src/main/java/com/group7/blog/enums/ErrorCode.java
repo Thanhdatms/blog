@@ -19,25 +19,36 @@ public enum ErrorCode {
     UNAUTHENTICATED(401, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_TOKEN(401, "Invalid token", HttpStatus.UNAUTHORIZED),
+    EMAIL_NOT_FOUND(404, "Email not found", HttpStatus.NOT_FOUND),
+    EMAIL_REGISTERED(404, "Email has been registered to another account", HttpStatus.BAD_REQUEST),
+    RESET_PASSWD_EMAIL_SENT(404, "Reset Password email has been sent", HttpStatus.BAD_REQUEST),
 
     USER_ID_INVALID(401, "User id invalid", HttpStatus.NOT_FOUND),
     USER_FOLLOW_EXISTED(401, "User follow existed", HttpStatus.FOUND),
     // BLOG ERRORS
     BLOG_NOT_EXISTED(1005, "Blog not existed", HttpStatus.NOT_FOUND),
 
+    // parent comment not existed
+    PARENT_COMMENT_NOT_EXISTED(1005, "parent comment not existed", HttpStatus.NOT_FOUND),
+
     // TAG ERRORS
     TAG_NOT_EXISTED(1005, "Tag not existed", HttpStatus.NOT_FOUND),
-
+    TAG_EXISTED(401, "Tag is already existed", HttpStatus.BAD_REQUEST),
     //CATEGORY ERRORS
     CATEGORY_NOT_EXISTED(1005, "Category not existed", HttpStatus.NOT_FOUND),
-  
+    CATEGORY_EXISTED(401, "Category is already existed", HttpStatus.BAD_REQUEST),
     // VOTE ERROR
     VOTETYPE_NOT_EXISTED(1005, "Vote type must be UPVOTE or DOWNVOTE", HttpStatus.NOT_FOUND),
-
+    VOTE_EXISTED(404, "Vote is existed", HttpStatus.BAD_REQUEST),
+    VOTE_NOT_FOUND(404, "Vote not found", HttpStatus.NOT_FOUND),
     //BOOKMARK ERRORS
     BOOKMARK_NOT_FOUND(404, "Bookmark not found", HttpStatus.NOT_FOUND),
     BOOKMARK_EXISTED(404, "Bookmark is existed", HttpStatus.BAD_REQUEST),
 
+    // COMMENT
+    COMMENT_NOT_FOUND(404, "Comment not found", HttpStatus.NOT_FOUND),
+    COMMENT_NOT_BELONG_TO_BLOG(404, "Comment is not belong to this blog", HttpStatus.BAD_REQUEST),
+    COMMENT_DELETE_PERMISSION_ERROR(404, "User do not have permission to delete comment", HttpStatus.BAD_REQUEST),
     ;
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

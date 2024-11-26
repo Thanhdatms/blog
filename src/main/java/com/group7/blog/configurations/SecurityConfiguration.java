@@ -34,7 +34,6 @@ public class SecurityConfiguration {
             "/users",
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "auth/token"
     };
 
     @Autowired
@@ -60,7 +59,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://meb.datdang.io.vn"));
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -73,10 +72,12 @@ public class SecurityConfiguration {
         httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Set up CORS configuration
                 .authorizeHttpRequests(authorize -> authorize
-                                .anyRequest().permitAll()
-//                        .requestMatchers(HttpMethod.GET, "/blogs/**").permitAll()
-//                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll() // Allow access to public endpoints
-//                        .anyRequest().authenticated() // Require authentication for other endpoints
+                        .requestMatchers(HttpMethod.GET, "/blogs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/tags/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/**").permitAll()
+                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll() // Allow access to public endpoints
+                        .anyRequest().authenticated() // Require authentication for other endpoints
                 ); // Disable CSRF if needed (optional, only if necessary)
 
         httpSecurity.oauth2ResourceServer(oauth2 ->

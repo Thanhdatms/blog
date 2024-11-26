@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
-import java.util.UUID;
+
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -17,7 +17,7 @@ import java.util.UUID;
 public class UserBlogVote {
     @Id
     @GeneratedValue
-    private UUID id;
+    Integer id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private Users users;

@@ -1,4 +1,4 @@
-package com.group7.blog.dto.User.reponse;
+package com.group7.blog.dto.Comment.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -6,12 +6,12 @@ import lombok.experimental.FieldDefaults;
 import java.util.UUID;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserBlogResponse {
-    UUID id;
-    String username;
-    String nameTag;
+public class CommentStatusResponse {
+    UUID commentId;
+    String status;
 }
+

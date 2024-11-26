@@ -16,6 +16,7 @@ public class Category {
     @Id
     @GeneratedValue
     UUID id;
+    @Column(unique = true)
     String title;
     String content;
     Timestamp createdAt;
