@@ -42,4 +42,14 @@ public class ReportController {
                 .build();
     }
 
+    @GetMapping("/user")
+    public ApiResponse<List<ReportDetailResponse>> getUserReport(
+            @RequestParam String username,
+            @RequestParam int page,
+            @RequestParam int size
+    ) {
+        return ApiResponse.<List<ReportDetailResponse>>builder()
+                .result(reportService.getListUserReport(username, page, size))
+                .build();
+    }
 }

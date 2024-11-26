@@ -20,15 +20,13 @@ public interface ReportMapper {
     ReportResponse toResponse(Report report);
 
     // Map Report entity to ReportDetailResponse
-    @Mapping(target = "thumbnail", source = "blog.thumbnail")
-    @Mapping(target = "blogTitle", source = "blog.title")
+    @Mapping(target = "reportResponse", source = "report")
     @Mapping(target = "user.id", source = "users.id")
     @Mapping(target = "user.username", source = "users.username")
     @Mapping(target = "user.avatar", source = "users.avatar")
-    @Mapping(target = "reportResponse.blogId", source = "blog.id")
-//    @Mapping(target = "reportResponse.reportType", source = "reportType")
-//    @Mapping(target = "reportResponse.description", source = "users.username")
-
+    @Mapping(target = "thumbnail", source = "blog.thumbnail")
+    @Mapping(target = "blogTitle", source = "blog.title")
+    ReportDetailResponse toReportDetailResponse(Report report)
     ReportDetailResponse toReportDetailResponse(Report report);
 
 }
