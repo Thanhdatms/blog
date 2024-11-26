@@ -4,12 +4,16 @@ import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Map;
 
@@ -39,5 +43,24 @@ public class EmailService {
         } catch (MessagingException e) {
             throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Async
+    public void sendAdminAlert(String to, String subject, Map<String, Object> model, String templateName) {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(to);
+            helper.setSubject(subject);
+
+            String content = templateEngine.process(templateName, new Context(Locale.getDefault(), model));
+            helper.setText(content, true);
+
+            javaMailSender.send(message);
+
+        } catch (MessagingException e) {
+            throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

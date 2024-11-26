@@ -7,6 +7,7 @@ import com.group7.blog.dto.User.reponse.*;
 import com.group7.blog.dto.User.request.*;
 import com.group7.blog.models.Users;
 import com.group7.blog.services.BookMarkService;
+import com.group7.blog.services.HistoryService;
 import com.group7.blog.services.UserBlogVoteService;
 import com.group7.blog.services.UserService;
 import jakarta.validation.Valid;
@@ -27,6 +28,7 @@ public class UserController {
     UserService userService;
     BookMarkService bookMarkService;
     UserBlogVoteService userBlogVoteService;
+    HistoryService historyService;
 
     @GetMapping
     List<Users> getUsers() {
@@ -167,5 +169,11 @@ public class UserController {
         return ApiResponse.<UserProfileResponseDTO>builder()
                 .result(userService.getUserByNameTag(nameTag))
                 .build();
+    }
+
+    @GetMapping("/trigger-cron-job")
+    public String triggerCronJobNow() {
+        historyService.triggerJobManually();
+        return "Cron job triggered immediately!";
     }
 }

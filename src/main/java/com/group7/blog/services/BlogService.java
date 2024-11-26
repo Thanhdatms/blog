@@ -8,6 +8,9 @@ import com.group7.blog.dto.Blog.request.BlogUpdateRequest;
 import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
 import com.group7.blog.dto.BlogTag.BlogTagCreation;
+import com.group7.blog.dto.History.request.HistoryCreation;
+import com.group7.blog.dto.History.request.HistoryDetailCreation;
+import com.group7.blog.enums.EnumData;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.mappers.BlogMapper;
@@ -38,6 +41,7 @@ public class BlogService {
     UserRepository userRepository;
     UserMapper userMapper;
     CategoryRepository categoryRepository;
+    HistoryService historyService;
 
     public BlogDetailResponse createBlog(BlogCreationRequest request, MultipartFile file) {
         SecurityContext context = SecurityContextHolder.getContext();
@@ -72,6 +76,16 @@ public class BlogService {
                         blogTagMapper.toBlogTag(new BlogTagCreation(tag, finalBlog))
                 )
         );
+
+        HistoryCreation historyCreation = new HistoryCreation();
+        historyCreation.setEmail(user.getEmail());
+        historyCreation.setUsers(user);
+        historyCreation.setObjectId(blog.getId());
+        historyCreation.setModel(Blog.class.getSimpleName());
+        historyCreation.setActionType(EnumData.HistoryActionType.CREATE);
+        historyCreation.setActionStatus(EnumData.HistoryActionStatus.SUCCESSFUL);
+        historyService.createHistory(historyCreation);
+
         return blogMapper.toBlogDetailResponse(blog);
     }
 
@@ -127,6 +141,23 @@ public class BlogService {
         }
 
         blogMapper.updateBlog(blog, request);
+
+        Users user = userRepository
+                .findById(UUID
+                        .fromString(userId))
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        HistoryCreation historyCreation = new HistoryCreation();
+        historyCreation.setEmail(user.getEmail());
+        historyCreation.setUsers(user);
+        historyCreation.setObjectId(blog.getId());
+        historyCreation.setModel(Blog.class.getSimpleName());
+        historyCreation.setActionType(EnumData.HistoryActionType.UPDATE);
+        historyCreation.setActionStatus(EnumData.HistoryActionStatus.SUCCESSFUL);
+        History history = historyService.createHistory(historyCreation);
+        List<HistoryDetailCreation> list = historyService.getNonNullFieldNames(request, history);
+        historyService.createHistoryDetails(list);
+
         return blogMapper.toBlogResponse(blogRepository.save(blog));
     }
 }

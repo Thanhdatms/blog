@@ -1,5 +1,6 @@
 package com.group7.blog.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -7,6 +8,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -82,4 +86,17 @@ public class Users {
 
     @OneToMany(mappedBy = "user")
     private List<BookMark> bookMarks;
+
+    @ColumnDefault("0")
+    private Integer loginFailedCount;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    Timestamp lastLoginFailed;
+
+    @ColumnDefault("false")
+    private Boolean isLock;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "users")
+    private List<History> histories;
 }

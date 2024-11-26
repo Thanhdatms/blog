@@ -1,6 +1,8 @@
 package com.group7.blog.services;
 
 import com.group7.blog.dto.Auth.TokenCreation;
+import com.group7.blog.dto.History.request.HistoryCreation;
+import com.group7.blog.dto.History.request.HistoryDetailCreation;
 import com.group7.blog.dto.User.reponse.ChangePasswordDTO;
 import com.group7.blog.dto.User.reponse.UserProfileResponseDTO;
 import com.group7.blog.dto.User.reponse.UserResponse;
@@ -9,10 +11,12 @@ import com.group7.blog.dto.User.request.ResetPasswordDTO;
 import com.group7.blog.dto.User.request.UpdateProfileRequestDTO;
 import com.group7.blog.dto.User.request.UserCreationRequest;
 import com.group7.blog.dto.User.request.UserUpdateRequest;
+import com.group7.blog.enums.EnumData;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.mappers.BlogMapper;
 import com.group7.blog.mappers.UserMapper;
+import com.group7.blog.models.History;
 import com.group7.blog.models.PasswordResetToken;
 import com.group7.blog.models.UserFollow;
 import com.group7.blog.models.Users;
@@ -35,10 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.group7.blog.enums.Constant.FOLDER_NAME;
@@ -59,6 +60,8 @@ public class UserService {
     TokenService tokenService;
     PasswordResetTokenRepository passwordResetTokenRepository;
     CloudinaryService cloudinaryService;
+    HistoryService historyService;
+    private final Class<Users> usersClass = Users.class;
 
     public boolean checkUserExistById(String userId) {
         return userRepository.existsById(UUID.fromString(userId));
@@ -219,7 +222,6 @@ public class UserService {
                     .orElseThrow(() -> new AppException(ErrorCode.INVALID_TOKEN));
             if(!passwordResetToken.isValid())
                 throw new AppException(ErrorCode.INVALID_TOKEN);
-
             SignedJWT result = tokenService.verifyToken(token, false);
             passwordResetToken.setValid(false);
             passwordResetTokenRepository.save(passwordResetToken);
@@ -238,11 +240,44 @@ public class UserService {
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean isMatched = passwordEncoder.matches(request.getOldPassword(), user.getHashPassword());
+
         if(!isMatched){
+
+            HistoryCreation historyCreation = new HistoryCreation();
+            historyCreation.setEmail(user.getEmail());
+            historyCreation.setUsers(user);
+            historyCreation.setObjectId(user.getId());
+            historyCreation.setModel(Users.class.getSimpleName());
+            historyCreation.setActionType(EnumData.HistoryActionType.UPDATE);
+            historyCreation.setActionStatus(EnumData.HistoryActionStatus.FAILED);
+            historyService.createHistory(historyCreation);
+
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
+
         user.setHashPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
+
+        HistoryCreation historyCreation = new HistoryCreation();
+        historyCreation.setEmail(user.getEmail());
+        historyCreation.setUsers(user);
+        historyCreation.setObjectId(user.getId());
+        historyCreation.setModel(Users.class.getSimpleName());
+        historyCreation.setActionType(EnumData.HistoryActionType.UPDATE);
+        historyCreation.setActionStatus(EnumData.HistoryActionStatus.SUCCESSFUL);
+        History history = historyService.createHistory(historyCreation);
+
+        HistoryDetailCreation historyDetailCreation = new HistoryDetailCreation();
+        Class<Users> userClass = Users.class;
+        try {
+            historyDetailCreation.setFieldName(String.valueOf(userClass.getDeclaredField("hashPassword")));
+            historyDetailCreation.setNewValue(user.getHashPassword());
+            historyDetailCreation.setHistory(history);
+            historyService.createHistoryDetails(Arrays.asList(historyDetailCreation));
+        } catch (NoSuchFieldException e) {
+            throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
         return "Change Password Successfully!";
     }
 
@@ -263,6 +298,17 @@ public class UserService {
         userMapper.updateUserProfile(user, request);
         user.setAvatar(request.getAvatar());
         userRepository.save(user);
+
+        HistoryCreation historyCreation = new HistoryCreation();
+        historyCreation.setEmail(user.getEmail());
+        historyCreation.setUsers(user);
+        historyCreation.setObjectId(user.getId());
+        historyCreation.setModel(Users.class.getSimpleName());
+        historyCreation.setActionType(EnumData.HistoryActionType.UPDATE);
+        historyCreation.setActionStatus(EnumData.HistoryActionStatus.SUCCESSFUL);
+        History history = historyService.createHistory(historyCreation);
+        List<HistoryDetailCreation> list = historyService.getNonNullFieldNames(request, history);
+        historyService.createHistoryDetails(list);
 
         return userMapper.toUserProfileResponse(user);
     }

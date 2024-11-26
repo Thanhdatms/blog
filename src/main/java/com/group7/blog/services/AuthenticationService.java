@@ -2,6 +2,8 @@ package com.group7.blog.services;
 import com.group7.blog.dto.Auth.LoginRequest;
 import com.group7.blog.dto.Auth.TokenCreation;
 import com.group7.blog.dto.Auth.TokenResponse;
+import com.group7.blog.dto.History.request.HistoryCreation;
+import com.group7.blog.enums.EnumData;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.models.Users;
@@ -17,6 +19,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +34,8 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
     UserRepository userRepository;
     TokenService tokenService;
+    HistoryService historyService;
+    EmailService emailService;
 
     @NonFinal
     @Value("${server.cookie.domain}")
@@ -38,13 +49,58 @@ public class AuthenticationService {
         Users user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
+        if(user.getIsLock() != null && user.getIsLock().equals(true)) {
+            if(user.getLastLoginFailed().before(Timestamp.valueOf(LocalDateTime.now().minusMinutes(15)))) {
+                user.setIsLock(false);
+            } else {
+                throw new AppException(ErrorCode.IS_LOCKED);
+            }
+        }
+
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean isMatched = passwordEncoder.matches(request.getPassword(), user.getHashPassword());
         if(!isMatched){
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+
+            HistoryCreation historyCreation = new HistoryCreation();
+            historyCreation.setEmail(user.getEmail());
+            historyCreation.setUsers(user);
+            historyCreation.setModel(Users.class.getSimpleName());
+            historyCreation.setActionType(EnumData.HistoryActionType.LOGIN);
+            historyCreation.setActionStatus(EnumData.HistoryActionStatus.FAILED);
+            historyService.createHistory(historyCreation);
+
+            user.setLoginFailedCount(
+                    user.getLoginFailedCount() + 1
+            );
+
+
+            if(user.getLoginFailedCount() == 5) {
+                user.setIsLock(true);
+                user.setLastLoginFailed(Timestamp.valueOf(LocalDateTime.now()));
+            }
+
+            if(user.getLoginFailedCount() > 5) {
+                Map<String, Object> model = new HashMap<>();
+                model.put("username", user.getUsername());
+                model.put("email", user.getEmail());
+                model.put("time", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+                emailService.sendAdminAlert(
+                        "beplodao@gmail.com",
+                        "Security Alert: Failed Login Attempts",
+                        model,
+                        "admin-email-alert-template"
+                );
+            }
+            userRepository.save(user);
+
+            throw new AppException(ErrorCode.PASSWORD_INCORRECT);
         }
+
         TokenResponse tokens = tokenService.generateToken(new TokenCreation(user.getId(), user.getUsername()));
+
         user.setRefreshToken(tokens.getRefreshToken());
+        user.setLoginFailedCount(0);
         userRepository.save(user);
         return tokens;
     }

@@ -1,6 +1,7 @@
 package com.group7.blog.dto.History.request;
 
 import com.group7.blog.enums.EnumData;
+import com.group7.blog.models.HistoryDetail;
 import com.group7.blog.models.Users;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,4 +21,5 @@ public class HistoryCreation {
     EnumData.HistoryActionType actionType;
     String email;
     Users users;
+    HistoryDetailCreation historyDetailCreation;
 }

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alert Notification</title>
+</head>
+<body>
+<h2>Security Alert</h2>
+<p>Hello Admin,</p>
+<p>We have detected <strong>multiple failed login attempts</strong> for the following user:</p>
+<ul>
+    <li><strong>Username:</strong> <span th:text="${username}"></span></li>
+    <li><strong>Email:</strong> <span th:text="${email}"></span></li>
+    <li><strong>Time:</strong> <span th:text="${time}"></span></li>
+</ul>
+<p>Please take immediate action if necessary.</p>
+<p>Thank you,</p>
+<p>Your Security Team</p>
+</body>
+</html>
