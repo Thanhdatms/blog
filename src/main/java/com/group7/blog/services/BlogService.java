@@ -146,5 +146,4 @@ public class BlogService {
                 .map(blogMapper::toBlogResponse)
                 .collect(Collectors.toList());
     }
-
 }

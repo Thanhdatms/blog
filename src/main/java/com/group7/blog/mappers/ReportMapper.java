@@ -22,6 +22,7 @@ public interface ReportMapper {
     @Mapping(target = "user.avatar", source = "users.avatar")
     @Mapping(target = "thumbnail", source = "blog.thumbnail")
     @Mapping(target = "blogTitle", source = "blog.title")
+    ReportDetailResponse toReportDetailResponse(Report report)
     ReportDetailResponse toReportDetailResponse(Report report);
 
 }
