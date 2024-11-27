@@ -1,5 +1,8 @@
 package com.group7.blog.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.group7.blog.dto.Auth.TokenBinaryDecoded;
 import com.group7.blog.dto.Auth.TokenCreation;
 import com.group7.blog.dto.Auth.TokenResponse;
 import com.group7.blog.enums.ErrorCode;
@@ -16,10 +19,15 @@ import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 import java.util.Date;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -93,5 +101,26 @@ public class TokenService {
 //            throw new AppException(ErrorCode.UNAUTHENTICATED);
 
         return signedJWT;
+    }
+
+    public String generateBinaryToken(TokenCreation payload) {
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+            // Convert JSON object to String
+            String jsonString = mapper.writeValueAsString(payload);
+            // Encode JSON string to Base64
+            return Base64.getEncoder().encodeToString(jsonString.getBytes());
+        } catch ( JsonProcessingException e) {
+            throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public TokenBinaryDecoded parseDecodedToken(String decodedToken) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();;
+            return mapper.readValue(decodedToken, TokenBinaryDecoded.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse token JSON", e);
+        }
     }
 }

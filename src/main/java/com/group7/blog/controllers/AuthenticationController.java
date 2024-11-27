@@ -1,12 +1,16 @@
 package com.group7.blog.controllers;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.group7.blog.dto.Auth.LoginRequest;
+import com.group7.blog.dto.Auth.TokenBinaryDecoded;
 import com.group7.blog.dto.Auth.TokenResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.services.AuthenticationService;
+import com.group7.blog.services.LoadSampleDataService;
+import com.group7.blog.services.TokenService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,16 +29,18 @@ import java.util.concurrent.atomic.AtomicReference;
 public class AuthenticationController {
 
     AuthenticationService authenticationService;
+    TokenService tokenService;
+    LoadSampleDataService loadSampleDataService;
 
-    @PostMapping("/login")
-    ApiResponse<String> login(@RequestBody LoginRequest request, HttpServletResponse response){
-        TokenResponse tokens = authenticationService.login(request);
-        Cookie cookie = authenticationService.getCookie("jwt", tokens.getRefreshToken());
-        response.addCookie(cookie);
-        return ApiResponse.<String>builder()
-                .result(tokens.getAccessToken())
-                .build();
-    }
+//    @PostMapping("/login")
+//    ApiResponse<String> login(@RequestBody LoginRequest request, HttpServletResponse response){
+//        TokenResponse tokens = authenticationService.login(request);
+//        Cookie cookie = authenticationService.getCookie("jwt", tokens.getRefreshToken());
+//        response.addCookie(cookie);
+//        return ApiResponse.<String>builder()
+//                .result(tokens.getAccessToken())
+//                .build();
+//    }
 
     @GetMapping("/token")
     ApiResponse<String> refreshToken(HttpServletRequest request) {
@@ -50,4 +56,25 @@ public class AuthenticationController {
                 .result(String.valueOf(refreshToken))
                 .build();
     }
+
+    @PostMapping("/login/test")
+    ApiResponse<String> test(@RequestBody LoginRequest request, HttpServletResponse response) throws JsonProcessingException {
+        return ApiResponse.<String>builder()
+                .result(authenticationService.loginTest(request))
+                .build();
+    }
+
+    @GetMapping("/token-info")
+    public TokenBinaryDecoded getTokenInfo(HttpServletRequest request) throws JsonProcessingException {
+        String decodedToken = (String) request.getAttribute("decodedToken");
+        return tokenService.parseDecodedToken(decodedToken);
+    }
+
+    @PostMapping("/sample-data")
+    public String loadSampleData(HttpServletRequest request) {
+        String decodedToken = (String) request.getAttribute("decodedToken");
+        loadSampleDataService.loadUserData();
+        return "Load data successfully!";
+    }
+
 }

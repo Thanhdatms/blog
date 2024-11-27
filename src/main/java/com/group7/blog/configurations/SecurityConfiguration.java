@@ -79,11 +79,11 @@ public class SecurityConfiguration {
 //                        .anyRequest().authenticated() // Require authentication for other endpoints
                 ); // Disable CSRF if needed (optional, only if necessary)
 
-        httpSecurity.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(jwtConfigurer -> jwtConfigurer
-                        .decoder(customJWTDecoder))
-                        .authenticationEntryPoint(new JWTAuthenticationEntryPoint())
-        );
+//        httpSecurity.oauth2ResourceServer(oauth2 ->
+//                oauth2.jwt(jwtConfigurer -> jwtConfigurer
+//                        .decoder(customJWTDecoder))
+//                        .authenticationEntryPoint(new JWTAuthenticationEntryPoint())
+//        );
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 

@@ -39,10 +39,7 @@ public class BlogService {
     UserMapper userMapper;
     CategoryRepository categoryRepository;
 
-    public BlogDetailResponse createBlog(BlogCreationRequest request, MultipartFile file) {
-        SecurityContext context = SecurityContextHolder.getContext();
-        String userId = context.getAuthentication().getName();
-
+    public BlogDetailResponse createBlog(BlogCreationRequest request, MultipartFile file, String userId) {
         Users user = userRepository
                 .findById(UUID
                 .fromString(userId))

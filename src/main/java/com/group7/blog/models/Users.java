@@ -82,4 +82,7 @@ public class Users {
 
     @OneToMany(mappedBy = "user")
     private List<BookMark> bookMarks;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserRole> userRoles;
 }

@@ -27,7 +27,6 @@ public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setStatus(200);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         ApiResponse apiResponse = new ApiResponse();
-
         if (Objects.equals(request.getHeader("Authorization"), "null")) {
             apiResponse.setCode(ErrorCode.UNAUTHENTICATED.getCode());
             apiResponse.setMessage(ErrorCode.UNAUTHENTICATED.getMessage());

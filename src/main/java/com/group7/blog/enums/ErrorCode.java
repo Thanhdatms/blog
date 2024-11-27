@@ -20,6 +20,7 @@ public enum ErrorCode {
 
     USER_ID_INVALID(401, "User id invalid", HttpStatus.NOT_FOUND),
     USER_FOLLOW_EXISTED(401, "User follow existed", HttpStatus.FOUND),
+    USER_ROLE_NOT_FOUND(404, "User role not found", HttpStatus.NOT_FOUND),
     // BLOG ERRORS
     BLOG_NOT_EXISTED(1005, "Blog not existed", HttpStatus.NOT_FOUND),
 

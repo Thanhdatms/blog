@@ -34,11 +34,13 @@ public class CustomJWTDecoder implements JwtDecoder {
     public Jwt decode(String token) throws BadJwtException {
         try {
             try {
+
                 SignedJWT result = tokenService.verifyToken(token, false);
                 if(!userService.checkUserExistById(result.getJWTClaimsSet().getSubject())) {
                     throw new AppException(ErrorCode.USER_NOT_EXISTED);
                 }
             } catch (AppException e) {
+
                 throw new BadJwtException("Invalid token");
             }
             if(Objects.isNull(nimbusJwtDecoder)){

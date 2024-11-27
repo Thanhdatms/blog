@@ -1,20 +1,18 @@
 package com.group7.blog.dto.Auth;
 
 import com.group7.blog.dto.Role.response.RoleResponse;
-import com.group7.blog.models.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TokenCreation {
-    UUID userId;
+public class TokenBinaryDecoded {
+    String userId;
     String username;
     List<RoleResponse> roles;
 }

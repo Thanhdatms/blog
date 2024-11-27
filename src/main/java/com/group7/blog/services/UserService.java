@@ -10,12 +10,8 @@ import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.mappers.BlogMapper;
 import com.group7.blog.mappers.UserMapper;
-import com.group7.blog.models.BookMark;
-import com.group7.blog.models.UserFollow;
-import com.group7.blog.models.Users;
-import com.group7.blog.repositories.BlogRepository;
-import com.group7.blog.repositories.UserFollowRepository;
-import com.group7.blog.repositories.UserRepository;
+import com.group7.blog.models.*;
+import com.group7.blog.repositories.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -41,6 +37,9 @@ public class UserService {
     BlogRepository blogRepository;
     BlogMapper blogMapper;
     UserFollowRepository userFollowRepository;
+    RoleRepository roleRepository;
+    UserRoleRepository userRoleRepository;
+
 
     public boolean checkUserExistById(String userId) {
         return userRepository.existsById(UUID.fromString(userId));
@@ -54,7 +53,15 @@ public class UserService {
         Users user = userMapper.toUser(request);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setHashpassword(passwordEncoder.encode(user.getHashpassword()));
-        return userRepository.save(user);
+        Role role = roleRepository.findByName("user").orElseThrow(()-> new AppException(ErrorCode.USER_ROLE_NOT_FOUND));
+        user = userRepository.save(user);
+
+        UserRole userRole = new UserRole();
+        userRole.setUser(user);
+        userRole.setRole(role);
+
+        userRoleRepository.save(userRole);
+        return user;
     }
 
     public Users getUser(UUID userId){

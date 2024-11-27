@@ -8,6 +8,8 @@ import com.group7.blog.dto.Blog.request.BlogCreationRequest;
 import com.group7.blog.dto.Blog.request.BlogUpdateRequest;
 import com.group7.blog.models.Blog;
 import com.group7.blog.services.BlogService;
+import com.group7.blog.services.TokenService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +27,18 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BlogController {
     BlogService blogService;
+    TokenService tokenService;
 
     @PostMapping
     ApiResponse<BlogDetailResponse> createBlog(
             @Valid @RequestPart("blog") BlogCreationRequest request,
-            @RequestPart(name = "file", required = false) MultipartFile file
+            @RequestPart(name = "file", required = false) MultipartFile file,
+            HttpServletRequest req
             ) {
+        String decodedToken = (String) req.getAttribute("decodedToken");
+        String userId = tokenService.parseDecodedToken(decodedToken).getUserId();
         return ApiResponse.<BlogDetailResponse>builder()
-                .result(blogService.createBlog(request, file))
+                .result(blogService.createBlog(request, file, userId))
                 .build();
     }
 
