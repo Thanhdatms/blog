@@ -168,4 +168,11 @@ public class UserController {
                 .result(userService.getUserByNameTag(nameTag))
                 .build();
     }
+
+    @GetMapping("/insight")
+    public ApiResponse<List<TopUserResponse>> getTopUsers() {
+        return ApiResponse.<List<TopUserResponse>>builder()
+                .result(userService.getTopUsers())
+                .build();
+    }
 }
