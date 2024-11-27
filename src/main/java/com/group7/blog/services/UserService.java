@@ -1,10 +1,7 @@
 package com.group7.blog.services;
 
 import com.group7.blog.dto.Auth.TokenCreation;
-import com.group7.blog.dto.User.reponse.ChangePasswordDTO;
-import com.group7.blog.dto.User.reponse.UserProfileResponseDTO;
-import com.group7.blog.dto.User.reponse.UserResponse;
-import com.group7.blog.dto.User.reponse.UserStatsResponseDTO;
+import com.group7.blog.dto.User.reponse.*;
 import com.group7.blog.dto.User.request.ResetPasswordDTO;
 import com.group7.blog.dto.User.request.UpdateProfileRequestDTO;
 import com.group7.blog.dto.User.request.UserCreationRequest;
@@ -26,6 +23,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,10 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.group7.blog.enums.Constant.FOLDER_NAME;
@@ -274,5 +270,23 @@ public class UserService {
         userStatsResponseDTO.setFollowers(userFollowRepository.countByUserTargetIdId(userId));
         userStatsResponseDTO.setPosts(blogRepository.countByUsersId(userId));
         return userStatsResponseDTO;
+    }
+
+    public List<TopUserResponse> getTopUsers() {
+        Pageable pageable = PageRequest.of(0, 10);
+        List<Object[]> results = userRepository.findTopUsersByBlogCount(pageable);
+
+        return results.stream()
+                .map(result -> {
+                    Users user = (Users) result[0];
+                    long blogCount = (long) result[1];
+                    UserResponse userResponse = userMapper.toUserResponse(user);
+
+                    return TopUserResponse.builder()
+                            .userResponse(userResponse)
+                            .weeklyBlogCount((int) blogCount)
+                            .build();
+                })
+                .toList();
     }
 }

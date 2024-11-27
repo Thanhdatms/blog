@@ -1,6 +1,7 @@
 package com.group7.blog.repositories;
 
 import com.group7.blog.models.Users;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,4 +23,10 @@ public interface UserRepository extends JpaRepository<Users, UUID> {
     Users findOneByEmail(String email);
 
     Optional<Users> findByNameTag(String nameTag);
+
+    @Query("SELECT u AS user, COUNT(b.id) AS blogCount " +
+            "FROM Users u JOIN u.blogs b " +
+            "GROUP BY u " +
+            "ORDER BY blogCount DESC")
+    List<Object[]> findTopUsersByBlogCount(Pageable pageable);
 }
