@@ -29,4 +29,6 @@ public interface UserRepository extends JpaRepository<Users, UUID> {
             "GROUP BY u " +
             "ORDER BY blogCount DESC")
     List<Object[]> findTopUsersByBlogCount(Pageable pageable);
+
+    Optional<Users> findOneByRefreshToken(String token);
 }

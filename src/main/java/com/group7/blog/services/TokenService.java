@@ -81,7 +81,9 @@ public class TokenService {
     }
 
     public SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
-        JWSVerifier verifier = new MACVerifier(ACCESS_KEY.getBytes());
+        JWSVerifier verifier = isRefresh ?
+                new MACVerifier(REFRESH_KEY.getBytes()) :
+                new MACVerifier(ACCESS_KEY.getBytes());
 
         SignedJWT signedJWT = SignedJWT.parse(token);
 
@@ -95,7 +97,7 @@ public class TokenService {
                 : signedJWT.getJWTClaimsSet().getExpirationTime();
 
         var verified = signedJWT.verify(verifier);
-
+        System.out.println(verified);
         if (!(verified && expiryTime.after(new Date())))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
