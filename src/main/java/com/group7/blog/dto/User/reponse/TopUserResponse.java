@@ -12,8 +12,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TopUserResponse {
     private UserResponse userResponse;
-    private int weeklyBlogCount;
-    private int totalUpvotes;
-    private int totalDownvotes;
+//    private int weeklyBlogCount;
+//    private int totalUpvotes;
+//    private int totalDownvotes;
     private double score;
 }

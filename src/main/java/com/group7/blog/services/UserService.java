@@ -290,8 +290,6 @@ public class UserService {
 
                     return TopUserResponse.builder()
                             .userResponse(userResponse)
-                            .weeklyBlogCount((int) blogCount)
-                            .totalUpvotes((int) totalUpvotes)
                             .score(score)
                             .build();
                 })
