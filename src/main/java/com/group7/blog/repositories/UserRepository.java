@@ -31,6 +31,14 @@ public interface UserRepository extends JpaRepository<Users, UUID> {
             "GROUP BY u")
     List<Object[]> findTopUsersRaw(Pageable pageable);
 
+    @Query("SELECT SUM(CASE WHEN vb.voteType = 'UPVOTE' THEN 1 ELSE 0 END) " +
+            "FROM UserBlogVote vb " +
+            "WHERE vb.blog.users.id = :userId")
+    Long totalUpvotes(@Param("userId") UUID userId);
 
+    @Query("SELECT SUM(CASE WHEN vb.voteType = 'DOWNVOTE' THEN 1 ELSE 0 END) " +
+            "FROM UserBlogVote vb " +
+            "WHERE vb.blog.users.id = :userId")
+    Long totalDownvote(@Param("userId") UUID userId);
 
 }

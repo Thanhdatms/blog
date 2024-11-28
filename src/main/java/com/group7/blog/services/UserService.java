@@ -269,6 +269,8 @@ public class UserService {
         userStatsResponseDTO.setFollowing(userFollowRepository.countByUserSourceId(userId));
         userStatsResponseDTO.setFollowers(userFollowRepository.countByUserTargetIdId(userId));
         userStatsResponseDTO.setPosts(blogRepository.countByUsersId(userId));
+        userStatsResponseDTO.setTotalUpvote(userRepository.totalUpvotes(userId));
+        userStatsResponseDTO.setTotalDownVote(userStatsResponseDTO.getTotalDownVote());
         return userStatsResponseDTO;
     }
 

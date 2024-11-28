@@ -14,4 +14,6 @@ public class UserStatsResponseDTO {
     Long posts;
     Long following;
     Long followers;
+    Long totalUpvote;
+    Long totalDownVote;
 }
