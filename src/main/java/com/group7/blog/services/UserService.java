@@ -274,19 +274,28 @@ public class UserService {
 
     public List<TopUserResponse> getTopUsers() {
         Pageable pageable = PageRequest.of(0, 10);
-        List<Object[]> results = userRepository.findTopUsersByBlogCount(pageable);
+        List<Object[]> results = userRepository.findTopUsersRaw(pageable);
 
         return results.stream()
                 .map(result -> {
                     Users user = (Users) result[0];
                     long blogCount = (long) result[1];
+                    long totalUpvotes = ((Number) result[2]).longValue();
+
+                    double score = 0.6 * blogCount + 0.4 * totalUpvotes;
+
                     UserResponse userResponse = userMapper.toUserResponse(user);
 
                     return TopUserResponse.builder()
                             .userResponse(userResponse)
                             .weeklyBlogCount((int) blogCount)
+                            .totalUpvotes((int) totalUpvotes)
+                            .score(score)
                             .build();
                 })
+                .sorted(Comparator.comparingDouble(TopUserResponse::getScore).reversed())
                 .toList();
     }
+
+
 }
