@@ -46,9 +46,9 @@ public class SecurityConfiguration {
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
-        corsConfiguration.setAllowedMethods(Arrays.asList("*"));
-        corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("*")); // Allow all origins
+        corsConfiguration.setAllowedMethods(Arrays.asList("*"));  // Allow all methods
+        corsConfiguration.setAllowedHeaders(Arrays.asList("*"));  // Allow all headers
 
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
@@ -59,9 +59,9 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://meb.datdang.io.vn"));
-        configuration.setAllowedMethods(Arrays.asList("*"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList("*")); // Allow all origins
+        configuration.setAllowedMethods(Arrays.asList("*"));  // Allow all methods
+        configuration.setAllowedHeaders(Arrays.asList("*"));  // Allow all headers
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -82,7 +82,7 @@ public class SecurityConfiguration {
 
         httpSecurity.oauth2ResourceServer(oauth2 ->
                 oauth2.jwt(jwtConfigurer -> jwtConfigurer
-                        .decoder(customJWTDecoder))
+                                .decoder(customJWTDecoder))
                         .authenticationEntryPoint(new JWTAuthenticationEntryPoint())
         );
 
