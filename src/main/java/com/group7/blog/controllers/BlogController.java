@@ -52,7 +52,14 @@ public class BlogController {
     @GetMapping
     ApiResponse<List<BlogDetailResponse>> getBlogs() {
         return ApiResponse.<List<BlogDetailResponse>>builder()
-                .result(blogService.getBlogs())
+                .result(blogService.getPublishedBlogs())
+                .build();
+    }
+
+    @GetMapping("/banned")
+    ApiResponse<List<BlogDetailResponse>> getBannedBlogs() {
+        return ApiResponse.<List<BlogDetailResponse>>builder()
+                .result(blogService.getBannedBlogs())
                 .build();
     }
 
@@ -112,7 +119,17 @@ public class BlogController {
                 .result(blogService.searchBlog(keyword, page, size))
                 .build();
     }
-
+  
+    @PutMapping("status/{blogId}")
+    ApiResponse<BlogResponse> updateBlogStatus(
+            @RequestParam("blogStatus") String blogStatus,
+            @PathVariable("blogId") String blogId
+    ){
+        return ApiResponse.<BlogResponse>builder()
+                .result(blogService.updateBlogStatus(blogStatus, blogId))
+                .build();
+    }
+  
     @PostMapping("/images/upload")
     ImageUploadResponseDTO uploadBlogImage(@RequestPart(name = "upload", required = false) MultipartFile file) throws ImageUploadException {
         if (file == null || file.isEmpty()) {

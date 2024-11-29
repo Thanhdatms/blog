@@ -3,6 +3,7 @@ package com.group7.blog.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.group7.blog.enums.EnumData;
 import com.group7.blog.enums.EnumData.ReportType;
+import com.group7.blog.enums.EnumData.ReportStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -31,6 +32,9 @@ public class Report {
 
     @Enumerated(EnumType.STRING)
     ReportType reportType;
+
+    @Enumerated(EnumType.STRING)
+    ReportStatus reportStatus = ReportStatus.PENDING;
 
     String description;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

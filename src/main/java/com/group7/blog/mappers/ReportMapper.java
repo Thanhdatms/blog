@@ -13,6 +13,8 @@ public interface ReportMapper {
     @Mapping(target = "blogId", source = "report.blog.id")
     @Mapping(target ="reportType", source = "report.reportType")
     @Mapping(target = "description", source = "description")
+    @Mapping(target = "reportStatus", source = "reportStatus")
+    @Mapping(target = "id", source = "id")
     ReportResponse toResponse(Report report);
 
     // Map Report entity to ReportDetailResponse

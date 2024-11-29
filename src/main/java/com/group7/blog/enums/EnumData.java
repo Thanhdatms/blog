@@ -16,12 +16,24 @@ public class EnumData {
         }
     }
 
+    public enum BlogStatus {
+        PUBLISHED,
+        BANNED
+    }
+
     public enum ReportType{
         SPAM,
         OFFENSIVE,
         INCORRECT,
         OTHER
     }
+
+    public enum ReportStatus{
+        PENDING,
+        CANCEL,
+        DELETE
+    }
+
 
     public static ReportType fromString(String value) {
         try {

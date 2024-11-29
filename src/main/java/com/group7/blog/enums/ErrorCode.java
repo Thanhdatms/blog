@@ -47,6 +47,10 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND(404, "Comment not found", HttpStatus.NOT_FOUND),
     COMMENT_NOT_BELONG_TO_BLOG(404, "Comment is not belong to this blog", HttpStatus.BAD_REQUEST),
     COMMENT_DELETE_PERMISSION_ERROR(404, "User do not have permission to delete comment", HttpStatus.BAD_REQUEST),
+
+    // REPORT
+
+    REPORT_NOT_EXIST(404, "Report not existed", HttpStatus.NOT_FOUND)
     ;
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

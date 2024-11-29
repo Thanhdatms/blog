@@ -15,8 +15,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReportResponse {
+    Integer id;
     UUID blogId;
     EnumData.ReportType reportType;
+    EnumData.ReportStatus reportStatus;
     String description;
     Timestamp createdAt;
 }
