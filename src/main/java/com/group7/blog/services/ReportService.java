@@ -3,6 +3,7 @@ package com.group7.blog.services;
 import com.group7.blog.dto.Report.reponse.ReportResponse;
 import com.group7.blog.dto.Report.request.ReportCreationRequest;
 import com.group7.blog.dto.Report.reponse.ReportDetailResponse;
+import com.group7.blog.enums.EnumData;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.mappers.ReportMapper;
@@ -66,8 +67,6 @@ public class ReportService {
         return reportMapper.toResponse(newReport);
     }
 
-
-
     public List<ReportDetailResponse> getListReport(int page, int size) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -104,5 +103,21 @@ public class ReportService {
         return reportPage.getContent().stream()
                 .map(reportMapper::toReportDetailResponse)
                 .collect(Collectors.toList());
+    }
+
+    public ReportResponse updateReportStatus(String reportID, String reportStatus){
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        Report report = reportRepository.findById(Integer.valueOf(reportID))
+                .orElseThrow(() -> new AppException(ErrorCode.REPORT_NOT_EXIST));
+
+        report.setReportStatus(EnumData.ReportStatus.valueOf(reportStatus));
+
+        reportRepository.save(report);
+
+        return reportMapper.toResponse(report);
     }
 }
