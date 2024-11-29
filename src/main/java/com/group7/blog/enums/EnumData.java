@@ -16,6 +16,11 @@ public class EnumData {
         }
     }
 
+    public enum BlogStatus {
+        PUBLISHED,
+        BANNED
+    }
+
     public enum ReportType{
         SPAM,
         OFFENSIVE,

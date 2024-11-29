@@ -8,6 +8,7 @@ import com.group7.blog.dto.Blog.request.BlogUpdateRequest;
 import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
 import com.group7.blog.dto.BlogTag.BlogTagCreation;
+import com.group7.blog.enums.EnumData;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.mappers.BlogMapper;
@@ -68,6 +69,7 @@ public class BlogService {
         Blog blog = blogMapper.toBlog(request);
         blog.setUsers(user);
         blog.setCategory(category);
+
         blog = blogRepository.save(blog);
         Blog finalBlog = blog;
         tags.forEach(tag ->
@@ -146,4 +148,21 @@ public class BlogService {
                 .map(blogMapper::toBlogResponse)
                 .collect(Collectors.toList());
     }
+
+    public BlogResponse updateBlogStatus(String blogStatus, String blogId){
+        SecurityContext context = SecurityContextHolder.getContext();
+        String userId = context.getAuthentication().getName();
+        Users user = userRepository
+                .findById(UUID
+                        .fromString(userId))
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        Blog blog = blogRepository.findById(UUID.fromString(blogId))
+                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
+
+        blog.setBlogStatus(EnumData.BlogStatus.valueOf(blogStatus));
+        blogRepository.save(blog);
+        return blogMapper.toBlogResponse(blog);
+    }
+
 }

@@ -102,4 +102,14 @@ public class BlogController {
                 .result(blogService.searchBlog(keyword, page, size))
                 .build();
     }
+
+    @PutMapping("status/{blogId}")
+    ApiResponse<BlogResponse> updateBlogStatus(
+            @RequestParam("blogStatus") String blogStatus,
+            @PathVariable("blogId") String blogId
+    ){
+        return ApiResponse.<BlogResponse>builder()
+                .result(blogService.updateBlogStatus(blogStatus, blogId))
+                .build();
+    }
 }
