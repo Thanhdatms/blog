@@ -17,6 +17,7 @@ import java.util.UUID;
 public class ReportResponse {
     UUID blogId;
     EnumData.ReportType reportType;
+    EnumData.ReportStatus reportStatus;
     String description;
     Timestamp createdAt;
 }
