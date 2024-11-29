@@ -80,9 +80,17 @@ public class BlogService {
         return blogMapper.toBlogDetailResponse(blog);
     }
 
-    public List<BlogDetailResponse> getBlogs() {
+    public List<BlogDetailResponse> getPublishedBlogs() {
         return blogRepository
-                .findAll()
+                .findByBlogStatus(EnumData.BlogStatus.PUBLISHED)
+                .stream()
+                .map(blogMapper::toBlogDetailResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<BlogDetailResponse> getBannedBlogs() {
+        return blogRepository
+                .findByBlogStatus(EnumData.BlogStatus.BANNED)
                 .stream()
                 .map(blogMapper::toBlogDetailResponse)
                 .collect(Collectors.toList());

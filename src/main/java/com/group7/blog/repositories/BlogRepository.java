@@ -35,4 +35,6 @@ public interface BlogRepository extends JpaRepository<Blog, UUID>, JpaSpecificat
             "OR LOWER(c.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(t.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Blog> searchBlogs(String keyword, Pageable pageable);
+
+    List<Blog> findByBlogStatus(EnumData.BlogStatus blogStatus);
 }
