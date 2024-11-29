@@ -27,6 +27,13 @@ public interface UserRepository extends JpaRepository<Users, UUID> {
     Optional<Users> findOneByRefreshToken(String token);
 
 
+    @Query("SELECT u AS user, " +
+            "COUNT(b.id) AS blogCount, " +
+            "SUM(CASE WHEN vb.voteType = 'UPVOTE' THEN 1 ELSE 0 END) AS totalUpvotes " +
+            "FROM Users u LEFT JOIN u.blogs b LEFT JOIN UserBlogVote vb ON b.id = vb.blog.id " +
+            "GROUP BY u")
+    List<Object[]> findTopUsersRaw(Pageable pageable);
+
     @Query("SELECT SUM(CASE WHEN vb.voteType = 'UPVOTE' THEN 1 ELSE 0 END) " +
             "FROM UserBlogVote vb " +
             "WHERE vb.blog.users.id = :userId")
