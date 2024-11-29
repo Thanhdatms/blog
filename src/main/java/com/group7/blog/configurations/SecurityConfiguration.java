@@ -31,6 +31,8 @@ public class SecurityConfiguration {
 
     private final String[] PUBLIC_ENDPOINTS = {
             "/auth/login",
+            "/auth/logout",
+            "/auth/refresh-token",
             "/users",
             "/v3/api-docs/**",
             "/swagger-ui/**",
@@ -62,6 +64,7 @@ public class SecurityConfiguration {
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://meb.datdang.io.vn"));
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

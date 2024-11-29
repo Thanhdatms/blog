@@ -6,6 +6,8 @@ import com.group7.blog.exceptions.AppException;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.models.Users;
 import com.group7.blog.repositories.UserRepository;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jwt.SignedJWT;
 import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
+import java.util.UUID;
 
 
 @Service
@@ -49,26 +54,6 @@ public class AuthenticationService {
         return tokens;
     }
 
-//    public IntrospecResponse introspect(IntrospecRequest request) throws JOSEException, ParseException {
-//        var token = request.getToken();
-//
-//        // Create verifier object with SIGNER_KEY => Covert this to byte for calculation
-//        JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
-//
-//
-//        SignedJWT signedJWT = SignedJWT.parse(token);
-//
-//        // Check expiry data
-//        Date expiryDate = signedJWT.getJWTClaimsSet().getExpirationTime();
-//
-//        // verify token => re
-//        var verify = signedJWT.verify(verifier);
-//
-//        return IntrospecResponse.builder()
-//                .valid(verify && expiryDate.after(new Date()))
-//                .build();
-//    }
-
     public Cookie getCookie(String name, String value) {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath(path);
@@ -77,5 +62,54 @@ public class AuthenticationService {
         cookie.setSecure(true);
         cookie.setMaxAge(60 * 60 * 24 * 1000);
         return cookie;
+    }
+
+    public Cookie deleteCookie(String name, String value) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setPath(path);
+        cookie.setDomain(domain);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setMaxAge(0);
+        return cookie;
+    }
+
+    public String logOut(String refreshToken) {
+        try{
+            if(refreshToken == null || refreshToken.isEmpty()) {
+                throw new AppException(ErrorCode.INVALID_TOKEN);
+            }
+            SignedJWT result = tokenService.verifyToken(refreshToken, true);
+            Users user = userRepository.findById(UUID.fromString(result.getJWTClaimsSet().getSubject()))
+                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_TOKEN));
+            if(userRepository.findOneByRefreshToken(refreshToken).isEmpty()) {
+                throw new AppException(ErrorCode.INVALID_TOKEN);
+            }
+            user.setRefreshToken(null);
+            userRepository.save(user);
+            return "Logout Successfully!";
+        } catch ( ParseException | JOSEException e) {
+            throw new AppException(ErrorCode.INVALID_TOKEN);
+        }
+
+    }
+
+    public String getNewAccessToken(String refreshToken) {
+        try{
+            if(refreshToken == null || refreshToken.isEmpty()) {
+                throw new AppException(ErrorCode.INVALID_TOKEN);
+            }
+            SignedJWT result = tokenService.verifyToken(refreshToken, true);
+            Users user = userRepository.findById(UUID.fromString(result.getJWTClaimsSet().getSubject()))
+                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_TOKEN));
+            if(userRepository.findOneByRefreshToken(refreshToken).isEmpty()) {
+                throw new AppException(ErrorCode.INVALID_TOKEN);
+            }
+            TokenResponse tokens = tokenService.generateToken(new TokenCreation(user.getId(), user.getUsername()));
+            return tokens.getAccessToken();
+        } catch ( ParseException | JOSEException e) {
+            throw new AppException(ErrorCode.INVALID_TOKEN);
+        }
+
     }
 }

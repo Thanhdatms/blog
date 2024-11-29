@@ -49,7 +49,7 @@ public class TokenService {
         // covert Java object to JSON strings
         // output: {"name":"mkyong","age":42}
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
-        String accessToken = signToken(jwsHeader, ACCESS_KEY, body, (int) VALID_DURATION, ChronoUnit.DAYS);
+        String accessToken = signToken(jwsHeader, ACCESS_KEY, body, (int) VALID_DURATION, ChronoUnit.HOURS);
         String refreshToken = signToken(jwsHeader, REFRESH_KEY, body, (int) REFRESHABLE_DURATION, ChronoUnit.DAYS);
         return new TokenResponse(accessToken, refreshToken);
     }
@@ -81,7 +81,9 @@ public class TokenService {
     }
 
     public SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
-        JWSVerifier verifier = new MACVerifier(ACCESS_KEY.getBytes());
+        JWSVerifier verifier = isRefresh ?
+                new MACVerifier(REFRESH_KEY.getBytes()) :
+                new MACVerifier(ACCESS_KEY.getBytes());
 
         SignedJWT signedJWT = SignedJWT.parse(token);
 
@@ -95,7 +97,6 @@ public class TokenService {
                 : signedJWT.getJWTClaimsSet().getExpirationTime();
 
         var verified = signedJWT.verify(verifier);
-
         if (!(verified && expiryTime.after(new Date())))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
