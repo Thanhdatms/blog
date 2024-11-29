@@ -24,6 +24,9 @@ public interface UserRepository extends JpaRepository<Users, UUID> {
 
     Optional<Users> findByNameTag(String nameTag);
 
+    Optional<Users> findOneByRefreshToken(String token);
+
+
     @Query("SELECT u AS user, " +
             "COUNT(b.id) AS blogCount, " +
             "SUM(CASE WHEN vb.voteType = 'UPVOTE' THEN 1 ELSE 0 END) AS totalUpvotes " +

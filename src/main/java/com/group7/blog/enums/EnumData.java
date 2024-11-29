@@ -23,6 +23,13 @@ public class EnumData {
         OTHER
     }
 
+    public enum ReportStatus{
+        PENDING,
+        CANCEL,
+        DELETE
+    }
+
+
     public static ReportType fromString(String value) {
         try {
             return ReportType.valueOf(value);
