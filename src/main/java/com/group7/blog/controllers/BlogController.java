@@ -42,7 +42,14 @@ public class BlogController {
     @GetMapping
     ApiResponse<List<BlogDetailResponse>> getBlogs() {
         return ApiResponse.<List<BlogDetailResponse>>builder()
-                .result(blogService.getBlogs())
+                .result(blogService.getPublishedBlogs())
+                .build();
+    }
+
+    @GetMapping("/banned")
+    ApiResponse<List<BlogDetailResponse>> getBannedBlogs() {
+        return ApiResponse.<List<BlogDetailResponse>>builder()
+                .result(blogService.getBannedBlogs())
                 .build();
     }
 
