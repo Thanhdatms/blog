@@ -52,4 +52,14 @@ public class ReportController {
                 .result(reportService.getListUserReport(username, page, size))
                 .build();
     }
+
+    @PutMapping("/{reportId}")
+    public ApiResponse<ReportResponse> updateStatus(
+            @RequestParam String reportStatus,
+            @PathVariable("reportId") String reportId
+    ){
+        return ApiResponse.<ReportResponse>builder()
+                .result(reportService.updateReportStatus(reportId,reportStatus))
+                .build();
+    }
 }
