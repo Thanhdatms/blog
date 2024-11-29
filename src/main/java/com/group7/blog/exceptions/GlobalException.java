@@ -1,6 +1,8 @@
 package com.group7.blog.exceptions;
 
 
+import com.group7.blog.dto.ImageUpload.response.ErrorMessageDTO;
+import com.group7.blog.dto.ImageUpload.response.ImageUploadErrorApiResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
 import com.group7.blog.enums.ErrorCode;
 import org.apache.tomcat.websocket.AuthenticationException;
@@ -48,6 +50,16 @@ public class GlobalException {
 
         return ResponseEntity.ok().body(apiResponse);
     }
+
+    @ExceptionHandler(value = ImageUploadException.class)
+    ResponseEntity<ImageUploadErrorApiResponse> handlingImageUploadException(ImageUploadException exception) {
+        ErrorMessageDTO errorMessageDTO = new ErrorMessageDTO();
+        errorMessageDTO.setMessage(exception.getMessage());
+        ImageUploadErrorApiResponse imageUploadErrorApiResponse = new ImageUploadErrorApiResponse();
+        imageUploadErrorApiResponse.setError(errorMessageDTO);
+        return ResponseEntity.ok().body(imageUploadErrorApiResponse);
+    }
+
 
     @ExceptionHandler(value = { MissingServletRequestPartException.class })
     ResponseEntity<ApiResponse> handleMissingServletRequestPartException(MissingServletRequestPartException exception) {

@@ -2,13 +2,20 @@ package com.group7.blog.controllers;
 
 import com.group7.blog.dto.Blog.response.BlogDetailResponse;
 import com.group7.blog.dto.Blog.response.BlogResponse;
+import com.group7.blog.dto.Blog.response.ImageUploadResponseDTO;
+import com.group7.blog.dto.ImageUpload.response.ErrorMessageDTO;
+import com.group7.blog.dto.ImageUpload.response.ImageUploadErrorApiResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
 import com.group7.blog.dto.Blog.request.BlogCreationRequest;
 import com.group7.blog.dto.Blog.request.BlogUpdateRequest;
 import com.group7.blog.dto.User.reponse.UserProfileResponseDTO;
 import com.group7.blog.dto.UserBlogVote.response.BlogVoteResponse;
 import com.group7.blog.enums.EnumData;
+import com.group7.blog.enums.ErrorCode;
+import com.group7.blog.exceptions.AppException;
+import com.group7.blog.exceptions.ImageUploadException;
 import com.group7.blog.services.BlogService;
+import com.group7.blog.services.CloudinaryService;
 import com.group7.blog.services.UserBlogVoteService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -20,6 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.UUID;
 
+import static com.group7.blog.enums.Constant.FOLDER_NAME;
+
 
 @RestController
 @RequestMapping("/blogs")
@@ -28,6 +37,7 @@ import java.util.UUID;
 public class BlogController {
     BlogService blogService;
     UserBlogVoteService userBlogVoteService;
+    CloudinaryService cloudinaryService;
 
     @PostMapping
     ApiResponse<BlogDetailResponse> createBlog(
@@ -101,5 +111,15 @@ public class BlogController {
         return ApiResponse.<List<BlogResponse>>builder()
                 .result(blogService.searchBlog(keyword, page, size))
                 .build();
+    }
+
+    @PostMapping("/images/upload")
+    ImageUploadResponseDTO uploadBlogImage(@RequestPart(name = "upload", required = false) MultipartFile file) throws ImageUploadException {
+        if (file == null || file.isEmpty()) {
+            throw new ImageUploadException(ErrorCode.FILE_MISSING.getMessage());
+        }
+        ImageUploadResponseDTO result = new ImageUploadResponseDTO();
+        result.setUrl(cloudinaryService.uploadFile(file, FOLDER_NAME));
+        return result;
     }
 }

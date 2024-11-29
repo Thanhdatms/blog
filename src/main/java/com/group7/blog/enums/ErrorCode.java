@@ -25,7 +25,7 @@ public enum ErrorCode {
     USER_FOLLOW_EXISTED(401, "User follow existed", HttpStatus.FOUND),
     // BLOG ERRORS
     BLOG_NOT_EXISTED(1005, "Blog not existed", HttpStatus.NOT_FOUND),
-
+    FILE_MISSING(404, "Image file is missing", HttpStatus.BAD_REQUEST),
     // parent comment not existed
     PARENT_COMMENT_NOT_EXISTED(1005, "parent comment not existed", HttpStatus.NOT_FOUND),
 
