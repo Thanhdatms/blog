@@ -1,6 +1,7 @@
 package com.group7.blog.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.group7.blog.enums.EnumData;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -31,6 +32,9 @@ public class Blog {
 
     String thumbnail;
     boolean status;
+
+    @Enumerated(EnumType.STRING)
+    EnumData.BlogStatus blogStatus = EnumData.BlogStatus.PUBLISHED;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @CreationTimestamp
