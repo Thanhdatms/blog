@@ -2,6 +2,7 @@ package com.group7.blog.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.group7.blog.exceptions.ImageUploadException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,7 +27,7 @@ public class CloudinaryService {
             String publicId = (String) uploadedFile.get("public_id");
             return cloudinary.url().secure(true).generate(publicId);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ImageUploadException(e.getMessage());
         }
     }
 }
