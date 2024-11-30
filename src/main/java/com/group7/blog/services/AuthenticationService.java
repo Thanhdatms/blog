@@ -57,7 +57,6 @@ public class AuthenticationService {
     public Cookie getCookie(String name, String value) {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath(path);
-        cookie.setDomain(domain);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setMaxAge(60 * 60 * 24 * 1000);
@@ -67,7 +66,6 @@ public class AuthenticationService {
     public Cookie deleteCookie(String name, String value) {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath(path);
-        cookie.setDomain(domain);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setMaxAge(0);
