@@ -75,6 +75,7 @@ public class SecurityConfiguration {
         httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Set up CORS configuration
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET, "/").permitAll()
                         .requestMatchers(HttpMethod.GET, "/blogs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/tags/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
