@@ -48,6 +48,7 @@ server:
         secure: true
         max-age: 3600
         path: /
+        same-site: strict
   domain-url: ${BASE_DEV_URL}
   cookie:
     domain: ${DOMAIN_COOKIE_DEV}

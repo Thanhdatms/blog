@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +28,15 @@ public class AuthenticationController {
     @PostMapping("/login")
     ApiResponse<String> login(@RequestBody LoginRequest request, HttpServletResponse response){
         TokenResponse tokens = authenticationService.login(request);
-        Cookie cookie = authenticationService.getCookie("refresh_token", tokens.getRefreshToken());
-        response.addCookie(cookie);
+//        Cookie cookie = authenticationService.getCookie("refresh_token", tokens.getRefreshToken());
+        ResponseCookie cookie = ResponseCookie.from("refresh_token", tokens.getRefreshToken()) // key & value
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(3600)
+                .sameSite("None")  // sameSite
+                .build();
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ApiResponse.<String>builder()
                 .result(tokens.getAccessToken())
                 .build();
