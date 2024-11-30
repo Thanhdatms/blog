@@ -41,7 +41,14 @@ jwt:
   refreshable-duration: ${REFRESHABLE_DURATION:15}
   reset-password-duration: ${RESETTABLE_DURATION:30}
 server:
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        secure: true
+        max-age: 3600
+        path: /
+  domain-url: ${BASE_DEV_URL}
   cookie:
     domain: ${DOMAIN_COOKIE_DEV}
     path: ${PATH_COOKIE_DEV}
-  domain-url: ${BASE_DEV_URL}
