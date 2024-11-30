@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,12 +33,12 @@ public class AuthenticationService {
     TokenService tokenService;
 
     @NonFinal
-    @Value("${server.cookie.domain}")
-    private String domain;
+    @Value("${server.cookie.sameSite}")
+    private String sameSite;
 
     @NonFinal
-    @Value("${server.cookie.path}")
-    private String path;
+    @Value("${server.cookie.secure}")
+    private String secure;
 
     public TokenResponse login(LoginRequest request){
         Users user = userRepository.findByUsername(request.getUsername())
@@ -54,22 +55,24 @@ public class AuthenticationService {
         return tokens;
     }
 
-    public Cookie getCookie(String name, String value) {
-        Cookie cookie = new Cookie(name, value);
-        cookie.setPath(path);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setMaxAge(60 * 60 * 24 * 1000);
-        return cookie;
+    public ResponseCookie getCookie(String name, String value) {
+        return ResponseCookie.from(name, value) // key & value
+                .httpOnly(true)
+                .secure(secure.equals("true"))
+                .path("/")
+                .maxAge(36000)
+                .sameSite(sameSite)  // sameSite
+                .build();
     }
 
-    public Cookie deleteCookie(String name, String value) {
-        Cookie cookie = new Cookie(name, value);
-        cookie.setPath(path);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setMaxAge(0);
-        return cookie;
+    public ResponseCookie deleteCookie(String name) {
+        return ResponseCookie.from(name, "") // key & value
+                .httpOnly(true)
+                .secure(secure.equals("true"))
+                .path("/")
+                .maxAge(0)
+                .sameSite(sameSite)  // sameSite
+                .build();
     }
 
     public String logOut(String refreshToken) {

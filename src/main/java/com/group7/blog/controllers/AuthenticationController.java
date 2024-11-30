@@ -28,14 +28,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     ApiResponse<String> login(@RequestBody LoginRequest request, HttpServletResponse response){
         TokenResponse tokens = authenticationService.login(request);
-//        Cookie cookie = authenticationService.getCookie("refresh_token", tokens.getRefreshToken());
-        ResponseCookie cookie = ResponseCookie.from("refresh_token", tokens.getRefreshToken()) // key & value
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge(3600)
-                .sameSite("None")  // sameSite
-                .build();
+        ResponseCookie cookie = authenticationService.getCookie("refresh_token", tokens.getRefreshToken());
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ApiResponse.<String>builder()
                 .result(tokens.getAccessToken())
@@ -44,8 +37,8 @@ public class AuthenticationController {
 
     @PostMapping("/logout")
     ApiResponse<String> logout(@CookieValue(value = "refresh_token", defaultValue = "") String cookie, HttpServletResponse response) {
-        Cookie newCookie = authenticationService.deleteCookie("refresh_token", null);
-        response.addCookie(newCookie);
+        ResponseCookie deletedCookie = authenticationService.deleteCookie("refresh_token");
+        response.setHeader(HttpHeaders.SET_COOKIE, String.valueOf(deletedCookie));
         return ApiResponse.<String>builder()
                 .result(authenticationService.logOut(cookie))
                 .build();
