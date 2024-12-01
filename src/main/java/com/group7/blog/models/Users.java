@@ -43,9 +43,9 @@ public class Users {
     @NotBlank(message = "Email cannot be blank")
     private String email;
 
-    private String phonenumber;
+    private String phoneNumber;
     @Column(columnDefinition = "TEXT")
-    private String refreshtoken;
+    private String refreshToken;
 
     private boolean status;
 

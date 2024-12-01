@@ -52,7 +52,7 @@ public class UserService {
     public Users createUser(UserCreationRequest request){
         Users user = userMapper.toUser(request);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        user.setHashpassword(passwordEncoder.encode(user.getHashpassword()));
+        user.setHashPassword(passwordEncoder.encode(user.getHashPassword()));
         Role role = roleRepository.findByName("user").orElseThrow(()-> new AppException(ErrorCode.USER_ROLE_NOT_FOUND));
         user = userRepository.save(user);
 

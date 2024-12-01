@@ -34,7 +34,7 @@ public class LoadSampleDataService {
             Users admin = new Users();
             admin.setEmail("adminMEB@gmail.com");
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-            admin.setHashpassword(passwordEncoder.encode("admin123456"));
+            admin.setHashPassword(passwordEncoder.encode("admin123456"));
             admin.setUsername("adminMEB");
 
             userRepository.save(admin);
