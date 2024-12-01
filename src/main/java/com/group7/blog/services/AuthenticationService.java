@@ -87,7 +87,7 @@ public class AuthenticationService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        boolean isMatched = passwordEncoder.matches(request.getPassword(), user.getHashpassword());
+        boolean isMatched = passwordEncoder.matches(request.getPassword(), user.getHashPassword());
         if(!isMatched){
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }

@@ -36,7 +36,7 @@ public class Users {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$",
             message = "Password must contain at least one digit, one lowercase, one uppercase letter, and one special character")
-    private String hashpassword;
+    private String hashPassword;
 
     @Column(unique = true)
     @Email(message = "Email should be valid")
