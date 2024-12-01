@@ -99,4 +99,7 @@ public class Users {
     @JsonIgnore
     @OneToMany(mappedBy = "users")
     private List<History> histories;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserRole> userRoles;
 }

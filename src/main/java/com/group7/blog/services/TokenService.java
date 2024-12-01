@@ -70,6 +70,7 @@ public class TokenService {
                             Instant.now().plus(duration, type).toEpochMilli()
                     ))
                     .claim("username", body.getUsername())
+                    .claim("roles", body.getRoles())
                     .build();
             Payload payload = new Payload(jwtClaimsSet.toJSONObject());
             JWSObject jwsObject = new JWSObject(algo, payload);

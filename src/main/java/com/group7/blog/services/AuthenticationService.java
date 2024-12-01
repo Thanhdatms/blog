@@ -6,6 +6,7 @@ import com.group7.blog.dto.History.request.HistoryCreation;
 import com.group7.blog.enums.EnumData;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.enums.ErrorCode;
+import com.group7.blog.mappers.RoleMapper;
 import com.group7.blog.models.Users;
 import com.group7.blog.repositories.UserRepository;
 import jakarta.servlet.http.Cookie;
@@ -36,6 +37,7 @@ public class AuthenticationService {
     TokenService tokenService;
     HistoryService historyService;
     EmailService emailService;
+    RoleMapper roleMapper;
 
     @NonFinal
     @Value("${server.cookie.domain}")
@@ -97,7 +99,13 @@ public class AuthenticationService {
             throw new AppException(ErrorCode.PASSWORD_INCORRECT);
         }
 
-        TokenResponse tokens = tokenService.generateToken(new TokenCreation(user.getId(), user.getUsername()));
+        TokenResponse tokens = tokenService.generateToken(new TokenCreation(
+                user.getId(),
+                user.getUsername(),
+                user.getUserRoles().stream().map(
+                        item -> roleMapper.toRoleResponse(item.getRole())
+                ).toList())
+        );
 
         user.setRefreshToken(tokens.getRefreshToken());
         user.setLoginFailedCount(0);

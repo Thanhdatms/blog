@@ -7,6 +7,7 @@ import com.group7.blog.dto.User.reponse.ApiResponse;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.services.AuthenticationService;
+import com.group7.blog.services.LoadSampleDataService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,6 +26,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class AuthenticationController {
 
     AuthenticationService authenticationService;
+    LoadSampleDataService loadSampleDataService;
 
     @PostMapping("/login")
     ApiResponse<String> login(@RequestBody LoginRequest request, HttpServletResponse response){
@@ -49,5 +51,11 @@ public class AuthenticationController {
         return ApiResponse.<String>builder()
                 .result(String.valueOf(refreshToken))
                 .build();
+    }
+
+    @PostMapping("/sample-data")
+    public String loadSampleData() {
+        loadSampleDataService.loadUserData();
+        return "Load data successfully!";
     }
 }
