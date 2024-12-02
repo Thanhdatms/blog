@@ -33,7 +33,7 @@ public class SecurityConfiguration {
             "/auth/login",
             "/auth/logout",
             "/auth/refresh-token",
-            "/users",
+            "/auth/register",
             "/v3/api-docs/**",
             "/swagger-ui/**",
     };
