@@ -56,11 +56,12 @@ public class AuthenticationService {
     }
 
     public ResponseCookie getCookie(String name, String value) {
-        return ResponseCookie.from(name, value)// key & value
+        return ResponseCookie.from(name, value) // key & value
                 .httpOnly(true)
-                .domain("www.yourrlove.com")
+                .secure(secure.equals("true"))
                 .path("/")
                 .maxAge(36000)
+                .sameSite(sameSite)  // sameSite
                 .build();
     }
 
@@ -70,6 +71,7 @@ public class AuthenticationService {
                 .secure(secure.equals("true"))
                 .path("/")
                 .maxAge(0)
+                .sameSite(sameSite)  // sameSite
                 .build();
     }
 
