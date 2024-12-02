@@ -1,5 +1,6 @@
 package com.group7.blog.services;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -173,4 +174,16 @@ public class BlogService {
         return blogMapper.toBlogResponse(blog);
     }
 
+    public String deleteBlog(UUID blogId) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        String userId = context.getAuthentication().getName();
+        Blog blog = blogRepository.findById(blogId).orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
+
+        if(!Objects.equals(userId, blog.getUsers().getId().toString())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        blogRepository.deleteById(blogId);
+        return "Delete Blog Successfully!";
+    }
 }

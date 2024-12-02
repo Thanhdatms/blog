@@ -23,6 +23,6 @@ public class Category {
     Timestamp updatedAt;
     Timestamp publishedAt;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST,  orphanRemoval = false)
     List<Blog> blogs;
 }

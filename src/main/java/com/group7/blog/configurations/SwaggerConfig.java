@@ -28,8 +28,8 @@ public class SwaggerConfig {
 
         // API Information
         Info apiInfo = new Info()
-                .title("Authentication Service API")
-                .description("This service is responsible for validating user credentials and providing authentication features.")
+                .title("MEB WEB API")
+                .description("This is api for blog application by MEB team.")
                 .version("v1.0.0")
                 .license(new License()
                         .name("Apache License 2.0")
@@ -45,7 +45,7 @@ public class SwaggerConfig {
                 .name(securitySchemeName)
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("bearer")
-                .bearerFormat("JWT");
+                .bearerFormat("Bearer");
 
         // Server URLs
         Server developmentServer = new Server()

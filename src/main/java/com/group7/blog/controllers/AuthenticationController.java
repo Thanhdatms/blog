@@ -4,17 +4,24 @@ package com.group7.blog.controllers;
 import com.group7.blog.dto.Auth.LoginRequest;
 import com.group7.blog.dto.Auth.TokenResponse;
 import com.group7.blog.dto.User.reponse.ApiResponse;
+import com.group7.blog.dto.User.reponse.UserResponse;
+import com.group7.blog.dto.User.request.UserCreationRequest;
 import com.group7.blog.services.AuthenticationService;
+import com.group7.blog.services.UserService;
 import com.nimbusds.jose.JOSEException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 
@@ -25,6 +32,29 @@ import java.text.ParseException;
 public class AuthenticationController {
 
     AuthenticationService authenticationService;
+    UserService userService;
+
+    @Operation(
+            summary = "Register New Account",
+            description = "Registers a new user account and optionally uploads a profile picture.",
+            tags = {"Authentication"}
+    )
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "User successfully registered",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UserResponse.class))
+    )
+    @PostMapping("/register")
+    ApiResponse<UserResponse> registerNewAccount(
+            @Valid @RequestPart("user") UserCreationRequest request,
+            @RequestPart(name = "file", required = false) MultipartFile file
+    ) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.createUser(request, file))
+                .build();
+    }
+
     @Operation(
             summary = "Login",
             description = "Authenticates the user and provides a JWT token if credentials are valid.",
