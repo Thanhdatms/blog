@@ -126,16 +126,8 @@ public class CommentService {
     }
 
     public List<CommentDetailResponse> getPaginatedBlogComment(String blogId, int page, int size){
-        SecurityContext context = SecurityContextHolder.getContext();
-        String userId = context.getAuthentication().getName();
-
-        Users user = userRepository.findById(UUID
-                        .fromString(userId))
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
         Blog blog = blogRepository.findById(UUID.fromString(blogId))
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
-
 
         Pageable pageable = PageRequest.of(page, size);
 

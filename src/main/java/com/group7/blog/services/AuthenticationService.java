@@ -70,7 +70,6 @@ public class AuthenticationService {
                 .secure(secure.equals("true"))
                 .path("/")
                 .maxAge(0)
-                .sameSite(sameSite)  // sameSite
                 .build();
     }
 
