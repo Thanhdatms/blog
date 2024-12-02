@@ -47,7 +47,7 @@ public class Blog {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     Timestamp publishedAt;
 
-    @OneToMany(mappedBy = "blog")
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
     List<BlogTag> blogTags;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -58,10 +58,10 @@ public class Blog {
     @JoinColumn(name = "category_id")
     Category category;
 
-    @OneToMany(mappedBy = "blog")
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
     List<BookMark> bookMarks;
 
-    @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Set<Comment> comments;
     @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
     List<UserBlogVote> userBlogVotes;

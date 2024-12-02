@@ -61,8 +61,8 @@ public class BlogController {
     }
 
     @Operation(
-            summary = "Upvote or Downvote a Blog",
-            description = "Allows a user to upvote or downvote a specific blog.",
+            summary = "Upvote or Down vote a Blog",
+            description = "Allows a user to upvote or down vote a specific blog.",
             tags = {"Blog Votes"}
     )
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
@@ -262,4 +262,20 @@ public class BlogController {
                 .build();
     }
 
+    @Operation(
+            summary = "Delete Blog",
+            description = "Deletes a blog by its unique ID.",
+            tags = {"Blogs"}
+    )
+    @io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Blog deleted successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Blog not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @DeleteMapping("/{blogId}")
+    public ApiResponse<String> deleteBlog(@PathVariable("blogId") UUID blogId) {
+        return ApiResponse.<String>builder()
+                .result(blogService.deleteBlog(blogId))
+                .build();
+    }
 }
