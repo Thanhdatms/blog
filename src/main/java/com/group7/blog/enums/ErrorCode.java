@@ -16,10 +16,11 @@ public enum ErrorCode {
     UNAUTHENTICATED(401, "Unauthenticated", HttpStatus.UNAUTHORIZED),  // 401
     UNAUTHORIZED(403, "You do not have permission", HttpStatus.FORBIDDEN),  // 403
     INVALID_TOKEN(401, "Invalid token", HttpStatus.UNAUTHORIZED),  // 401
+    INVALID_REFRESH_TOKEN(405, "Invalid refresh token", HttpStatus.UNAUTHORIZED),
     EMAIL_NOT_FOUND(404, "Email not found", HttpStatus.NOT_FOUND),  // 404
     EMAIL_REGISTERED(400, "Email is already registered", HttpStatus.BAD_REQUEST),  // 400
     RESET_PASSWD_EMAIL_SENT(400, "Reset Password email has been sent", HttpStatus.BAD_REQUEST),  // 200
-
+    TOKEN_NOT_FOUND(404, "Token not found", HttpStatus.BAD_REQUEST),
     USER_ID_INVALID(400, "Invalid user ID", HttpStatus.BAD_REQUEST),  // 400
     USER_FOLLOW_EXISTED(409, "User already followed", HttpStatus.CONFLICT),  // 409 (409 is Conflict, better for "already followed" scenario)
 

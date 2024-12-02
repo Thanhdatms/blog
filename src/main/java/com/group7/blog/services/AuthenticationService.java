@@ -78,19 +78,19 @@ public class AuthenticationService {
     public String logOut(String refreshToken) {
         try{
             if(refreshToken == null || refreshToken.isEmpty()) {
-                throw new AppException(ErrorCode.INVALID_TOKEN);
+                throw new AppException(ErrorCode.TOKEN_NOT_FOUND);
             }
             SignedJWT result = tokenService.verifyToken(refreshToken, true);
             Users user = userRepository.findById(UUID.fromString(result.getJWTClaimsSet().getSubject()))
-                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_TOKEN));
+                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_REFRESH_TOKEN));
             if(userRepository.findOneByRefreshToken(refreshToken).isEmpty()) {
-                throw new AppException(ErrorCode.INVALID_TOKEN);
+                throw new AppException(ErrorCode.INVALID_REFRESH_TOKEN);
             }
             user.setRefreshToken(null);
             userRepository.save(user);
             return "Logout Successfully!";
         } catch ( ParseException | JOSEException e) {
-            throw new AppException(ErrorCode.INVALID_TOKEN);
+            throw new AppException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
     }
