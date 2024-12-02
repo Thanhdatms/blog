@@ -6,6 +6,7 @@ import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.mappers.BlogMapper;
 import com.group7.blog.mappers.CategoryMapper;
+import com.group7.blog.models.Blog;
 import com.group7.blog.models.Category;
 import com.group7.blog.repositories.BlogRepository;
 import com.group7.blog.repositories.CategoryRepository;
@@ -56,5 +57,17 @@ public class CategoryService {
         );
 
         return categoryDetailResponse;
+    }
+
+    public String delete(UUID categoryId) {
+        Category category = categoryRepository
+                .findById(categoryId)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXISTED));
+        List<Blog> blogs = category.getBlogs().stream().toList();
+        blogs.forEach(blog -> {
+            blog.setCategory(null);
+        });
+        categoryRepository.deleteById(categoryId);
+        return "Delete Category Successfully";
     }
 }

@@ -8,9 +8,11 @@ import com.group7.blog.services.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -80,6 +82,26 @@ public class CategoryController {
     public ApiResponse<CategoryDetailResponse> getCategory(@PathVariable("categoryId") UUID categoryId) {
         return ApiResponse.<CategoryDetailResponse>builder()
                 .result(categoryService.getCategory(categoryId))
+                .build();
+    }
+
+    @Operation(
+            summary = "Delete Category",
+            description = "Deletes a category by its ID.",
+            tags = {"Categories"}
+    )
+    @io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "Category successfully deleted",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiResponse.class))
+            ),
+    })
+    @DeleteMapping("/{categoryId}")
+    public ApiResponse<String> deleteCategory(@PathVariable("categoryId") UUID categoryId) {
+        return ApiResponse.<String>builder()
+                .result(categoryService.delete(categoryId))
                 .build();
     }
 }
