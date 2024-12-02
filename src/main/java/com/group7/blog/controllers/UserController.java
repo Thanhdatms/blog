@@ -220,6 +220,23 @@ public class UserController {
     }
 
     @Operation(
+            summary = "Get Bookmarked Blogs",
+            description = "Retrieves a list of blogs that the user has bookmarked.",
+            tags = {"Users"}
+    )
+    @io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "List of bookmarked blogs retrieved successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "No bookmarked blogs found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/bookmarks")
+    public ApiResponse<BookMarkListResponse> getBookMarkBlogs() {
+        return ApiResponse.<BookMarkListResponse>builder()
+                .result(bookMarkService.getBookMarkBlogs())
+                .build();
+    }
+
+    @Operation(
             summary = "Add a Blog to Bookmarks",
             description = "Adds a blog to the user's bookmarks.",
             tags = {"Users"}
