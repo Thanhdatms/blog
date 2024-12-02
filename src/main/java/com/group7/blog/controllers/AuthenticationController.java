@@ -38,7 +38,7 @@ public class AuthenticationController {
     ApiResponse<String> login(@RequestBody LoginRequest request, HttpServletResponse response){
         TokenResponse tokens = authenticationService.login(request);
         ResponseCookie cookie = authenticationService.getCookie("refresh_token", tokens.getRefreshToken());
-        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString() + "; SameSite=Lax; Secure");
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString() + "; SameSite=None; Secure");
         return ApiResponse.<String>builder()
                 .result(tokens.getAccessToken())
                 .build();

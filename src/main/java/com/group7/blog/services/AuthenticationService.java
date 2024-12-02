@@ -58,7 +58,7 @@ public class AuthenticationService {
     public ResponseCookie getCookie(String name, String value) {
         return ResponseCookie.from(name, value)// key & value
                 .httpOnly(true)
-                .secure(secure.equals("true"))
+                .domain("www.yourrlove.com")
                 .path("/")
                 .maxAge(36000)
                 .build();
