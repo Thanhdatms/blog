@@ -1,8 +1,10 @@
 package com.group7.blog.dto.User.reponse;
 
+import com.group7.blog.dto.Role.response.RoleResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -11,8 +13,10 @@ import java.util.UUID;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserProfileResponse {
-    UUID id;
-    String firstname;
-    String lastname;
+    String id;
     String username;
+    String nameTag;
+    String bio;
+    String avatar;
+    List<RoleResponse> roles;
 }

@@ -9,6 +9,7 @@ import com.group7.blog.dto.User.request.UserUpdateRequest;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.mappers.BlogMapper;
+import com.group7.blog.mappers.RoleMapper;
 import com.group7.blog.mappers.UserMapper;
 import com.group7.blog.models.*;
 import com.group7.blog.repositories.*;
@@ -39,6 +40,7 @@ public class UserService {
     UserFollowRepository userFollowRepository;
     RoleRepository roleRepository;
     UserRoleRepository userRoleRepository;
+    RoleMapper roleMapper;
 
 
     public boolean checkUserExistById(String userId) {
@@ -77,14 +79,20 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    public UserProfileResponse getCurrentUserInfo() {
-        SecurityContext context = SecurityContextHolder.getContext();
-        String userId = context.getAuthentication().getName();
-
+    public UserProfileResponse getCurrentUserInfo(String userId) {
         Users user = userRepository.findById(UUID.fromString(userId)).
                 orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        return userMapper.toUserProfileResponse(user);
+        return new UserProfileResponse(
+                user.getId().toString(),
+                user.getUsername(),
+                user.getLastname(),
+                user.getBio(),
+                user.getAvatar(),
+                user.getUserRoles().stream().map(
+                        item -> roleMapper.toRoleResponse(item.getRole())
+                ).toList()
+        );
     }
 
     public UserResponse getBlogsByUserId(UUID userId) {

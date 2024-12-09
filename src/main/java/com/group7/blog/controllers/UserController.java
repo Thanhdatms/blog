@@ -15,7 +15,9 @@ import com.group7.blog.models.Blog;
 import com.group7.blog.models.UserFollow;
 import com.group7.blog.models.Users;
 import com.group7.blog.services.BookMarkService;
+import com.group7.blog.services.TokenService;
 import com.group7.blog.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -35,6 +37,7 @@ import java.util.UUID;
 public class UserController {
     UserService userService;
     BookMarkService bookMarkService;
+    TokenService tokenService;
 
     @GetMapping
     List<Users> getUsers() {
@@ -70,10 +73,12 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    ApiResponse<UserProfileResponse> getMe () {
+    ApiResponse<UserProfileResponse> getMe (HttpServletRequest req) {
+        String decodedToken = (String) req.getAttribute("decodedToken");
+        String userId = tokenService.parseDecodedToken(decodedToken).getUserId();
         return ApiResponse.<UserProfileResponse>builder()
                 .message("Get User Profile Successfully!")
-                .result(userService.getCurrentUserInfo())
+                .result(userService.getCurrentUserInfo(userId))
                 .build();
     }
 
