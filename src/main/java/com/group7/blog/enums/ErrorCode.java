@@ -36,7 +36,8 @@ public enum ErrorCode {
     //BOOKMARK ERRORS
     BOOKMARK_NOT_FOUND(404, "Bookmark not found", HttpStatus.NOT_FOUND),
     BOOKMARK_EXISTED(404, "Bookmark is existed", HttpStatus.BAD_REQUEST),
-
+    // REPORT ERRORS
+    REPORT_NOT_EXIST(404, "Report not found", HttpStatus.NOT_FOUND);
     ;
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

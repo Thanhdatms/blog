@@ -91,4 +91,7 @@ public class Users {
 
     @OneToMany(mappedBy = "user")
     private List<UserRole> userRoles;
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Report> reports;
 }

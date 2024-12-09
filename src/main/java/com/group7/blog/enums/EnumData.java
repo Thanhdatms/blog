@@ -16,5 +16,30 @@ public class EnumData {
         }
     }
 
+    public enum BlogStatus {
+        PUBLISHED,
+        BANNED
+    }
 
+    public enum ReportType{
+        SPAM,
+        OFFENSIVE,
+        INCORRECT,
+        OTHER
+    }
+
+    public enum ReportStatus{
+        PENDING,
+        CANCEL,
+        APPROVE,
+    }
+
+
+    public static ReportType fromString(String value) {
+        try {
+            return ReportType.valueOf(value);
+        } catch (IllegalArgumentException e){
+            return ReportType.OTHER;
+        }
+    }
 }
