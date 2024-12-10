@@ -102,7 +102,16 @@ public class UserService {
         Users user = userRepository.findByNameTag(nameTag)
                 .orElseThrow(() -> new RuntimeException("User is not exist"));
 
-        return userMapper.toUserProfileResponse(user);
+        return new UserProfileResponseDTO(
+                user.getId().toString(),
+                user.getUsername(),
+                user.getNameTag(),
+                user.getBio(),
+                user.getAvatar(),
+                user.getUserRoles().stream().map(
+                        item -> roleMapper.toRoleResponse(item.getRole())
+                ).toList()
+        );
     }
 
     public UserResponse updateUser(UUID userId, UserUpdateRequest request){

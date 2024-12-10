@@ -1,7 +1,10 @@
 package com.group7.blog.dto.User.reponse;
 
+import com.group7.blog.dto.Role.response.RoleResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,4 +17,5 @@ public class UserProfileResponseDTO {
     String nameTag;
     String bio;
     String avatar;
+    List<RoleResponse> roles;
 }
