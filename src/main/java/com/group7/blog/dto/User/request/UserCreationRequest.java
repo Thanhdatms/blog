@@ -16,7 +16,7 @@ public class UserCreationRequest {
     String firstname;
     String lastname;
     String username;
-    String hashpassword;
+    String hashPassword;
     String email;
     String phonenumber;
 }

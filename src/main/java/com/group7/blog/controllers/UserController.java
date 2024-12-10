@@ -18,10 +18,12 @@ import com.group7.blog.services.BookMarkService;
 import com.group7.blog.services.TokenService;
 import com.group7.blog.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -45,7 +47,10 @@ public class UserController {
     }
 
     @PostMapping
-    ApiResponse<Users> createUser(@RequestBody UserCreationRequest request){
+    ApiResponse<Users> createUser(
+            @Valid @RequestPart("user") UserCreationRequest request,
+            @RequestPart(name = "file", required = false) MultipartFile file
+    ){
         ApiResponse<Users> usersApiResponse = new ApiResponse<>();
         Users createdUser = userService.createUser(request);
         usersApiResponse.setResult(createdUser);
