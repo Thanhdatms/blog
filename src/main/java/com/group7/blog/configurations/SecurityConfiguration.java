@@ -119,6 +119,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/tags/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/auth/sample-data").permitAll()
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll() // Allow access to public endpoints
                         .anyRequest().authenticated() // Require authentication for other endpoints
                 ); // Disable CSRF if needed (optional, only if necessary)
