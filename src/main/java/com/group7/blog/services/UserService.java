@@ -130,7 +130,16 @@ public class UserService {
         Users user = userRepository.findById(UUID.fromString(userId)).
                 orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        return userMapper.toUserProfileResponse(user);
+        return new UserProfileResponseDTO(
+                user.getId().toString(),
+                user.getUsername(),
+                user.getNameTag(),
+                user.getBio(),
+                user.getAvatar(),
+                user.getUserRoles().stream().map(
+                        item -> roleMapper.toRoleResponse(item.getRole())
+                ).toList()
+        );
     }
 
     public UserResponse getBlogsByUserId(UUID userId) {
