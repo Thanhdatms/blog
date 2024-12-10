@@ -92,20 +92,19 @@ public class ReportController {
 
     @Operation(
             summary = "Update the status of a report",
-            description = "This endpoint allows you to update the status of a report (e.g., mark as resolved).",
+            description = "Updates the status of a specific report (e.g., mark it as resolved).",
             tags = {"Reports"},
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(
                             responseCode = "200",
-                            description = "Report status updated successfully",
+                            description = "Report status updated successfully.",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReportResponse.class))
-                    ),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid status or report ID", content = @Content)
+                    )
             }
     )
     @PutMapping("/{reportId}")
     public ApiResponse<ReportResponse> updateStatus(
-            @RequestParam String reportStatus,
+            @RequestParam("reportStatus") String reportStatus,
             @PathVariable("reportId") String reportId) {
         return ApiResponse.<ReportResponse>builder()
                 .result(reportService.updateReportStatus(reportId, reportStatus))
