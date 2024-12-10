@@ -55,6 +55,17 @@ public class AuthenticationService {
             if(user.getLastLoginFailed().before(Timestamp.valueOf(LocalDateTime.now().minusMinutes(15)))) {
                 user.setIsLock(false);
             } else {
+                Map<String, Object> model = new HashMap<>();
+                model.put("username", user.getUsername());
+                model.put("email", user.getEmail());
+                model.put("time", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+                emailService.sendAdminAlert(
+                        "beplodao@gmail.com",
+                        "Security Alert: Failed Login Attempts",
+                        model,
+                        "admin-email-alert-template"
+                );
                 throw new AppException(ErrorCode.IS_LOCKED);
             }
         }
@@ -81,19 +92,6 @@ public class AuthenticationService {
                 user.setLastLoginFailed(Timestamp.valueOf(LocalDateTime.now()));
             }
 
-            if(user.getLoginFailedCount() > 5) {
-                Map<String, Object> model = new HashMap<>();
-                model.put("username", user.getUsername());
-                model.put("email", user.getEmail());
-                model.put("time", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-
-                emailService.sendAdminAlert(
-                        "beplodao@gmail.com",
-                        "Security Alert: Failed Login Attempts",
-                        model,
-                        "admin-email-alert-template"
-                );
-            }
             userRepository.save(user);
 
             throw new AppException(ErrorCode.PASSWORD_INCORRECT);
