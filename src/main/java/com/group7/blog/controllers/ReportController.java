@@ -118,4 +118,26 @@ public class ReportController {
                 .result(reportService.updateReportStatus(reportId, reportStatus))
                 .build();
     }
+
+    @Operation(
+            summary = "Get reports by status",
+            description = "This endpoint retrieves a paginated list of reports filtered by status.",
+            tags = {"Reports"},
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Reports fetched successfully",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class))
+                    )
+            }
+    )
+    @GetMapping("/{reportStatus}")
+    public ApiResponse<List<ReportDetailResponse>> getReportsByStatus(
+            @PathVariable String reportStatus,
+            @RequestParam int page,
+            @RequestParam int size) {
+        return ApiResponse.<List<ReportDetailResponse>>builder()
+                .result(reportService.getListReportByStatus(reportStatus, page, size))
+                .build();
+    }
 }

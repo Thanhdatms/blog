@@ -1,4 +1,4 @@
-FROM openjdk:24-oraclelinux9
+FROM openjdk:24-ea-21-oraclelinux9
 # Set working directory trong container
 WORKDIR /app
 COPY ./target/blog-0.0.1-SNAPSHOT.jar app.jar
