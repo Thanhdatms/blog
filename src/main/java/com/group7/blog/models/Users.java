@@ -1,6 +1,7 @@
 package com.group7.blog.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.group7.blog.enums.EnumData;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -52,6 +53,9 @@ public class Users {
     private String refreshToken;
 
     private boolean status;
+
+    @Enumerated(EnumType.STRING)
+    EnumData.UserStatus userStatus = EnumData.UserStatus.ACTIVATED;
 
     private Timestamp createdAt;
     private Timestamp updatedAt;

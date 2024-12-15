@@ -59,6 +59,7 @@ public class ReportService {
         newReport.setBlog(blog);
         newReport.setUsers(user);
         newReport.setReportType(request.getReportType());
+        newReport.setReportReason(request.getReportReason());
         newReport.setDescription(request.getDescription());
         newReport.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
 
@@ -130,10 +131,16 @@ public class ReportService {
                 .orElseThrow(() -> new AppException(ErrorCode.REPORT_NOT_EXIST));
         Blog blog = blogRepository.findById(report.getBlog().getId())
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
+        Users user = userRepository.findById(UUID.fromString(userId))
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         report.setReportStatus(EnumData.ReportStatus.valueOf(reportStatus));
         if(report.getReportStatus() == EnumData.ReportStatus.DELETE) {
-            blog.setBlogStatus(EnumData.BlogStatus.BANNED);
+            if(report.getReportType() == EnumData.ReportType.BLOG) {
+                blog.setBlogStatus(EnumData.BlogStatus.BANNED);
+            } else if(report.getReportType() == EnumData.ReportType.USER) {
+                user.setUserStatus(EnumData.UserStatus.BANNED);
+            }
         }
         blogRepository.save(blog);
 
@@ -142,7 +149,7 @@ public class ReportService {
         return reportMapper.toResponse(report);
     }
 
-    public List<ReportDetailResponse> getListReportByStatus(String reportStatus, int page, int size) {
+    public List<ReportDetailResponse> getListReportByStatus(String reportStatus, String reportType, int page, int size) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         boolean isAdmin = SecurityContextHolder.getContext()
                 .getAuthentication()
@@ -160,8 +167,10 @@ public class ReportService {
         // Convert string to enum
         EnumData.ReportStatus status = EnumData.ReportStatus.valueOf(reportStatus.toUpperCase());
 
+        EnumData.ReportType type = EnumData.ReportType.valueOf(reportType.toUpperCase());
+
         // Fetch paginated Reports by status
-        Page<Report> paginatedReports = reportRepository.findByReportStatus(status, pageable);
+        Page<Report> paginatedReports = reportRepository.findByReportStatusAndReportType(status, type, pageable);
 
         // Map reports to responses
         return paginatedReports.getContent().stream()

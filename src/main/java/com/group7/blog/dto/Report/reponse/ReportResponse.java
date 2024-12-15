@@ -19,6 +19,7 @@ public class ReportResponse {
     UUID blogId;
     EnumData.ReportType reportType;
     EnumData.ReportStatus reportStatus;
+    EnumData.ReportReason reportReason;
     String description;
     Timestamp createdAt;
 }

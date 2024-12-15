@@ -34,6 +34,9 @@ public class Report {
     ReportType reportType;
 
     @Enumerated(EnumType.STRING)
+    EnumData.ReportReason reportReason;
+
+    @Enumerated(EnumType.STRING)
     ReportStatus reportStatus = ReportStatus.PENDING;
 
     String description;

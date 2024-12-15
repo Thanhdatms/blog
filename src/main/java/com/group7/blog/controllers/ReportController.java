@@ -47,26 +47,26 @@ public class ReportController {
                 .build();
     }
 
-    @Operation(
-            summary = "Get a list of reports",
-            description = "This endpoint retrieves a paginated list of reports.",
-            tags = {"Reports"},
-            responses = {
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-                            responseCode = "200",
-                            description = "Reports fetched successfully",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class))
-                    )
-            }
-    )
-    @GetMapping
-    public ApiResponse<List<ReportDetailResponse>> getReport(
-            @RequestParam int page,
-            @RequestParam int size) {
-        return ApiResponse.<List<ReportDetailResponse>>builder()
-                .result(reportService.getListReport(page, size))
-                .build();
-    }
+//    @Operation(
+//            summary = "Get a list of reports",
+//            description = "This endpoint retrieves a paginated list of reports.",
+//            tags = {"Reports"},
+//            responses = {
+//                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+//                            responseCode = "200",
+//                            description = "Reports fetched successfully",
+//                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class))
+//                    )
+//            }
+//    )
+//    @GetMapping
+//    public ApiResponse<List<ReportDetailResponse>> getReport(
+//            @RequestParam int page,
+//            @RequestParam int size) {
+//        return ApiResponse.<List<ReportDetailResponse>>builder()
+//                .result(reportService.getListReport(page, size))
+//                .build();
+//    }
 
     @Operation(
             summary = "Get a list of reports for a specific user",
@@ -124,13 +124,14 @@ public class ReportController {
                     )
             }
     )
-    @GetMapping("/{reportStatus}")
+    @GetMapping
     public ApiResponse<List<ReportDetailResponse>> getReportsByStatus(
-            @PathVariable String reportStatus,
+            @RequestParam String reportStatus,
+            @RequestParam String reportType,
             @RequestParam int page,
             @RequestParam int size) {
         return ApiResponse.<List<ReportDetailResponse>>builder()
-                .result(reportService.getListReportByStatus(reportStatus, page, size))
+                .result(reportService.getListReportByStatus(reportStatus, reportType, page, size))
                 .build();
     }
 }

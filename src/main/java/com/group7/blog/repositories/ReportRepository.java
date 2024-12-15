@@ -11,6 +11,6 @@ import java.util.UUID;
 
 public interface ReportRepository extends JpaRepository<Report, Integer> {
     Page<Report> findByUsers(Users user, Pageable pageable);
-    Page<Report> findByReportStatus(EnumData.ReportStatus reportStatus, Pageable pageable);
+    Page<Report> findByReportStatusAndReportType(EnumData.ReportStatus reportStatus, EnumData.ReportType reportType, Pageable pageable);
 
 }
