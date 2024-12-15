@@ -9,8 +9,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 import org.springframework.web.cors.CorsConfiguration;
@@ -19,6 +22,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -32,6 +38,7 @@ public class SecurityConfiguration {
     private final String[] PUBLIC_ENDPOINTS = {
             "/auth/login",
             "/auth/logout",
+            "/auth/sample-data",
             "/auth/refresh-token",
             "/auth/register",
             "/v3/api-docs/**",
@@ -71,6 +78,21 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            Map<String, Object> claims = jwt.getClaims();
+            // Extract roles
+            List<Map<String, String>> rolesList = (List<Map<String, String>>) claims.get("roles");
+            return rolesList.stream()
+                    .map(role -> new SimpleGrantedAuthority(role.get("name")))
+                    .collect(Collectors.toList());
+        });
+        return jwtAuthenticationConverter;
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Set up CORS configuration
@@ -86,9 +108,10 @@ public class SecurityConfiguration {
 
         httpSecurity.oauth2ResourceServer(oauth2 ->
                 oauth2.jwt(jwtConfigurer -> jwtConfigurer
-                        .decoder(customJWTDecoder))
+                                .decoder(customJWTDecoder).jwtAuthenticationConverter(jwtAuthenticationConverter()))
                         .authenticationEntryPoint(new JWTAuthenticationEntryPoint())
         );
+
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 

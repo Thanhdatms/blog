@@ -4,6 +4,7 @@ import com.group7.blog.dto.Auth.TokenCreation;
 import com.group7.blog.dto.Auth.TokenResponse;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.enums.ErrorCode;
+import com.group7.blog.mappers.RoleMapper;
 import com.group7.blog.models.Users;
 import com.group7.blog.repositories.UserRepository;
 import com.nimbusds.jose.JOSEException;
@@ -31,6 +32,7 @@ import java.util.UUID;
 public class AuthenticationService {
     UserRepository userRepository;
     TokenService tokenService;
+    RoleMapper roleMapper;
 
     @NonFinal
     @Value("${server.cookie.sameSite}")
@@ -49,7 +51,14 @@ public class AuthenticationService {
         if(!isMatched){
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
-        TokenResponse tokens = tokenService.generateToken(new TokenCreation(user.getId(), user.getUsername()));
+        TokenResponse tokens = tokenService.generateToken(new TokenCreation(
+                user.getId(),
+                user.getUsername(),
+                user.getUserRoles().stream().map(
+                        item -> roleMapper.toRoleResponse(item.getRole())
+                ).toList()
+                )
+        );
         user.setRefreshToken(tokens.getRefreshToken());
         userRepository.save(user);
         return tokens;
@@ -106,7 +115,13 @@ public class AuthenticationService {
             if(userRepository.findOneByRefreshToken(refreshToken).isEmpty()) {
                 throw new AppException(ErrorCode.INVALID_TOKEN);
             }
-            TokenResponse tokens = tokenService.generateToken(new TokenCreation(user.getId(), user.getUsername()));
+            TokenResponse tokens = tokenService.generateToken(new TokenCreation(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getUserRoles().stream().map(
+                            item -> roleMapper.toRoleResponse(item.getRole())
+                    ).toList()
+            ));
             return tokens.getAccessToken();
         } catch ( ParseException | JOSEException e) {
             throw new AppException(ErrorCode.INVALID_TOKEN);

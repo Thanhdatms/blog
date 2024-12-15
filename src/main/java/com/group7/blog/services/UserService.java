@@ -9,14 +9,10 @@ import com.group7.blog.dto.User.request.UserUpdateRequest;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.mappers.BlogMapper;
+import com.group7.blog.mappers.RoleMapper;
 import com.group7.blog.mappers.UserMapper;
-import com.group7.blog.models.PasswordResetToken;
-import com.group7.blog.models.UserFollow;
-import com.group7.blog.models.Users;
-import com.group7.blog.repositories.BlogRepository;
-import com.group7.blog.repositories.PasswordResetTokenRepository;
-import com.group7.blog.repositories.UserFollowRepository;
-import com.group7.blog.repositories.UserRepository;
+import com.group7.blog.models.*;
+import com.group7.blog.repositories.*;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
@@ -55,6 +51,9 @@ public class UserService {
     TokenService tokenService;
     PasswordResetTokenRepository passwordResetTokenRepository;
     CloudinaryService cloudinaryService;
+    RoleRepository roleRepository;
+    UserRoleRepository userRoleRepository;
+    RoleMapper roleMapper;
 
     public boolean checkUserExistById(String userId) {
         return userRepository.existsById(UUID.fromString(userId));
@@ -74,7 +73,14 @@ public class UserService {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         Users user = userMapper.toUser(request);
         user.setHashPassword(passwordEncoder.encode(request.getPassword()));
+        Role role = roleRepository.findByName("user").orElseThrow(()-> new AppException(ErrorCode.USER_ROLE_NOT_FOUND));
+        user = userRepository.save(user);
 
+        UserRole userRole = new UserRole();
+        userRole.setUser(user);
+        userRole.setRole(role);
+
+        userRoleRepository.save(userRole);
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
@@ -108,7 +114,16 @@ public class UserService {
         Users user = userRepository.findById(UUID.fromString(userId)).
                 orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        return userMapper.toUserProfileResponse(user);
+        return new UserProfileResponseDTO(
+                user.getId().toString(),
+                user.getUsername(),
+                user.getNameTag(),
+                user.getBio(),
+                user.getAvatar(),
+                user.getUserRoles().stream().map(
+                        item -> roleMapper.toRoleResponse(item.getRole())
+                ).toList()
+        );
     }
 
     public UserResponse getBlogsByUserId(UUID userId) {
@@ -184,7 +199,13 @@ public class UserService {
         });
 
         String resetPasswordToken = tokenService.generateResetPasswordToken(
-                new TokenCreation(user.getId(), user.getUsername())
+                new TokenCreation(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getUserRoles().stream().map(
+                                item -> roleMapper.toRoleResponse(item.getRole())
+                        ).toList()
+                )
         );
         String url = resetPasswordUrl + resetPasswordToken;
 

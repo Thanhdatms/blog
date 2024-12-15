@@ -1,8 +1,8 @@
 package com.group7.blog.services;
 
+import com.group7.blog.dto.Report.reponse.ReportDetailResponse;
 import com.group7.blog.dto.Report.reponse.ReportResponse;
 import com.group7.blog.dto.Report.request.ReportCreationRequest;
-import com.group7.blog.dto.Report.reponse.ReportDetailResponse;
 import com.group7.blog.enums.EnumData;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
@@ -69,7 +69,12 @@ public class ReportService {
 
     public List<ReportDetailResponse> getListReport(int page, int size) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-
+        boolean isAdmin = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .stream()
+                .anyMatch(authority -> "admin".equals(authority.getAuthority()));
+        if(!isAdmin) throw new AppException(ErrorCode.UNAUTHORIZED);
         // Validate User
         userRepository.findById(UUID.fromString(userId))
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -88,7 +93,12 @@ public class ReportService {
 
     public List<ReportDetailResponse> getListUserReport(String username, int page, int size){
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-
+        boolean isAdmin = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .stream()
+                .anyMatch(authority -> "admin".equals(authority.getAuthority()));
+        if(!isAdmin) throw new AppException(ErrorCode.UNAUTHORIZED);
         userRepository.findById(UUID.fromString(userId))
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -107,14 +117,25 @@ public class ReportService {
 
     public ReportResponse updateReportStatus(String reportID, String reportStatus){
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-
+        boolean isAdmin = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .stream()
+                .anyMatch(authority -> "admin".equals(authority.getAuthority()));
+        if(!isAdmin) throw new AppException(ErrorCode.UNAUTHORIZED);
         userRepository.findById(UUID.fromString(userId))
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Report report = reportRepository.findById(Integer.valueOf(reportID))
                 .orElseThrow(() -> new AppException(ErrorCode.REPORT_NOT_EXIST));
+        Blog blog = blogRepository.findById(report.getBlog().getId())
+                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
 
         report.setReportStatus(EnumData.ReportStatus.valueOf(reportStatus));
+        if(report.getReportStatus() == EnumData.ReportStatus.DELETE) {
+            blog.setBlogStatus(EnumData.BlogStatus.BANNED);
+        }
+        blogRepository.save(blog);
 
         reportRepository.save(report);
 
