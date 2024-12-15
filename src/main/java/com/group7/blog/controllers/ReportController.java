@@ -38,12 +38,11 @@ public class ReportController {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
             }
     )
-    @PostMapping("/{blogId}")
+    @PostMapping
     public ApiResponse<ReportResponse> createReport(
-            @PathVariable("blogId") String blogId,
             @RequestBody @Valid ReportCreationRequest request) {
         return ApiResponse.<ReportResponse>builder()
-                .result(reportService.create(blogId, request))
+                .result(reportService.create(request))
                 .build();
     }
 

@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -29,6 +30,9 @@ public class Report {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "blog_id")
     Blog blog;
+
+    @Column(name="created_by")
+    UUID createdBy;
 
     @Enumerated(EnumType.STRING)
     ReportType reportType;

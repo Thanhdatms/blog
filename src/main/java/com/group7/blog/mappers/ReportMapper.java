@@ -15,6 +15,8 @@ public interface ReportMapper {
     @Mapping(target = "description", source = "description")
     @Mapping(target = "reportStatus", source = "reportStatus")
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "createdBy", source = "createdBy")
+    @Mapping(target = "userId", source = "report.users.id")
     ReportResponse toResponse(Report report);
 
     // Map Report entity to ReportDetailResponse

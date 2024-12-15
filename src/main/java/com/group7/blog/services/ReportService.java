@@ -40,24 +40,30 @@ public class ReportService {
 
     ReportMapper reportMapper;
 
-    public ReportResponse create(String blogId, ReportCreationRequest request){
+    public ReportResponse create(ReportCreationRequest request){
         SecurityContext context = SecurityContextHolder.getContext();
         String userId = context.getAuthentication().getName();
+
         Users user = userRepository
                 .findById(UUID
                         .fromString(userId))
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        Blog blog = blogRepository
-                .findById(UUID
-                        .fromString(blogId))
-                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
-
-        // Create report
         Report newReport = new Report();
-
-        newReport.setBlog(blog);
-        newReport.setUsers(user);
+        if(request.getBlogId() != null) {
+            Blog blog = blogRepository
+                    .findById(request.getBlogId())
+                    .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
+            newReport.setBlog(blog);
+        }
+        if(request.getUserId() != null) {
+            Users userReport = userRepository
+                    .findById(request.getUserId())
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+            newReport.setUsers(userReport);
+        }
+        // Create report
+        newReport.setCreatedBy(UUID.fromString(userId));
         newReport.setReportType(request.getReportType());
         newReport.setReportReason(request.getReportReason());
         newReport.setDescription(request.getDescription());
@@ -131,7 +137,7 @@ public class ReportService {
                 .orElseThrow(() -> new AppException(ErrorCode.REPORT_NOT_EXIST));
         Blog blog = blogRepository.findById(report.getBlog().getId())
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
-        Users user = userRepository.findById(UUID.fromString(userId))
+        Users user = userRepository.findById(report.getUsers().getId())
                         .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         report.setReportStatus(EnumData.ReportStatus.valueOf(reportStatus));
