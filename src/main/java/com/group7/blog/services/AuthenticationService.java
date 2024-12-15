@@ -2,6 +2,7 @@ package com.group7.blog.services;
 import com.group7.blog.dto.Auth.LoginRequest;
 import com.group7.blog.dto.Auth.TokenCreation;
 import com.group7.blog.dto.Auth.TokenResponse;
+import com.group7.blog.enums.EnumData;
 import com.group7.blog.exceptions.AppException;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.mappers.RoleMapper;
@@ -50,6 +51,9 @@ public class AuthenticationService {
         boolean isMatched = passwordEncoder.matches(request.getPassword(), user.getHashPassword());
         if(!isMatched){
             throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+        if(user.getUserStatus() == EnumData.UserStatus.BANNED) {
+            throw new AppException(ErrorCode.ACCOUNT_IS_BANNED);
         }
         TokenResponse tokens = tokenService.generateToken(new TokenCreation(
                 user.getId(),
