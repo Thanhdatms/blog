@@ -141,6 +141,12 @@ public class ReportService {
             } else if(report.getReportType() == EnumData.ReportType.USER) {
                 user.setUserStatus(EnumData.UserStatus.BANNED);
             }
+        } else if(report.getReportStatus() == EnumData.ReportStatus.CANCEL) {
+            if(report.getReportType() == EnumData.ReportType.BLOG) {
+                blog.setBlogStatus(EnumData.BlogStatus.PUBLISHED);
+            } else if(report.getReportType() == EnumData.ReportType.USER) {
+                user.setUserStatus(EnumData.UserStatus.ACTIVATED);
+            }
         }
         blogRepository.save(blog);
 
