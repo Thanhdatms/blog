@@ -141,4 +141,31 @@ public class ReportService {
 
         return reportMapper.toResponse(report);
     }
+
+    public List<ReportDetailResponse> getListReportByStatus(String reportStatus, int page, int size) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        boolean isAdmin = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .stream()
+                .anyMatch(authority -> "admin".equals(authority.getAuthority()));
+        if(!isAdmin) throw new AppException(ErrorCode.UNAUTHORIZED);
+
+        userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        // Pagination with sorting
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        // Convert string to enum
+        EnumData.ReportStatus status = EnumData.ReportStatus.valueOf(reportStatus.toUpperCase());
+
+        // Fetch paginated Reports by status
+        Page<Report> paginatedReports = reportRepository.findByReportStatus(status, pageable);
+
+        // Map reports to responses
+        return paginatedReports.getContent().stream()
+                .map(reportMapper::toReportDetailResponse)
+                .collect(Collectors.toList());
+    }
 }
