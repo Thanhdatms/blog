@@ -23,9 +23,10 @@ public interface ReportMapper {
     @Mapping(target = "reportResponse", source = "report")
     @Mapping(target = "user.id", source = "users.id")
     @Mapping(target = "user.username", source = "users.username")
+    @Mapping(target = "user.nameTag", source = "users.nameTag")
     @Mapping(target = "user.avatar", source = "users.avatar")
-    @Mapping(target = "thumbnail", source = "blog.thumbnail")
-    @Mapping(target = "blogTitle", source = "blog.title")
+    @Mapping(target = "thumbnail", source = "blog.thumbnail", defaultExpression = "java(null)")
+    @Mapping(target = "blogTitle", source = "blog.title", defaultExpression = "java(null)")
     ReportDetailResponse toReportDetailResponse(Report report);
 
 }
