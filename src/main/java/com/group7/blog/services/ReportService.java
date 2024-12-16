@@ -135,26 +135,33 @@ public class ReportService {
 
         Report report = reportRepository.findById(Integer.valueOf(reportID))
                 .orElseThrow(() -> new AppException(ErrorCode.REPORT_NOT_EXIST));
-        Blog blog = blogRepository.findById(report.getBlog().getId())
-                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
-        Users user = userRepository.findById(report.getUsers().getId())
-                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         report.setReportStatus(EnumData.ReportStatus.valueOf(reportStatus));
         if(report.getReportStatus() == EnumData.ReportStatus.DELETE) {
             if(report.getReportType() == EnumData.ReportType.BLOG) {
+                Blog blog = blogRepository.findById(report.getBlog().getId())
+                        .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
                 blog.setBlogStatus(EnumData.BlogStatus.BANNED);
+                blogRepository.save(blog);
             } else if(report.getReportType() == EnumData.ReportType.USER) {
+                Users user = userRepository.findById(report.getUsers().getId())
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
                 user.setUserStatus(EnumData.UserStatus.BANNED);
+                userRepository.save(user);
             }
         } else if(report.getReportStatus() == EnumData.ReportStatus.CANCEL) {
             if(report.getReportType() == EnumData.ReportType.BLOG) {
+                Blog blog = blogRepository.findById(report.getBlog().getId())
+                        .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
                 blog.setBlogStatus(EnumData.BlogStatus.PUBLISHED);
+                blogRepository.save(blog);
             } else if(report.getReportType() == EnumData.ReportType.USER) {
+                Users user = userRepository.findById(report.getUsers().getId())
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
                 user.setUserStatus(EnumData.UserStatus.ACTIVATED);
+                userRepository.save(user);
             }
         }
-        blogRepository.save(blog);
 
         reportRepository.save(report);
 
