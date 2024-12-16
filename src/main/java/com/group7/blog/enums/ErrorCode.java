@@ -23,7 +23,8 @@ public enum ErrorCode {
     TOKEN_NOT_FOUND(404, "Token not found", HttpStatus.BAD_REQUEST),
     USER_ID_INVALID(400, "Invalid user ID", HttpStatus.BAD_REQUEST),  // 400
     USER_FOLLOW_EXISTED(409, "User already followed", HttpStatus.CONFLICT),  // 409 (409 is Conflict, better for "already followed" scenario)
-
+    USER_ROLE_NOT_FOUND(404, "User role not found", HttpStatus.NOT_FOUND),
+    ACCOUNT_IS_BANNED(404, "User account is banned", HttpStatus.BAD_REQUEST),
     // BLOG ERRORS
     BLOG_NOT_EXISTED(404, "Blog not found", HttpStatus.NOT_FOUND),  // 404
     FILE_MISSING(400, "Image file is missing", HttpStatus.BAD_REQUEST),  // 400

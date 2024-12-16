@@ -1,8 +1,8 @@
 package com.group7.blog.services;
 
+import com.group7.blog.dto.Report.reponse.ReportDetailResponse;
 import com.group7.blog.dto.Report.reponse.ReportResponse;
 import com.group7.blog.dto.Report.request.ReportCreationRequest;
-import com.group7.blog.dto.Report.reponse.ReportDetailResponse;
 import com.group7.blog.enums.EnumData;
 import com.group7.blog.enums.ErrorCode;
 import com.group7.blog.exceptions.AppException;
@@ -40,25 +40,32 @@ public class ReportService {
 
     ReportMapper reportMapper;
 
-    public ReportResponse create(String blogId, ReportCreationRequest request){
+    public ReportResponse create(ReportCreationRequest request){
         SecurityContext context = SecurityContextHolder.getContext();
         String userId = context.getAuthentication().getName();
+
         Users user = userRepository
                 .findById(UUID
                         .fromString(userId))
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        Blog blog = blogRepository
-                .findById(UUID
-                        .fromString(blogId))
-                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
-
-        // Create report
         Report newReport = new Report();
-
-        newReport.setBlog(blog);
-        newReport.setUsers(user);
+        if(request.getBlogId() != null) {
+            Blog blog = blogRepository
+                    .findById(request.getBlogId())
+                    .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
+            newReport.setBlog(blog);
+        }
+        if(request.getUserId() != null) {
+            Users userReport = userRepository
+                    .findById(request.getUserId())
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+            newReport.setUsers(userReport);
+        }
+        // Create report
+        newReport.setCreatedBy(UUID.fromString(userId));
         newReport.setReportType(request.getReportType());
+        newReport.setReportReason(request.getReportReason());
         newReport.setDescription(request.getDescription());
         newReport.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
 
@@ -69,7 +76,12 @@ public class ReportService {
 
     public List<ReportDetailResponse> getListReport(int page, int size) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-
+        boolean isAdmin = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .stream()
+                .anyMatch(authority -> "admin".equals(authority.getAuthority()));
+        if(!isAdmin) throw new AppException(ErrorCode.UNAUTHORIZED);
         // Validate User
         userRepository.findById(UUID.fromString(userId))
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -88,7 +100,12 @@ public class ReportService {
 
     public List<ReportDetailResponse> getListUserReport(String username, int page, int size){
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-
+        boolean isAdmin = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .stream()
+                .anyMatch(authority -> "admin".equals(authority.getAuthority()));
+        if(!isAdmin) throw new AppException(ErrorCode.UNAUTHORIZED);
         userRepository.findById(UUID.fromString(userId))
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -107,7 +124,12 @@ public class ReportService {
 
     public ReportResponse updateReportStatus(String reportID, String reportStatus){
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-
+        boolean isAdmin = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .stream()
+                .anyMatch(authority -> "admin".equals(authority.getAuthority()));
+        if(!isAdmin) throw new AppException(ErrorCode.UNAUTHORIZED);
         userRepository.findById(UUID.fromString(userId))
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -115,9 +137,63 @@ public class ReportService {
                 .orElseThrow(() -> new AppException(ErrorCode.REPORT_NOT_EXIST));
 
         report.setReportStatus(EnumData.ReportStatus.valueOf(reportStatus));
+        if(report.getReportStatus() == EnumData.ReportStatus.DELETE) {
+            if(report.getReportType() == EnumData.ReportType.BLOG) {
+                Blog blog = blogRepository.findById(report.getBlog().getId())
+                        .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
+                blog.setBlogStatus(EnumData.BlogStatus.BANNED);
+                blogRepository.save(blog);
+            } else if(report.getReportType() == EnumData.ReportType.USER) {
+                Users user = userRepository.findById(report.getUsers().getId())
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                user.setUserStatus(EnumData.UserStatus.BANNED);
+                userRepository.save(user);
+            }
+        } else if(report.getReportStatus() == EnumData.ReportStatus.CANCEL) {
+            if(report.getReportType() == EnumData.ReportType.BLOG) {
+                Blog blog = blogRepository.findById(report.getBlog().getId())
+                        .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
+                blog.setBlogStatus(EnumData.BlogStatus.PUBLISHED);
+                blogRepository.save(blog);
+            } else if(report.getReportType() == EnumData.ReportType.USER) {
+                Users user = userRepository.findById(report.getUsers().getId())
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                user.setUserStatus(EnumData.UserStatus.ACTIVATED);
+                userRepository.save(user);
+            }
+        }
 
         reportRepository.save(report);
 
         return reportMapper.toResponse(report);
+    }
+
+    public List<ReportDetailResponse> getListReportByStatus(String reportStatus, String reportType, int page, int size) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        boolean isAdmin = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .stream()
+                .anyMatch(authority -> "admin".equals(authority.getAuthority()));
+        if(!isAdmin) throw new AppException(ErrorCode.UNAUTHORIZED);
+
+        userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        // Pagination with sorting
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        // Convert string to enum
+        EnumData.ReportStatus status = EnumData.ReportStatus.valueOf(reportStatus.toUpperCase());
+
+        EnumData.ReportType type = EnumData.ReportType.valueOf(reportType.toUpperCase());
+
+        // Fetch paginated Reports by status
+        Page<Report> paginatedReports = reportRepository.findByReportStatusAndReportType(status, type, pageable);
+
+        // Map reports to responses
+        return paginatedReports.getContent().stream()
+                .map(reportMapper::toReportDetailResponse)
+                .collect(Collectors.toList());
     }
 }

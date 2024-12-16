@@ -38,35 +38,34 @@ public class ReportController {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
             }
     )
-    @PostMapping("/{blogId}")
+    @PostMapping
     public ApiResponse<ReportResponse> createReport(
-            @PathVariable("blogId") String blogId,
             @RequestBody @Valid ReportCreationRequest request) {
         return ApiResponse.<ReportResponse>builder()
-                .result(reportService.create(blogId, request))
+                .result(reportService.create(request))
                 .build();
     }
 
-    @Operation(
-            summary = "Get a list of reports",
-            description = "This endpoint retrieves a paginated list of reports.",
-            tags = {"Reports"},
-            responses = {
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-                            responseCode = "200",
-                            description = "Reports fetched successfully",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class))
-                    )
-            }
-    )
-    @GetMapping
-    public ApiResponse<List<ReportDetailResponse>> getReport(
-            @RequestParam int page,
-            @RequestParam int size) {
-        return ApiResponse.<List<ReportDetailResponse>>builder()
-                .result(reportService.getListReport(page, size))
-                .build();
-    }
+//    @Operation(
+//            summary = "Get a list of reports",
+//            description = "This endpoint retrieves a paginated list of reports.",
+//            tags = {"Reports"},
+//            responses = {
+//                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+//                            responseCode = "200",
+//                            description = "Reports fetched successfully",
+//                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class))
+//                    )
+//            }
+//    )
+//    @GetMapping
+//    public ApiResponse<List<ReportDetailResponse>> getReport(
+//            @RequestParam int page,
+//            @RequestParam int size) {
+//        return ApiResponse.<List<ReportDetailResponse>>builder()
+//                .result(reportService.getListReport(page, size))
+//                .build();
+//    }
 
     @Operation(
             summary = "Get a list of reports for a specific user",
@@ -108,6 +107,29 @@ public class ReportController {
             @PathVariable("reportId") String reportId) {
         return ApiResponse.<ReportResponse>builder()
                 .result(reportService.updateReportStatus(reportId, reportStatus))
+                .build();
+    }
+
+    @Operation(
+            summary = "Get reports by status",
+            description = "This endpoint retrieves a paginated list of reports filtered by status.",
+            tags = {"Reports"},
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Reports fetched successfully",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class))
+                    )
+            }
+    )
+    @GetMapping
+    public ApiResponse<List<ReportDetailResponse>> getReportsByStatus(
+            @RequestParam String reportStatus,
+            @RequestParam String reportType,
+            @RequestParam int page,
+            @RequestParam int size) {
+        return ApiResponse.<List<ReportDetailResponse>>builder()
+                .result(reportService.getListReportByStatus(reportStatus, reportType, page, size))
                 .build();
     }
 }

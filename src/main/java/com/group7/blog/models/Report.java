@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -30,8 +31,14 @@ public class Report {
     @JoinColumn(name = "blog_id")
     Blog blog;
 
+    @Column(name="created_by")
+    UUID createdBy;
+
     @Enumerated(EnumType.STRING)
     ReportType reportType;
+
+    @Enumerated(EnumType.STRING)
+    EnumData.ReportReason reportReason;
 
     @Enumerated(EnumType.STRING)
     ReportStatus reportStatus = ReportStatus.PENDING;

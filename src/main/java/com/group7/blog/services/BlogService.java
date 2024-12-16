@@ -52,6 +52,9 @@ public class BlogService {
                 .findById(UUID
                 .fromString(userId))
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        if(user.getUserStatus() == EnumData.UserStatus.BANNED) {
+            throw new AppException(ErrorCode.ACCOUNT_IS_BANNED);
+        }
         List<Tag> tags = request.getTags()
                                 .stream()
                                 .map(
@@ -165,7 +168,9 @@ public class BlogService {
                 .findById(UUID
                         .fromString(userId))
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
+        if(user.getUserStatus() == EnumData.UserStatus.BANNED) {
+            throw new AppException(ErrorCode.ACCOUNT_IS_BANNED);
+        }
         Blog blog = blogRepository.findById(UUID.fromString(blogId))
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_EXISTED));
 

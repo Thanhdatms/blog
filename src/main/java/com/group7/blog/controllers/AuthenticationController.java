@@ -7,6 +7,7 @@ import com.group7.blog.dto.User.reponse.ApiResponse;
 import com.group7.blog.dto.User.reponse.UserResponse;
 import com.group7.blog.dto.User.request.UserCreationRequest;
 import com.group7.blog.services.AuthenticationService;
+import com.group7.blog.services.LoadSampleDataService;
 import com.group7.blog.services.UserService;
 import com.nimbusds.jose.JOSEException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,6 +34,7 @@ public class AuthenticationController {
 
     AuthenticationService authenticationService;
     UserService userService;
+    LoadSampleDataService loadSampleDataService;
 
     @Operation(
             summary = "Register New Account",
@@ -108,5 +110,11 @@ public class AuthenticationController {
         return ApiResponse.<String>builder()
                 .result(authenticationService.getNewAccessToken(cookie))
                 .build();
+    }
+
+    @PostMapping("/sample-data")
+    public String loadSampleData() {
+        loadSampleDataService.loadUserData();
+        return "Load data successfully!";
     }
 }

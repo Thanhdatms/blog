@@ -21,7 +21,18 @@ public class EnumData {
         BANNED
     }
 
+    public enum UserStatus {
+        BANNED,
+        ACTIVATED
+    }
+
     public enum ReportType{
+        USER,
+        BLOG,
+        OTHER
+    }
+
+    public enum ReportReason{
         SPAM,
         OFFENSIVE,
         INCORRECT,
@@ -35,11 +46,11 @@ public class EnumData {
     }
 
 
-    public static ReportType fromString(String value) {
+    public static ReportReason fromString(String value) {
         try {
-            return ReportType.valueOf(value);
+            return ReportReason.valueOf(value);
         } catch (IllegalArgumentException e){
-            return ReportType.OTHER;
+            return ReportReason.OTHER;
         }
     }
 }
